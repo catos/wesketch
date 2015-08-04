@@ -1,4 +1,5 @@
 var Hapi = require('hapi');
+var Good = require('good');
 
 // Create a server with a host and port
 var server = new Hapi.Server();
@@ -29,7 +30,23 @@ server.route({
     }
 });
 
-// Start the server
-server.start(function() {
-	console.log('Server running at: ', server.info.uri);
-});
+server.register({
+    register: Good,
+    options: {
+        reporters: [{
+            reporter: require('good-console'),
+            events: {
+                response: '*',
+                log: '*'
+            }
+        }]
+    }
+}, function (err) {
+    if (err) {
+        throw err; // something bad happened loading the plugin
+    }
+    
+    server.start(function () {
+        server.log('info', 'Server running at: ' + server.info.uri);
+    });
+})
