@@ -1,0 +1,22 @@
+{
+  "name": "CSA",
+  "version": "1.0.0",
+  "description": "Just another CSA Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/catos/CSA.git"
+  },
+  "author": "Cato Skogholt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/catos/CSA/issues"
+  },
+  "homepage": "https://github.com/catos/CSA",
+  "dependencies": {
+    "hapi": "^8.8.1"
+  }
+}
