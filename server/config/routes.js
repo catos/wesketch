@@ -6,18 +6,23 @@
     //     courses = require('../controllers/courses'),
     //     mongoose = require('mongoose'),
     //     User = mongoose.model('User');
+    var batteriesRouter = require('../batteries/batteries.routes.js');
 
     module.exports = function (app, config) {
 
-        require('../batteries/batteries.routes.js')(app);
+        app.use('/api', batteriesRouter);
 
         app.get('/', function(req, res) {
-            // res.send('hello world');
             res.render('../server/index', {
                 title: 'Hei',
                 message: 'dette er en melding!'
             });
         });
+
+
+
+
+
 
         // app.get('/api/users', auth.requiresRole('admin'), users.getUsers);
         // app.post('/api/users', users.createUser);
