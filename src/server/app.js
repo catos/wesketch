@@ -9,21 +9,26 @@
 
 	// ----------------------
 
-	var config = require('./server/config/config')[env];
+	var config = require('./config/config.js')[env];
 
-	require('./server/config/express')(app, config);
+	require('./config/express')(app, config);
 
 	// require('./server/config/mongoose')(config);
 
 	// require('./server/config/passport')();
 
-	require('./server/config/routes')(app, config);
+	require('./config/routes')(app, config);
 
 	// ----------------------
 
 	app.listen(config.port);
 
-	console.log('Listening on port ' + config.port + ', env: ' + env);
+	console.log('Listening on port ' + config.port);
+	console.log(
+		'env = ' + env +
+		'\n__dirname = ' + __dirname  +
+        '\nprocess.cwd = ' + process.cwd());
+		
 	console.log('_o\\   \\o|   |o|   |o/   /o_');
 
 }());

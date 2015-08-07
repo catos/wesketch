@@ -1,10 +1,12 @@
-var express = require('express');
-    // logger = require('morgan'),
-    // bodyParser = require('body-parser');
-    // stylus = require('stylus'),
-    // cookieParser = require('cookie-parser'),
-    // session = require('express-session'),
-    // passport = require('passport');
+var express = require('express')
+    , bodyParser = require('body-parser');
+// logger = require('morgan'),
+// stylus = require('stylus'),
+// cookieParser = require('cookie-parser'),
+// session = require('express-session'),
+// passport = require('passport');
+    // var compress = require('compression');
+    // var cors = require('cors');
 
 module.exports = function (app, config) {
     // function compile(str, path) {
@@ -15,7 +17,8 @@ module.exports = function (app, config) {
     app.set('view engine', 'jade');
     // app.use(logger('dev'));
     // app.use(cookieParser());
-    // app.use(bodyParser());
+    app.use(bodyParser.urlencoded({ extended : true }));
+    app.use(bodyParser.json());
     // app.use(session({secret: 'multi vision unicorns'}));
     // app.use(passport.initialize());
     // app.use(passport.session());
@@ -26,5 +29,5 @@ module.exports = function (app, config) {
     //     }
     // ));
     // app.use(express.static(config.rootPath + '/client'));
-    app.use(express.static('client'));
+    
 };
