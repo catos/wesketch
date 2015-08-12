@@ -13,9 +13,9 @@
 
 	require('./config/express')(app, config);
 
-	// require('./server/config/mongoose')(config);
+	require('./config/mongoose')(config);
 
-	// require('./server/config/passport')();
+	// require('./config/passport')();
 
 	require('./config/routes')(app, config);
 
@@ -25,9 +25,9 @@
 
 	console.log('Listening on port ' + config.port);
 	console.log(
-		'env = ' + env +
-		'\n__dirname = ' + __dirname  +
-        '\nprocess.cwd = ' + process.cwd());
+		'\tenv = ' + env +
+		'\n\t__dirname = ' + __dirname  +
+        '\n\tprocess.cwd = ' + process.cwd());
 		
 	console.log('_o\\   \\o|   |o|   |o/   /o_');
 

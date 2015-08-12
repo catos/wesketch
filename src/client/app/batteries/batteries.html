@@ -1,18 +1,22 @@
 <div data-ng-controller="BatteriesController as vm">
 	
+	<h1><i class="fa fa-battery-full"></i> Batteries</h1>
+	
 	<table class="table table-striped table-bordered">
 		<tr>
 			<th>Id</th>
+			<th>Number</th>
 			<th>Name</th>
 			<th>Cycles</th>
+			<th>Created</th>
 		</tr>
 		<tr data-ng-repeat="battery in vm.batteries">
-			<td>{{battery.id}}</td>			
+			<td>{{battery._id}}</td>			
+			<td>{{battery.number}}</td>			
 			<td>{{battery.name}}</td>			
 			<td>{{battery.cycles}}</td>			
+			<td>{{battery.created}}</td>			
 		</tr>
 	</table>
-		
-	
 	
 </div>

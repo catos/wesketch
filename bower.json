@@ -18,6 +18,7 @@
     "angular": "~1.4.3",
     "bootstrap": "~3.3.5",
     "angular-route": "~1.4.3",
-    "angular-resource": "~1.4.3"
+    "angular-resource": "~1.4.3",
+    "fontawesome": "~4.4.0"
   }
 }

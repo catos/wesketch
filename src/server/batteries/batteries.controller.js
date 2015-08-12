@@ -1,58 +1,60 @@
-(function () {
-    'use strict';
+var Battery = require('./batteries.model');
 
-    var data = [
-        {
-            id: 1,
-            name: '#1 ONBO 3S 1350mAh 20C',
-            cycles: 14
-        },
-        {
-            id: 2,
-            name: '#2 ONBO 3S 1350mAh 20C',
-            cycles: 13
-        },
-        {
-            id: 3,
-            name: '#1 Fatshark 2s 1000mAh',
-            cycles: 7
-        }
-    ];
+module.exports = {
 
-    var BatteriesController = {
+    init: function (req, res, next) {
+        console.log('batteries.controller -> init()');
+        next();
+    },
 
-        init: function (req, res, next) {
-            console.log('batteriesController.init: %s %s %s', req.method, req.url, req.path);
-            next();
-        },
+    index: function (req, res, next) {
+        Battery.find(function (err, data) {
+            if (err) {
+                return next(err);
+            }
 
-        get: function (req, res, next) {
-            res.send(data);
-        },
+            res.json(data);
+        });
+    },
 
-        put: function (req, res, next) {
-            res.send('batteriesController.put');
-        },
+    get: function (req, res, next) {
+        console.log(req.params.id);
+        Battery.findById(req.params.id, function (err, data) {
+            if (err) {
+                return next(err);
+            }
 
-        post: function (req, res, next) {
-            //res.json(req.body);
-            var newBattery = {
-                id: 4,
-                name: '#2 Fatshark 2s 1000mAh',
-                cycles: 3
-            };
-            data.push(newBattery);
-            
-            res.send(newBattery);
-        },
+            res.json(data);
+        });
+    },
 
-        delete: function (req, res, next) {
-            res.send('batteriesController.delete')
-            next();
-        },
+    update: function (req, res, next) {
+        Battery.findByIdAndUpdate(req.params.id, req.body, { new: true }, function (err, data) {
+            if (err) {
+                return next(err);
+            }
 
+            res.json(data);
+        });
+    },
+
+    create: function (req, res, next) {
+        Battery.create(req.body, function (err, data) {
+            if (err) {
+                res.json(err);
+            }
+
+            res.json(data);
+        });
+    },
+
+    destroy: function (req, res, next) {
+        Battery.findByIdAndRemove(req.params.id, req.body, function (err, data) {
+            if (err) {
+                res.json(err);
+            }
+
+            res.json(data);
+        });
     }
-
-    module.exports = BatteriesController;
-
-} ());
+};
