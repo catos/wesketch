@@ -4,8 +4,9 @@
 [x] Logging with Morgan
 [x] MongdoDB & Models
 [x] FontAwesome
-[ ] WTB Queries for uthenting av data med Mongoose: http://mongoosejs.com/docs/queries.html
+[x] WTB Queries for uthenting av data med Mongoose: http://mongoosejs.com/docs/queries.html
 [ ] Client code for Create, Update & Delete batteries
+	[ ] Trenger å bruke /path/id med $resource for å få til dette 
 
 # TODO Whenever "big"
 [ ] Authentication

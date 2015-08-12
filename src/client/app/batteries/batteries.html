@@ -11,7 +11,7 @@
 			<th>Created</th>
 		</tr>
 		<tr data-ng-repeat="battery in vm.batteries">
-			<td>{{battery._id}}</td>			
+			<td><a href="#/batteries/{{battery._id}}">{{battery._id}}</a></td>			
 			<td>{{battery.number}}</td>			
 			<td>{{battery.name}}</td>			
 			<td>{{battery.cycles}}</td>			

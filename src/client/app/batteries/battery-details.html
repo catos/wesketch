@@ -1,0 +1,21 @@
+<div data-ng-controller="BatteryDetailsController as vm">
+	<h1><i class="fa fa-battery-full"></i>Batteries</h1>
+		
+	<form>
+		<div class="form-group">
+			<label for="inputNumber">Number</label>
+			<input type="text" class="form-control" id="inputNumber" placeholder="Number" value="{{vm.battery.number}}" />
+			<p class="help-block">_id: {{vm.battery._id}}</p>
+			<p class="help-block">created: {{vm.battery.created}}</p>
+		</div>
+		<div class="form-group">
+			<label for="inputName">Name</label>
+			<input type="text" class="form-control" id="inputName" placeholder="Name" value="{{vm.battery.name}}" />
+		</div>
+		<div class="form-group">
+			<label for="inputCycles">Cycles</label>
+			<input type="text" class="form-control" id="inputCycles" placeholder="Cycles" value="{{vm.battery.cycles}}" />
+		</div>
+		<button type="submit" class="btn btn-default" data-ng-click="vm.submit()">Submit</button>
+	</form>
+</div>

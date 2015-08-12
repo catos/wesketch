@@ -24,7 +24,7 @@
                         templateUrl: 'app/batteries/batteries.html',
                     })
                     .when('/batteries/:id', {
-                        templateUrl: 'app/batteries/battery-detail.html',
+                        templateUrl: 'app/batteries/battery-details.html',
                     })
                     .otherwise({
                         redirectTo: '/batteries'
