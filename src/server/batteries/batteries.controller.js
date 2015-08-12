@@ -8,24 +8,29 @@ module.exports = {
     },
 
     index: function (req, res, next) {
-        Battery.find(function (err, data) {
-            if (err) {
-                return next(err);
-            }
+        Battery
+            .find({})
+            .limit(10)
+            .sort({ number: -1 })
+            .exec(function callback(err, data) {
+                if (err) {
+                    return next(err);
+                }
+                res.json(data);
+            });
 
-            res.json(data);
-        });
     },
 
     get: function (req, res, next) {
-        console.log(req.params.id);
-        Battery.findById(req.params.id, function (err, data) {
-            if (err) {
-                return next(err);
-            }
+        Battery
+            .findOne({ '_id': req.params.id })
+            .exec(function callback(err, data) {
+                if (err) {
+                    return next(err);
+                }
 
-            res.json(data);
-        });
+                res.json(data);
+            });
     },
 
     update: function (req, res, next) {
