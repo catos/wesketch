@@ -5,8 +5,15 @@
 [x] MongdoDB & Models
 [x] FontAwesome
 [x] WTB Queries for uthenting av data med Mongoose: http://mongoosejs.com/docs/queries.html
-[ ] Client code for Create, Update & Delete batteries
-[x] Make $resource use path (not querystring) 
+[x] Make $resource use path (not querystring)
+[x] Client code for Update batteries
+[ ] Make /api/batteries/0 return an empty Battery object, it returns a status 500 now
+[ ] Codereview på batteriesService og callbacks / errorhandling
+[ ] Client code for Create & Delete batteries
+[ ] Reference bower_components in dev, remove client/vendor-references
+[ ] Fix routing in the client, code is currently inside app.module.js
+[ ] Make a reference to useful site for development in the client nav
+[ ] Make a TODO-feature and replace this file with that feature
 
 # TODO Whenever "big"
 [ ] Authentication

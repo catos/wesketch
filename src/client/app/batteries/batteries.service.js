@@ -9,7 +9,7 @@
 
     function batteriesService($resource, appSettings) {
         console.log(appSettings.serverPath);
-        var result = $resource(
+        return $resource(
             appSettings.serverPath + '/api/batteries/:id',
             { id: '@id' },
             {
@@ -26,7 +26,6 @@
                     method: 'DELETE'
                 }
             });
-        return result;
     }
-	
+
 } ());

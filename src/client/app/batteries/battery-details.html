@@ -1,12 +1,18 @@
 <div data-ng-controller="BatteryDetailsController as vm">
-	<h1><i class="fa fa-battery-full"></i> Battery <small>{{vm.battery.created}}</small></h1>
+	<h1><i class="fa fa-battery-full"></i> 
+		{{vm.title}}
+	</h1>
 	<p>
 		<a href="#/batteries">Back to index</a>
 	</p>
 	<form>
 		<div class="form-group">
+			<label for="inputId">_id</label>
+			<input type="text" class="form-control" id="inputId" data-ng-model="vm.battery._id" disabled />
+		</div>
+		<div class="form-group">
 			<label for="inputNumber">Number</label>
-			<input type="text" class="form-control" id="inputNumber" placeholder="Number" data-ng-model="vm.battery.number" />
+			<input type="number" class="form-control" id="inputNumber" placeholder="Number" data-ng-model="vm.battery.number" />
 		</div>
 		<div class="form-group">
 			<label for="inputName">Name</label>
@@ -14,7 +20,11 @@
 		</div>
 		<div class="form-group">
 			<label for="inputCycles">Cycles</label>
-			<input type="text" class="form-control" id="inputCycles" placeholder="Cycles" data-ng-model="vm.battery.cycles" />
+			<input type="text" class="form-control" id="inputCycles" data-ng-model="vm.battery.cycles" />
+		</div>
+		<div class="form-group">
+			<label for="inputCycles">Created</label>
+			<input type="datetime" class="form-control" id="inputCycles" placeholder="Cycles" data-ng-model="vm.battery.created" disabled />
 		</div>
 
 		<div class="form-group">

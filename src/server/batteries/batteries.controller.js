@@ -21,15 +21,19 @@ module.exports = {
     },
 
     get: function (req, res, next) {
-        Battery
-            .findOne({ '_id': req.params.id })
-            .exec(function callback(err, data) {
-                if (err) {
-                    return next(err);
-                }
+        if (req.params.id !== 0) {
+            Battery
+                .findOne({ '_id': req.params.id })
+                .exec(function callback(err, data) {
+                    if (err) {
+                        return next(err);
+                    }
 
-                res.json(data);
-            });
+                    res.json(data);
+                });
+        } else {
+            res.json(new Battery());
+        }
     },
 
     update: function (req, res, next) {
@@ -45,7 +49,7 @@ module.exports = {
     create: function (req, res, next) {
         Battery.create(req.body, function (err, data) {
             if (err) {
-                return next(err);                
+                return next(err);
             }
 
             res.json(data);
@@ -55,7 +59,7 @@ module.exports = {
     destroy: function (req, res, next) {
         Battery.findByIdAndRemove(req.params.id, req.body, function (err, data) {
             if (err) {
-                return next(err);                
+                return next(err);
             }
 
             res.json(data);

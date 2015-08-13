@@ -10,6 +10,7 @@
     function BatteryDetailsController($routeParams, batteriesService) {
         var vm = this;
         vm.battery = {};
+        vm.title = '';
         vm.message = '';
         vm.submit = submit;
         init();
@@ -19,26 +20,17 @@
                 { id: $routeParams.id },
                 function (data) {
                     vm.battery = data;
+
+                    if (vm.battery && vm.battery.name) {
+                        vm.title = "Edit: " + vm.battery.name;
+                    } else {
+                        vm.title = "New Battery";
+                    }
+
                 },
                 function (response) {
-                    vm.message = response.statusText + '\n\r';
-
-                    if (response.data.modelState) {
-                        for (var key in response.data.modelState) {
-                            vm.message += response.data.modelState[key] + '\n\r';
-                        }
-                    }
-
-                    if (response.data.exceptionMessage) {
-                        vm.message += response.data.exceptionMessage;
-                    }
+                    vm.message = response.statusText + ' - ' + response.data.message;
                 });
-
-            // if (vm.product && vm.product.productId) {
-            //     vm.title = "Edit: " + vm.product.productName;
-            // } else {
-            //     vm.title = "New Product";
-            // }
         };
 
         function submit() {
@@ -64,7 +56,7 @@
                         }
                     });
             } else {
-                
+
             }
         }
 
