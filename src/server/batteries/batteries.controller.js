@@ -3,7 +3,6 @@ var Battery = require('./batteries.model');
 module.exports = {
 
     init: function (req, res, next) {
-        console.log('batteries.controller -> init()');
         next();
     },
 
@@ -46,7 +45,7 @@ module.exports = {
     create: function (req, res, next) {
         Battery.create(req.body, function (err, data) {
             if (err) {
-                res.json(err);
+                return next(err);                
             }
 
             res.json(data);
@@ -56,7 +55,7 @@ module.exports = {
     destroy: function (req, res, next) {
         Battery.findByIdAndRemove(req.params.id, req.body, function (err, data) {
             if (err) {
-                res.json(err);
+                return next(err);                
             }
 
             res.json(data);

@@ -45,11 +45,12 @@
             
             // Update
             if (vm.battery._id) {
-                vm.battery.$update({ _id: vm.battery._id },
+                vm.battery.$update({ id: vm.battery._id },
                     function (data) {
                         vm.message = 'Update complete.';
                     },
                     function (response) {
+                        console.log(response);
                         vm.message = response.statusText + '\n\r';
 
                         if (response.data.modelState) {
@@ -62,6 +63,8 @@
                             vm.message += response.data.exceptionMessage;
                         }
                     });
+            } else {
+                
             }
         }
 

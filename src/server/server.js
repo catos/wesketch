@@ -19,6 +19,8 @@
 
 	require('./config/routes')(app, config);
 
+	require('./config/errors')(app);
+
 	// ----------------------
 
 	app.listen(config.port);

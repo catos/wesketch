@@ -7,11 +7,11 @@
 
     batteriesService.$inject = ['$resource', 'appSettings'];
 
-	function batteriesService($resource, appSettings) {
+    function batteriesService($resource, appSettings) {
         console.log(appSettings.serverPath);
-        return $resource(
+        var result = $resource(
             appSettings.serverPath + '/api/batteries/:id',
-            null,
+            { id: '@id' },
             {
                 'get': {
                     method: 'GET'
@@ -20,30 +20,13 @@
                     method: 'POST'
                 },
                 'update': {
-                    method: 'PUT'                    
-				},
-				'delete': {
-					method: 'DELETE'
-				}
+                    method: 'PUT'
+                },
+                'delete': {
+                    method: 'DELETE'
+                }
             });
+        return result;
     }
 	
-    // function batteryService($resource, appSettings, currentUser) {
-    //     return $resource(
-    //         appSettings.serverPath + '/api/products/:id',
-    //         null,
-    //         {
-    //             'get': {
-    //                 headers: { 'Authorization': 'Bearer ' + currentUser.getProfile().token }
-    //             },
-    //             'save': {
-    //                 headers: { 'Authorization': 'Bearer ' + currentUser.getProfile().token }
-    //             },
-    //             'update': {
-    //                 method: 'PUT',
-    //                 headers: { 'Authorization': 'Bearer ' + currentUser.getProfile().token }
-    //         }
-    //         });
-    // }
-
 } ());
