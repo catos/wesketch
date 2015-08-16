@@ -5,14 +5,16 @@
         .module('app')
         .controller('BatteryDetailsController', BatteryDetailsController);
 
-    BatteryDetailsController.$inject = ['$routeParams', 'batteriesService'];
+    BatteryDetailsController.$inject = ['$location', '$routeParams', 'batteriesService'];
 
-    function BatteryDetailsController($routeParams, batteriesService) {
+    function BatteryDetailsController($location, $routeParams, batteriesService) {
         var vm = this;
         vm.battery = {};
         vm.title = '';
         vm.message = '';
         vm.submit = submit;
+        vm.del = del;
+        vm.action = '';
         init();
 
         function init() {
@@ -22,8 +24,10 @@
                     vm.battery = data;
 
                     if (vm.battery && vm.battery.name) {
+                        vm.action = 'update';
                         vm.title = "Edit: " + vm.battery.name;
                     } else {
+                        vm.action = 'create';
                         vm.title = "New Battery";
                     }
 
@@ -34,30 +38,33 @@
         };
 
         function submit() {
-            
-            // Update
-            if (vm.battery._id) {
+            if (vm.action === 'update') {
                 vm.battery.$update({ id: vm.battery._id },
                     function (data) {
                         vm.message = 'Update complete.';
                     },
                     function (response) {
-                        console.log(response);
-                        vm.message = response.statusText + '\n\r';
-
-                        if (response.data.modelState) {
-                            for (var key in response.data.modelState) {
-                                vm.message += response.data.modelState[key] + '\n\r';
-                            }
-                        }
-
-                        if (response.data.exceptionMessage) {
-                            vm.message += response.data.exceptionMessage;
-                        }
+                        vm.message = response.statusText + ' - ' + response.data.message;
                     });
             } else {
-
+                vm.battery.$save(
+                    function (data) {
+                        vm.message = 'Save complete.';
+                    },
+                    function (response) {
+                        vm.message = response.statusText + ' - ' + response.data.message;
+                    });
             }
+        };
+
+        function del() {
+            vm.battery.$delete({ id: vm.battery._id },
+                function (data) {
+                    $location.path('/');
+                },
+                function (response) {
+                    vm.message = response.statusText + ' - ' + response.data.message;
+                });
         }
 
     };

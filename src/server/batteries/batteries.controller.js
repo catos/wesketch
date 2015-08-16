@@ -21,7 +21,7 @@ module.exports = {
     },
 
     get: function (req, res, next) {
-        if (req.params.id !== 0) {
+        if (req.params.id !== '0') {
             Battery
                 .findOne({ '_id': req.params.id })
                 .exec(function callback(err, data) {

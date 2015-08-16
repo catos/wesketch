@@ -1,10 +1,11 @@
 <div data-ng-controller="BatteryDetailsController as vm">
-	<h1><i class="fa fa-battery-full"></i> 
+	<h1>
+		<i class="fa fa-battery-full"></i> 
 		{{vm.title}}
+		<a class="btn btn-primary btn-sm" href="#/batteries">Back to index</a>
+		<a class="btn btn-danger btn-sm" href="#" data-ng-click="vm.del()">Delete battery</a>
 	</h1>
-	<p>
-		<a href="#/batteries">Back to index</a>
-	</p>
+
 	<form>
 		<div class="form-group">
 			<label for="inputId">_id</label>
@@ -16,7 +17,7 @@
 		</div>
 		<div class="form-group">
 			<label for="inputName">Name</label>
-			<input type="text" class="form-control" id="inputName" placeholder="Name" data-ng-model="vm.battery.name" />
+			<input type="text" class="form-control" id="inputName" placeholder="Example: ONBO 3S 1350mah 20C" data-ng-model="vm.battery.name" />
 		</div>
 		<div class="form-group">
 			<label for="inputCycles">Cycles</label>

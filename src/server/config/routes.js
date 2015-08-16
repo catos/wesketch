@@ -7,10 +7,8 @@ module.exports = function (app, config) {
 
     // Serve all files from client directory
     app.use(express.static('src/client'));
-        
-    // Any deep link calls should return index.html
-    // app.use('/*', express.static('./src/client/index.html'));
-        
+    app.use('/bower_components',  express.static('bower_components'));
+            
     // -- SERVER --------------------------------------------------
         
     // API Routes
