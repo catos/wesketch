@@ -23,7 +23,7 @@ function getStates() {
 		{
 			state: 'battery details',
 			config: {
-				url: '/lol/:id',
+				url: '/batteries/:id',
 				templateUrl: 'app/batteries/battery-details.html',
 				controller: 'BatteryDetailsController',
 				controllerAs: 'vm',
