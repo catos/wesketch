@@ -2,15 +2,14 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app.batteries')
         .factory('batteriesService', batteriesService);
 
-    batteriesService.$inject = ['$resource', 'appSettings'];
+    batteriesService.$inject = ['$resource', 'config'];
 
-    function batteriesService($resource, appSettings) {
-        console.log(appSettings.serverPath);
+    function batteriesService($resource, config) {
         return $resource(
-            appSettings.serverPath + '/api/batteries/:id',
+            config.serverPath + '/api/batteries/:id',
             { id: '@id' },
             {
                 'get': {

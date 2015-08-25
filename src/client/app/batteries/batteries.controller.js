@@ -4,7 +4,7 @@
 	'use strict';
 
 	angular
-		.module('app')
+		.module('app.batteries')
 		.controller('BatteriesController', BatteriesController);
 
 	BatteriesController.$inject = ['batteriesService'];
@@ -13,7 +13,7 @@
 		var vm = this;
 		vm.batteries = [];
 		
-		activate()
+		activate();
 		
 		function activate() {
 			batteriesService.query(

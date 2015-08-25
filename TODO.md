@@ -13,6 +13,8 @@
 [ ] Fix routing in the client, code is currently inside app.module.js
 [ ] Make a reference to useful site for development in the client nav
 [ ] Make a TODO-feature and replace this file with that feature
+[ ] Rename /src/server/core/routeHandler -> restApiSomething.-...
+[ ] app.layout i client
 
 # TODO Whenever "big"
 [ ] Authentication

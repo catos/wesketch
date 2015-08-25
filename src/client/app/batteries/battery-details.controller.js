@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app.batteries')
         .controller('BatteryDetailsController', BatteryDetailsController);
 
-    BatteryDetailsController.$inject = ['$location', '$routeParams', 'batteriesService'];
+    BatteryDetailsController.$inject = ['$location', '$stateParams', 'batteriesService'];
 
-    function BatteryDetailsController($location, $routeParams, batteriesService) {
+    function BatteryDetailsController($location, $stateParams, batteriesService) {
         var vm = this;
         vm.battery = {};
         vm.title = '';
@@ -15,11 +15,14 @@
         vm.submit = submit;
         vm.del = del;
         vm.action = '';
-        init();
+        
+        console.log('BatteryDetailsController -> $stateParams.id: ' + $stateParams.id);
+        
+        activate();
 
-        function init() {
+        function activate() {
             batteriesService.get(
-                { id: $routeParams.id },
+                { id: $stateParams.id },
                 function (data) {
                     vm.battery = data;
 

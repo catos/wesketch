@@ -4,30 +4,11 @@
 
     angular
         .module('app', [
-        // Angular modules
-            'ngRoute',              // routing
-
-            // Custom modules
             'app.core',
+            
+            // 'app.widgets',
 
-            // 3rd Party modules
-            // 'ui.bootstrap'        // ui-bootstrap (ex: carousel, pagination, dialog)
-		
+            // 'app.layout', 
+            'app.batteries'
         ]);
-
-    angular
-        .module('app')
-        .config(['$routeProvider',
-            function ($routeProvider) {
-                $routeProvider.
-                    when('/batteries', {
-                        templateUrl: 'app/batteries/batteries.html',
-                    })
-                    .when('/batteries/:id', {
-                        templateUrl: 'app/batteries/battery-details.html',
-                    })
-                    .otherwise({
-                        redirectTo: '/batteries'
-                    });
-            }]);
 } ());

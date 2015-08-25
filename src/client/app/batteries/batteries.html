@@ -1,8 +1,6 @@
-<div data-ng-controller="BatteriesController as vm">
+<section>
 	
-	<h1><i class="fa fa-battery-full"></i> Batteries <a href="#/batteries/0" class="btn btn-primary btn-sm">New Battery</a></h1>
-	
-	
+	<h1><i class="fa fa-battery-full"></i> Batteries <small>{{vm.batteries.length}}</small> <a href="/batteries/0" class="btn btn-primary btn-sm">New Battery</a></h1>
 	
 	<table class="table table-striped table-bordered">
 		<tr>
@@ -13,10 +11,10 @@
 		</tr>
 		<tr data-ng-repeat="battery in vm.batteries">
 			<td>{{battery.number}}</td>			
-			<td><a href="#/batteries/{{battery._id}}">{{battery.name}}</a></td>			
+			<td><a href="/batteries/{{battery._id}}">{{battery.name}}</a></td>			
 			<td>{{battery.cycles}}</td>			
 			<td>{{battery.created}}</td>			
 		</tr>
 	</table>
 	
-</div>
+</section>

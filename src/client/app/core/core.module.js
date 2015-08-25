@@ -3,6 +3,15 @@
 
     angular
         .module('app.core', [
-            'ngResource'
+            // 'ngAnimate', 
+            // 'ngSanitize',
+            'ngResource',
+            
+            // 'blocks.exception', 
+            'blocks.logger', 
+            'blocks.router',
+            
+            'ui.router', 
+            // 'ngplus'
         ]);
 })();

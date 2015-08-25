@@ -6,9 +6,11 @@ module.exports = function (app, config) {
     // -- CLIENT --------------------------------------------------
 
     // Serve all files from client directory
-    app.use(express.static('src/client'));
-    app.use('/bower_components',  express.static('bower_components'));
-            
+    app.use(express.static('./src/client'));
+    app.use('/bower_components', express.static('bower_components'));
+    // app.use(express.static('./'));
+    // app.use(express.static('./tmp'));
+
     // -- SERVER --------------------------------------------------
         
     // API Routes
@@ -16,8 +18,12 @@ module.exports = function (app, config) {
 
     // Server start page (index.jade)
     app.get('/api', function (req, res) {
+        console.log('/api');
         res.render(config.rootPath + 'server/views/index');
     });
+    
+    // Any deep link calls should return index.html
+    app.use('/*', express.static('./src/client/index.html'));
 
     // 404
     app.use(function fourOfour(req, res, next) {
@@ -39,4 +45,6 @@ module.exports = function (app, config) {
 
         res.send('Not Found').end();
     });
+
+
 };
