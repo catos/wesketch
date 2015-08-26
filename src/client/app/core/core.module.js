@@ -11,7 +11,8 @@
             'blocks.logger', 
             'blocks.router',
             
-            'ui.router', 
+            'ui.router',
+            'ui.bootstrap' 
             // 'ngplus'
         ]);
 })();

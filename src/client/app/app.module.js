@@ -9,6 +9,7 @@
             // 'app.widgets',
 
             // 'app.layout', 
-            'app.batteries'
+            'app.batteries',
+            'app.recipes'
         ]);
 } ());

@@ -5,3 +5,7 @@
     border-right: none;
     border-left: none;
 }
+
+.sidebar {
+    border-right: 1px solid #e7e7e7; 
+}

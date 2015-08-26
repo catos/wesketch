@@ -13,28 +13,27 @@
     
     <body>
         <div class="container-fluid">
-            
-            <div data-ng-include="'app/layout/topnav.html'"></div>
 
-            <div class="list-group pull-left">
-                <a href="#" class="list-group-item active">Internal</a>            
-                <a href="/api" class="list-group-item">Server /api</a>
-            </div>
-                        
-            <div class="list-group pull-left"">
-                <a href="#" class="list-group-item active">Dev-resources</a>
-                <a href="http://www.angularjs.org" class="list-group-item">Angularjs</a>
-                <a href="https://angular-ui.github.io/" class="list-group-item">Angular UI</a>
-                <a href="http://momentjs.com/" class="list-group-item">Moment.js</a>
+            <div class="row">
+                <div class="col-md-12">
+                    <div data-ng-include="'app/layout/topnav.html'"></div>                    
+                </div>
             </div>
             
-            <div data-ui-view></div>
-            
+            <div class="row">
+                <div class="col-md-3 sidebar">
+                    <div data-ng-include="'app/layout/sidebar.html'"></div>                    
+                </div>
+                <div class="col-md-9">
+                    <div data-ui-view></div>  
+                </div>
+            </div>
         </div>
         
         <script src="/bower_components/angular/angular.js"></script>        
         <script src="/bower_components/angular-resource/angular-resource.js"></script>
         <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         
         
         <!--app.module-->
@@ -57,5 +56,11 @@
         <script src="/app/batteries/batteries.controller.js"></script>
         <script src="/app/batteries/battery-details.controller.js"></script>
         <script src="/app/batteries/batteries.service.js"></script>
+
+        <!--app.recipes-->
+        <script src="/app/recipes/recipes.module.js"></script>       
+        <script src="/app/recipes/recipes.route.js"></script>       
+        <script src="/app/recipes/recipes.controller.js"></script>       
+
     </body>
 </html>

@@ -2,17 +2,18 @@
 	<div>
 		<div class="navbar-header">
 			<a href="/" class="navbar-brand"><span class="brand-title">CSA</span></a>
-			<a class="btn navbar-btn navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<a class="btn navbar-btn navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
 		</div>
-		<div class="navbar-collapse collapse">
+		<div class="navbar-collapse collapse" ng-class="{'in': !navCollapsed}">
 			
 			<div class="pull-left">
 				<ul class="nav navbar-nav pull-right">
-					<li><a href="/batteries">/batteries</a></li>
+					<li><a href="/batteries">Batteries</a></li>
+					<li><a href="/recipes">Recipes</a></li>
 				</ul>
 			</div>
 			
