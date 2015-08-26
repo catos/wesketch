@@ -21,7 +21,7 @@ function getStates() {
 			}
 		},
 		{
-			state: 'battery details',
+			state: 'batteries.detail',
 			config: {
 				url: '/batteries/:id',
 				templateUrl: 'app/batteries/battery-details.html',
