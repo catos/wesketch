@@ -9,7 +9,6 @@
             
             // 'blocks.exception', 
             'blocks.logger', 
-            'blocks.router',
             
             'ui.router',
             'ui.bootstrap' 

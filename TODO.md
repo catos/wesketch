@@ -10,7 +10,11 @@
 [x] Make /api/batteries/0 return an empty Battery object, it returns a status 500 now
 [x] Client code for Create & Delete batteries
 [x] Reference bower_components in dev, remove client/vendor-references
+
 [ ] Fix routing in the client, code is currently inside app.module.js
+	[ ] Continue batteries.route.js, and use this as reference:
+		https://github.com/angular-ui/ui-router/blob/gh-pages/sample/app/contacts/contacts.js
+
 [ ] Make a reference to useful site for development in the client nav
 [ ] Make a TODO-feature and replace this file with that feature
 [ ] Rename /src/server/core/routeHandler -> restApiSomething.-...

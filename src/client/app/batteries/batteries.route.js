@@ -3,35 +3,29 @@
 
 	angular
 		.module('app.batteries')
-		.run(appRun);
+		.config(configureRoutes);		
 	
-	appRun.$inject = ['routerHelper'];
-	
-	function appRun(routerHelper) {
-		routerHelper.configureStates(getStates());
-	}
-	
-	function getStates() {
-		return [
-			{
-				state: 'batteries',
-				config: {
-					url: '/batteries',
-					templateUrl: 'app/batteries/batteries.html',
-					controller: 'BatteriesController',
-					controllerAs: 'vm',
-				}
-			},
-			{
-				state: 'batteries.detail',
-				config: {
-					url: '/batteries/:id',
-					templateUrl: 'app/batteries/battery-details.html',
-					controller: 'BatteryDetailsController',
-					controllerAs: 'vm',
-				}
-			}		
-		];
-	}
+	configureRoutes.$inject = ['$stateProvider'];
 
-} ());
+	function configureRoutes($stateProvider) {
+		$stateProvider
+			.state('batteries', {
+				// abstract: true,
+                url: '/batteries',
+                templateUrl: 'app/batteries/batteries.html',
+                controller: 'BatteriesController',
+                controllerAs: 'vm'
+            });
+			// .state('batteries.list', {
+			// 	url: '',
+			// 	templateUrl: 'app/batteries/batteries.list.html'
+			// })
+			// .state('batteries.details', {
+			// 	url: '/:id',
+			// 	templateUrl: 'app/batteries/battery-details.html',
+			// 	controller: 'BatteryDetailsController',
+			// 	controllerAs: 'vm'
+			// });
+
+	}
+}());

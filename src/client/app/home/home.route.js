@@ -2,19 +2,18 @@
 	'use strict';
 
 	angular
-		.module('app.recipes')
+		.module('app.home')
 		.config(configureRoutes);		
 	
 	configureRoutes.$inject = ['$stateProvider'];
 
 	function configureRoutes($stateProvider) {
 		$stateProvider
-			.state('recipes', {
-                url: '/recipes',
-                templateUrl: 'app/recipes/recipes.html',
-                controller: 'RecipesController',
+			.state('home', {
+                url: '/',
+                templateUrl: 'app/home/home.html',
+                controller: 'HomeController',
                 controllerAs: 'vm'
             });
-
 	}
 }());
