@@ -16,6 +16,7 @@
 		activate();
 		
 		function activate() {
+			console.log("BatteriesController -> activate()");
 			batteriesService.query(
 				{},
 				function (data) {

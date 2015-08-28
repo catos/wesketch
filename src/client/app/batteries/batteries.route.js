@@ -10,22 +10,22 @@
 	function configureRoutes($stateProvider) {
 		$stateProvider
 			.state('batteries', {
-				// abstract: true,
+				abstract: true,
                 url: '/batteries',
-                templateUrl: 'app/batteries/batteries.html',
+                templateUrl: 'app/batteries/batteries.html'
+            })
+			.state('batteries.list', {
+				url: '',
+				templateUrl: 'app/batteries/batteries-list.html',
                 controller: 'BatteriesController',
                 controllerAs: 'vm'
-            });
-			// .state('batteries.list', {
-			// 	url: '',
-			// 	templateUrl: 'app/batteries/batteries.list.html'
-			// })
-			// .state('batteries.details', {
-			// 	url: '/:id',
-			// 	templateUrl: 'app/batteries/battery-details.html',
-			// 	controller: 'BatteryDetailsController',
-			// 	controllerAs: 'vm'
-			// });
+			})
+			.state('batteries.details', {
+				url: '/:id',
+				templateUrl: 'app/batteries/battery-details.html',
+				controller: 'BatteryDetailsController',
+				controllerAs: 'vm'
+			});
 
 	}
 }());
