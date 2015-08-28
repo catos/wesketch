@@ -5,9 +5,9 @@
         .module('app.batteries')
         .controller('BatteryDetailsController', BatteryDetailsController);
 
-    BatteryDetailsController.$inject = ['$location', '$stateParams', 'batteriesService'];
+    BatteryDetailsController.$inject = ['$location', '$state', '$stateParams', '$timeout', 'batteriesService'];
 
-    function BatteryDetailsController($location, $stateParams, batteriesService) {
+    function BatteryDetailsController($location, $state, $stateParams, $timeout, batteriesService) {
         var vm = this;
         vm.battery = {};
         vm.title = '';
@@ -15,8 +15,6 @@
         vm.submit = submit;
         vm.del = del;
         vm.action = '';
-        
-        console.log('BatteryDetailsController -> $stateParams.id: ' + $stateParams.id);
         
         activate();
 
@@ -28,7 +26,7 @@
 
                     if (vm.battery && vm.battery.name) {
                         vm.action = 'update';
-                        vm.title = "Edit: " + vm.battery.name;
+                        vm.title = "Edit Battery";
                     } else {
                         vm.action = 'create';
                         vm.title = "New Battery";
@@ -44,7 +42,10 @@
             if (vm.action === 'update') {
                 vm.battery.$update({ id: vm.battery._id },
                     function (data) {
-                        vm.message = 'Update complete.';
+                        vm.message = 'Update complete';
+                        $timeout(function() {
+                            $state.go('batteries.list');
+                        }, 3000);
                     },
                     function (response) {
                         vm.message = response.statusText + ' - ' + response.data.message;

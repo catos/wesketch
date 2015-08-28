@@ -1,31 +1,22 @@
-/// <reference path="../../../../typings/angularjs/angular.d.ts"/>
-
 (function () {
 	'use strict';
 
 	angular
 		.module('app.batteries')
-		.controller('BatteriesController', BatteriesController);
+		.controller('BatteriesController', BatteriesController)
 
-	BatteriesController.$inject = ['batteriesService'];
+	BatteriesController.$inject = ['$state', '$stateParams'];
 
-	function BatteriesController(batteriesService) {
+	function BatteriesController($state, $stateParams) {
 		var vm = this;
-		vm.batteries = [];
-		
+		vm.message = "";
+
 		activate();
-		
+
 		function activate() {
-			console.log("BatteriesController -> activate()");
-			batteriesService.query(
-				{},
-				function (data) {
-					vm.batteries = data;
-				}
-			)
+			console.log('BatteriesController -> activate');
+			console.log($stateParams);
+			vm.message = $stateParams.message;
 		}
-
 	}
-
-
-} ());
+}());

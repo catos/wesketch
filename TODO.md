@@ -11,12 +11,11 @@
 [x] Client code for Create & Delete batteries
 [x] Reference bower_components in dev, remove client/vendor-references
 [x] Fix routing in the client, code is currently inside app.module.js
-[ ] Rename /src/server/core/routeHandler -> restApiSomething.-...
-[ ] app.layout i client
-[ ] Toastr
+[x] Rename /src/server/core/routeHandler.getRouter to routeHandler.getApiRouter
 [ ] Gulp automation
 
 # TODO Whenever "big"
+[ ] Toastr
 [ ] Make a TODO-feature and replace this file with that feature
 [ ] Authentication
 [ ] Testing client with *.specs.js

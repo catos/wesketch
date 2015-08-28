@@ -12,12 +12,14 @@
 			.state('batteries', {
 				abstract: true,
                 url: '/batteries',
-                templateUrl: 'app/batteries/batteries.html'
+                templateUrl: 'app/batteries/batteries.html',
+				controller: 'BatteriesController',
+				controllerAs: 'vm'				
             })
 			.state('batteries.list', {
 				url: '',
 				templateUrl: 'app/batteries/batteries-list.html',
-                controller: 'BatteriesController',
+                controller: 'BatteriesListController',
                 controllerAs: 'vm'
 			})
 			.state('batteries.details', {

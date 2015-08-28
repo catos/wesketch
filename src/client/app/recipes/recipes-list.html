@@ -1,0 +1,27 @@
+<h1><i class="fa fa-list-ol"></i> Recipes <small></h1>
+
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>Name</th>
+		<th>Description</th>
+		<th># ingredients</th>
+		<th></th>
+	</tr>
+	<tr data-ng-repeat="recipe in vm.recipes">
+		<td>{{recipe.name}}</td>			
+		<td>{{recipe.description}}</td>			
+		<td>{{recipe.ingredients.length}}</td>
+		<td>
+			<div class="btn-group" dropdown>
+				<a class="dropdown-toggle" dropdown-toggle type="button">
+					<i class="fa fa-ellipsis-h fa-2x"></i>
+				</a>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Configure</a></li>
+					<li><a href="#">Edit</a></li>
+					<li><a href="#">Delete</a></li>
+				</ul>
+			</div>
+		</td>			
+	</tr>
+</table>
