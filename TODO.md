@@ -12,6 +12,7 @@
 [x] Reference bower_components in dev, remove client/vendor-references
 [x] Fix routing in the client, code is currently inside app.module.js
 [x] Rename /src/server/core/routeHandler.getRouter to routeHandler.getApiRouter
+[ ] Continue on batteries.cycles in server api, and update client to reflect model changes
 [ ] Gulp automation
 
 # TODO Whenever "big"

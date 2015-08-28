@@ -37,12 +37,31 @@ module.exports = {
     },
 
     update: function (req, res, next) {
-        Battery.findByIdAndUpdate(req.params.id, req.body, { new: true }, function (err, data) {
+        var newCycle = req.body.newCycle;
+        console.log("newCycle: " + newCycle, req.body.newCycle.length);
+        // Battery.findByIdAndUpdate(req.params.id, req.body, { new: true }, function (err, data) {
+        //     if (err) {
+        //         return next(err);
+        //     }
+            
+        //     console.log(this);
+
+        //     res.json(data);
+        // });
+        Battery.findById(req.params.id, function (err, doc) {
             if (err) {
                 return next(err);
             }
 
-            res.json(data);
+            doc.cycles.push(newCycle);
+
+            doc.save(function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+
+            res.json(doc);
         });
     },
 
