@@ -3,7 +3,7 @@ var express = require('express');
 module.exports = function (config) {
 	var module = {};
 
-	module.getRouter = function (name) {
+	module.getApiRouter = function (name) {
 		var router = express.Router(),
 			controller = require('../' + name + '/' + name + '.controller');
 

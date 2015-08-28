@@ -14,7 +14,7 @@ module.exports = function (app, config) {
     // -- SERVER --------------------------------------------------
         
     // API Routes
-    app.use('/api/batteries', routeHandler.getRouter('batteries'));
+    app.use('/api/batteries', routeHandler.getApiRouter('batteries'));
 
     // Server start page (index.jade)
     app.get('/api', function (req, res) {
