@@ -10,7 +10,7 @@
 	<tr data-ng-repeat="battery in vm.batteries">
 		<td>{{battery.number}}</td>
 		<td><a ui-sref="batteries.details({ id: battery._id })">{{battery.name}}</a></td>
-		<td>{{battery.cycles}}</td>
+		<td>{{battery.cycles.length}}</td>
 		<td>{{battery.created}}</td>
 	</tr>
 </table>

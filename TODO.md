@@ -13,6 +13,10 @@
 [x] Fix routing in the client, code is currently inside app.module.js
 [x] Rename /src/server/core/routeHandler.getRouter to routeHandler.getApiRouter
 [ ] Continue on batteries.cycles in server api, and update client to reflect model changes
+	Har kommet litt lengre....jobber med cycles i src/server/batteries/batteries.controller.js
+	http://stackoverflow.com/questions/13026486/how-to-populate-a-sub-document-in-mongoose-after-creating-it
+	http://stackoverflow.com/questions/25535401/node-mongoose-error-on-save-typeerror-object-keys-called-on-non-object
+	Angular krever at ng-repeat="cycles in vm.battery.cycles" har unik "id"...
 [ ] Gulp automation
 
 # TODO Whenever "big"

@@ -18,13 +18,31 @@
 			<label for="inputName">Name</label>
 			<input type="text" class="form-control" id="inputName" placeholder="Example: ONBO 3S 1350mah 20C" data-ng-model="vm.battery.name" />
 		</div>
+
 		<div class="form-group">
-			<label for="inputCycles">Cycles</label>
-			<input type="text" class="form-control" id="inputCycles" data-ng-model="vm.battery.cycles" />
+			
+			<label for="cycles">Cycles: {{vm.battery.cycles.length}}</label>
+			<table class="table table-striped table-bordered" ng-show="vm.battery.cycles.length">
+				<tr>
+					<th>Created</th>
+					<th>Comment</th>
+				</tr>
+				<tr ng-repeat="cycle in vm.battery.cycles">
+					<td>{{cycle.created}}</td>
+					<td>{{cycle.comment}}</td>
+				</tr>				
+			</table>
+				
+			
+			<input type="datetime" class="form-control" placeholder="Date and time of charge" ng-model="vm.newCycle.created" value="2015-09-01" />
+			<input type="text" class="form-control" placeholder="Comment" ng-model="vm.newCycle.comment" value="Just a sample comment..." />
+			<button class="btn btn-primary" ng-click="vm.addCycle()">Add Cycle</button>
+			
 		</div>
+
 		<div class="form-group">
-			<label for="inputCycles">Created</label>
-			<input type="datetime" class="form-control" id="inputCycles" placeholder="Cycles" data-ng-model="vm.battery.created" disabled />
+			<label for="inputCreated">Created</label>
+			<input type="datetime" class="form-control" id="inputCreated" placeholder="Created" data-ng-model="vm.battery.created" disabled />
 		</div>
 
 		<div class="form-group">

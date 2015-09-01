@@ -37,31 +37,55 @@ module.exports = {
     },
 
     update: function (req, res, next) {
-        var newCycle = req.body.newCycle;
-        console.log("newCycle: " + newCycle, req.body.newCycle.length);
+        // if (req.body.newCycle !== undefined) {
+        //     var newCycle = req.body.newCycle;
+        //     console.log(req.body.newCycle !== undefined);
+        //     console.log("newCycle: " + newCycle, req.body.newCycle.length);
+        // }
         // Battery.findByIdAndUpdate(req.params.id, req.body, { new: true }, function (err, data) {
         //     if (err) {
         //         return next(err);
         //     }
-            
-        //     console.log(this);
+
+        //     console.log('newCycle:', req.body.newCycle);
+
+        //     if (req.body.newCycle !== undefined &&
+        //         req.body.newCycle.length) {
+        //         console.log('Add a cycles');
+        //     }
 
         //     res.json(data);
         // });
-        Battery.findById(req.params.id, function (err, doc) {
+
+        Battery.findById(req.params.id, function (err, battery) {
+            console.log('req.body: ', req.body);
             if (err) {
                 return next(err);
             }
 
-            doc.cycles.push(newCycle);
+            // if (req.body.newCycle !== undefined &&
+            //     req.body.newCycle.length) {
+            //     console.log('Add a cycles');
 
-            doc.save(function (err) {
+            //     // battery.cycles.push(req.body.newCycle);                
+            // }
+            
+            // battery.cycles.push({
+            //    created: '2015.01.01',
+            //    comment: 'Bare en statisk kommentar lissm' 
+            // });
+            
+            Battery.populate(battery, req.body.cycles, function (err, battery) {
+                console.log("populate: " + battery);
+            });
+
+            battery.save(function (err) {
                 if (err) {
                     console.log(err);
                 }
             });
 
-            res.json(doc);
+            res.json(battery);
         });
     },
 

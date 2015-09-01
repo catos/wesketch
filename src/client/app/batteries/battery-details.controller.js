@@ -13,8 +13,10 @@
         vm.title = '';
         vm.message = '';
         vm.submit = submit;
+        vm.addCycle = addCycle;
         vm.del = del;
         vm.action = '';
+        vm.newCycle = {};
         
         activate();
 
@@ -38,14 +40,20 @@
                 });
         };
 
+        function addCycle() {
+            vm.battery.cycles.push(vm.newCycle);
+            vm.newCycle = {};
+        }
+
         function submit() {
             if (vm.action === 'update') {
+                console.log(vm.battery);
                 vm.battery.$update({ id: vm.battery._id },
                     function (data) {
                         vm.message = 'Update complete';
-                        $timeout(function() {
-                            $state.go('batteries.list');
-                        }, 3000);
+                        // $timeout(function() {
+                        //     $state.go('batteries.list');
+                        // }, 3000);
                     },
                     function (response) {
                         vm.message = response.statusText + ' - ' + response.data.message;
