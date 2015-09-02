@@ -10,7 +10,7 @@
 	<tr data-ng-repeat="battery in vm.batteries">
 		<td><input type="checkbox" /></td>
 		<td>#{{battery.number}} - {{battery.name}} <span class="badge">{{battery.cycles.length}}</span></td>
-		<td>{{battery.created}}</td>
+		<td>{{battery.created | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
 		<td><a ui-sref="batteries.details({ id: battery._id })" class="btn btn-primary">Edit</a></td>
 	</tr>
 </table>

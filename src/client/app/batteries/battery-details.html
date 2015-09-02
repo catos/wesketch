@@ -29,7 +29,7 @@
 					<th></th>
 				</tr>
 				<tr ng-repeat="cycle in vm.battery.cycles">
-					<td>{{cycle.created}}</td>
+					<td>{{cycle.created | date:'yyyy-MM-dd'}}</td>
 					<td>{{cycle.comment}}</td>
 					<td></td>
 				</tr>

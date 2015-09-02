@@ -12,7 +12,7 @@
 [x] Reference bower_components in dev, remove client/vendor-references
 [x] Fix routing in the client, code is currently inside app.module.js
 [x] Rename /src/server/core/routeHandler.getRouter to routeHandler.getApiRouter
-[ ] Continue on batteries.cycles in server api, and update client to reflect model changes
+[x] Continue on batteries.cycles in server api, and update client to reflect model changes
 [ ] Gulp automation
 
 # TODO Whenever "big"
@@ -20,13 +20,11 @@
 [ ] Make a TODO-feature and replace this file with that feature
 [ ] Authentication
 [ ] Testing client with *.specs.js
-[ ] Morgan, vurder å fjern...eventuelt logg annerledes i produksjon
-[ ] Proper Error Handling aka. codereview på congig/errors.js
+[ ] Proper Error Handling aka. codereview på config/errors.js
 
 # TODO Maybe & Some Thoughts
 [ ] Codereview på batteriesService og callbacks / errorhandling
 [ ] få til å fremprovosere en 500 hvor response = render 500.jade 
 [ ] batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
-[ ] Hmm, kanskje jeg vil ha en batteries.service.js under server ?
 [ ] if (err) på server api-controllers må/bør returnere json istedenfor next(err)
 [ ] Clean out console.log's
