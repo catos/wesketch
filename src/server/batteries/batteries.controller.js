@@ -3,6 +3,8 @@ var Battery = require('./batteries.model');
 module.exports = {
 
     init: function (req, res, next) {
+        seedBatteries();
+
         next();
     },
 
@@ -21,7 +23,6 @@ module.exports = {
     },
 
     get: function (req, res, next) {
-        console.log('req.params: ', req.params);
         if (req.params.batteriesId !== '0') {
             Battery
                 .findOne({ '_id': req.params.batteriesId })
@@ -67,3 +68,19 @@ module.exports = {
         });
     }
 };
+
+function seedBatteries() {
+    Battery.find({}).exec(function(err, batteries) {
+       if (batteries.length === 0) {           
+           
+           var battery1 = new Battery({ number: 1, name: 'ONBO 3S 20C 1350mah' });
+           battery1.cycles.push({ battery: battery1._id, comment: 'Just some comment' });
+           battery1.save(function (err) {
+              if (err) {
+                  console.log('err: ' + err);
+              }
+              console.log('success!');
+           });
+       }       
+    });
+}

@@ -14,8 +14,6 @@
 		activate();
 
 		function activate() {
-			console.log('BatteriesController -> activate');
-			console.log($stateParams);
 			vm.message = $stateParams.message;
 		}
 	}

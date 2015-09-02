@@ -2,15 +2,15 @@
 
 <table class="table table-striped table-bordered">
 	<tr>
-		<th>Number</th>
+		<th></th>
 		<th>Name</th>
-		<th>Cycles</th>
 		<th>Created</th>
+		<th></th>
 	</tr>
 	<tr data-ng-repeat="battery in vm.batteries">
-		<td>{{battery.number}}</td>
-		<td><a ui-sref="batteries.details({ id: battery._id })">{{battery.name}}</a></td>
-		<td>{{battery.cycles.length}}</td>
+		<td><input type="checkbox" /></td>
+		<td>#{{battery.number}} - {{battery.name}} <span class="badge">{{battery.cycles.length}}</span></td>
 		<td>{{battery.created}}</td>
+		<td><a ui-sref="batteries.details({ id: battery._id })" class="btn btn-primary">Edit</a></td>
 	</tr>
 </table>

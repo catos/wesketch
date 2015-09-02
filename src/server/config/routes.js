@@ -1,24 +1,19 @@
 module.exports = function (app, config) {
 
-    var express = require('express'),
-        routeHandler = require('../core/routeHandler')(config);
-
+    var express = require('express');
+        
     // -- CLIENT --------------------------------------------------
 
     // Serve all files from client directory
     app.use(express.static('./src/client'));
     app.use('/bower_components', express.static('bower_components'));
-    // app.use(express.static('./'));
-    // app.use(express.static('./tmp'));
+
+
+    // -- API Routes ----------------------------------------------
+    
+    require('../batteries/batteries.route.js')(app, config);
 
     // -- SERVER --------------------------------------------------
-        
-    // API Routes
-    var batteriesRouter = routeHandler.getApiRouter('batteries'),
-        cyclesRouter = routeHandler.getApiRouter('batteries', 'cycles');
-    batteriesRouter.use('/:batteriesId/cycles', cyclesRouter);
-    
-    app.use('/api/batteries', batteriesRouter);
 
     // Server start page (index.jade)
     app.get('/api', function (req, res) {

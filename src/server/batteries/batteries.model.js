@@ -1,12 +1,13 @@
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    Cycle = require('./cycles.model');
+var mongoose = require('mongoose');
 
-var BatterySchema = new mongoose.Schema({
+var batterySchema = new mongoose.Schema({
     number: { type: Number, required: true },
     name: { type: String, required: true },
-    cycles: [{ type: Schema.Types.ObjectId, ref: 'Cycle' }],
+    cycles: [{
+        created: { type: Date, default: Date.now },
+        comment: String
+    }],
     created: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Battery', BatterySchema);
+module.exports = mongoose.model('Battery', batterySchema);

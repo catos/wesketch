@@ -17,10 +17,10 @@
         vm.del = del;
         vm.action = '';
         vm.newCycle = {};
-        
+
         vm.datepickerIsOpened = false;
         vm.toggleDatepicker = toggleDatepicker;
-        
+
         activate();
 
         function activate() {
@@ -54,13 +54,9 @@
 
         function submit() {
             if (vm.action === 'update') {
-                console.log(vm.battery);
                 vm.battery.$update({ id: vm.battery._id },
                     function (data) {
                         vm.message = 'Update complete';
-                        // $timeout(function() {
-                        //     $state.go('batteries.list');
-                        // }, 3000);
                     },
                     function (response) {
                         vm.message = response.statusText + ' - ' + response.data.message;
@@ -74,6 +70,10 @@
                         vm.message = response.statusText + ' - ' + response.data.message;
                     });
             }
+            
+            $timeout(function () {
+                $state.go('batteries.list');
+            }, 3000);
         };
 
         function del() {
