@@ -1,4 +1,5 @@
-var Battery = require('./batteries.model');
+var Cycle = require('./cycles.model'),
+    Battery = require('./batteries.model');
 
 module.exports = {
 
@@ -7,8 +8,9 @@ module.exports = {
     },
 
     index: function (req, res, next) {
-        Battery
-            .find({})
+        console.log(req.params);
+        Cycle
+            .find({ 'battery': req.params.batteriesId })
             .limit(10)
             .sort({ number: -1 })
             .exec(function callback(err, data) {
@@ -17,15 +19,13 @@ module.exports = {
                 }
                 res.json(data);
             });
-
     },
 
     get: function (req, res, next) {
         console.log('req.params: ', req.params);
-        if (req.params.batteriesId !== '0') {
-            Battery
-                .findOne({ '_id': req.params.batteriesId })
-                .populate('cycles')
+        if (req.params.cyclesId !== '0') {
+            Cycle
+                .findOne({ '_id': req.params.cyclesId })
                 .exec(function callback(err, data) {
                     if (err) {
                         return next(err);
@@ -34,12 +34,12 @@ module.exports = {
                     res.json(data);
                 });
         } else {
-            res.json(new Battery());
+            res.json(new Cycle());
         }
     },
 
     update: function (req, res, next) {
-        Battery.findByIdAndUpdate(req.params.batteriesId, req.body, { new: true }, function (err, data) {
+        Cycle.findByIdAndUpdate(req.params.cyclesId, req.body, { new: true }, function (err, data) {
             if (err) {
                 return next(err);
             }
@@ -48,7 +48,11 @@ module.exports = {
     },
 
     create: function (req, res, next) {
-        Battery.create(req.body, function (err, data) {
+        var cycle = req.body;
+
+        cycle.battery = req.params.batteriesId;
+
+        Cycle.create(cycle, function (err, data) {
             if (err) {
                 return next(err);
             }
@@ -58,7 +62,7 @@ module.exports = {
     },
 
     destroy: function (req, res, next) {
-        Battery.findByIdAndRemove(req.params.batteriesId, req.body, function (err, data) {
+        Cycle.findByIdAndRemove(req.params.cyclesId, req.body, function (err, data) {
             if (err) {
                 return next(err);
             }

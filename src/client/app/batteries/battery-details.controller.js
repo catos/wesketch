@@ -18,6 +18,9 @@
         vm.action = '';
         vm.newCycle = {};
         
+        vm.datepickerIsOpened = false;
+        vm.toggleDatepicker = toggleDatepicker;
+        
         activate();
 
         function activate() {
@@ -39,6 +42,10 @@
                     vm.message = response.statusText + ' - ' + response.data.message;
                 });
         };
+
+        function toggleDatepicker() {
+            vm.datepickerIsOpened = !vm.datepickerIsOpened;
+        }
 
         function addCycle() {
             vm.battery.cycles.push(vm.newCycle);

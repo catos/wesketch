@@ -3,16 +3,20 @@ var express = require('express');
 module.exports = function (config) {
 	var module = {};
 
-	module.getApiRouter = function (name) {
-		var router = express.Router(),
-			controller = require('../' + name + '/' + name + '.controller');
+	module.getApiRouter = function (featureName, typeName) {
+		if (!typeName) {
+			typeName = featureName;
+		}		
+		
+		var router = express.Router({mergeParams: true}),
+			controller = require('../' + featureName + '/' + typeName + '.controller');
 
 		router.all('*', controller.init);
 		router.get('/', controller.index)
-		router.get('/:id', controller.get)
+		router.get('/:' + typeName + 'Id', controller.get)
 		router.post('/', controller.create);
-		router.put('/:id', controller.update)
-		router.delete('/:id', controller.destroy);
+		router.put('/:' + typeName + 'Id', controller.update)
+		router.delete('/:' + typeName + 'Id', controller.destroy);
 
 		return router;
 	};
