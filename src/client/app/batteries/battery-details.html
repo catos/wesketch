@@ -1,7 +1,7 @@
 <section>
 	<h3>
 		{{vm.title}}
-		<a class="btn btn-primary btn-sm" ui-sref="batteries.list">Back to index</a>
+		<small><a ui-sref="batteries.list">Back to index</a></small>
 		<a class="btn btn-danger btn-sm" href="#" data-ng-click="vm.del()">Delete battery</a>
 		<small ng-show="vm.message.length">{{vm.message}}</small>
 	</h1>
@@ -49,11 +49,18 @@
 				</tr>
 			</table>
 			
-			<input type="datetime" class="form-control" placeholder="Date and time of charge" 
-				is-open="vm.datepickerIsOpened"
-				ng-click="vm.toggleDatepicker()"  
-				datepicker-popup="yyyy-MM-dd" 
-				ng-model="vm.newCycle.created" />
+			<div class="input-group">
+				<input type="datetime" class="form-control" placeholder="Date and time of charge" 
+					is-open="vm.datepickerIsOpened"
+					ng-click="vm.toggleDatepicker()"  
+					datepicker-popup="yyyy-MM-dd" 
+					ng-model="vm.newCycle.created" />
+				
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="vm.toggleDatepicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</div>
+			
 			<input type="text" class="form-control" placeholder="Comment" ng-model="vm.newCycle.comment" value="Just a sample comment..." />
 			<button class="btn btn-primary" ng-click="vm.addCycle()">Add Cycle</button>
 			
