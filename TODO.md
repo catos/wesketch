@@ -13,12 +13,15 @@
 [x] Fix routing in the client, code is currently inside app.module.js
 [x] Rename /src/server/core/routeHandler.getRouter to routeHandler.getApiRouter
 [x] Continue on batteries.cycles in server api, and update client to reflect model changes
+[...] Authentication
+[ ] Repetetive code on controllers....need a default controller with crud-methods
 [ ] Gulp automation
+[ ] I want auth out of users.controller.js
+[ ] All api-controllers -> /server/api/batteries ... ?
+[ ] Server-side controllers is not DRY, but what do i do with filters and index() ?
+[ ] Put seed-code with schema-definition (*.model.js)
 
 # TODO Whenever "big"
-[ ] Toastr
-[ ] Make a TODO-feature and replace this file with that feature
-[ ] Authentication
 [ ] Testing client with *.specs.js
 [ ] Proper Error Handling aka. codereview på config/errors.js
 
@@ -28,3 +31,6 @@
 [ ] batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
 [ ] if (err) på server api-controllers må/bør returnere json istedenfor next(err)
 [ ] Clean out console.log's
+
+# TO-Read
+- http://justbuildsomething.com/node-js-best-practices/#2

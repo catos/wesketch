@@ -3,6 +3,7 @@
 		{{vm.title}}
 		<a class="btn btn-primary btn-sm" ui-sref="batteries.list">Back to index</a>
 		<a class="btn btn-danger btn-sm" href="#" data-ng-click="vm.del()">Delete battery</a>
+		<small ng-show="vm.message.length">{{vm.message}}</small>
 	</h1>
 
 	<form>
@@ -20,8 +21,21 @@
 		</div>
 
 		<div class="form-group">
+			<label for="inputCreated">Created</label>
+			<input type="datetime" class="form-control" id="inputCreated" placeholder="Created" data-ng-model="vm.battery.created" disabled />
+		</div>
+
+		<div class="form-group">
+			<button type="submit" class="btn btn-default" data-ng-click="vm.submit()">Submit</button>
+		</div>
+	</form>
+	
+	<hr />
+
+	<form class="form-inline">	
+		<div class="form-group">
 			
-			<label for="cycles">Cycles: {{vm.battery.cycles.length}}</label>
+			<h3>Cycles: {{vm.battery.cycles.length}}</h3>
 			<table class="table table-striped table-bordered" ng-show="vm.battery.cycles.length">
 				<tr>
 					<th>Created</th>
@@ -31,7 +45,7 @@
 				<tr ng-repeat="cycle in vm.battery.cycles">
 					<td>{{cycle.created | date:'yyyy-MM-dd'}}</td>
 					<td>{{cycle.comment}}</td>
-					<td></td>
+					<td><a class="btn btn-primary" ng-click="vm.deleteCycle($index)"><i class="fa fa-trash-o"></i></a></td>
 				</tr>
 			</table>
 			
@@ -39,25 +53,11 @@
 				is-open="vm.datepickerIsOpened"
 				ng-click="vm.toggleDatepicker()"  
 				datepicker-popup="yyyy-MM-dd" 
-				ng-model="vm.newCycle.created" 
-				value="2015-09-01" />
+				ng-model="vm.newCycle.created" />
 			<input type="text" class="form-control" placeholder="Comment" ng-model="vm.newCycle.comment" value="Just a sample comment..." />
 			<button class="btn btn-primary" ng-click="vm.addCycle()">Add Cycle</button>
 			
 		</div>
-
-		<div class="form-group">
-			<label for="inputCreated">Created</label>
-			<input type="datetime" class="form-control" id="inputCreated" placeholder="Created" data-ng-model="vm.battery.created" disabled />
-		</div>
-
-		<div class="form-group">
-			<button type="submit" class="btn btn-default" data-ng-click="vm.submit()">Submit</button>
-		</div>
-
-		<div class="form-group alert alert-info" data-ng-show="vm.message">
-			{{vm.message}}
-		</div>
-
 	</form>
+	
 </section>

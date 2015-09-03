@@ -1,26 +1,13 @@
 extend layout
 
 block main-content
-    div.container
-      p
-        h2 Urls
-        ul
-          li
-            a(href="/") client
-          li
-            a(href="/api/batteries") /api/batteries
-          li
-            a(href="/does/note/exist") 404
-      p
-        h2 Codesupport
-        ul
-          li
-            a(href="http://adrianmejia.com/blog/2014/10/01/creating-a-restful-api-tutorial-with-nodejs-and-mongodb/") Creating a restful api tutorial with Nodejs and MongoDB
-          li
-            a(href="http://expressjs.com/4x/api.html") Express API
-          li
-            a(href="https://github.com/cgmartin/sailsjs-angularjs-bootstrap-example") Sailsjs Angularjs Example
-          li
-            a(href="https://github.com/catos/Multivision") Multivision
-          li
-            a(href="https://mongolab.com/") Mongolab
+  div.container
+    h1 Server side is the best saide, wazzaaap!
+    div.list-group      
+      a(class="list-group-item" href="/") Client
+      a(class="list-group-item" href="/api/users") /api/users
+      a(class="list-group-item" href="/api/batteries") /api/batteries
+      a(class="list-group-item" href="/does/note/exist") 404
+      a(class="list-group-item" href="/open") /open
+      a(class="list-group-item" href="/authenticated") /authenticated
+      a(class="list-group-item" href="/authorized") /authorized

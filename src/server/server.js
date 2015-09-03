@@ -15,13 +15,13 @@
 
 	require('./config/mongoose')(config);
 
-	// require('./config/passport')();
+	require('./config/passport')();
 
 	require('./config/routes')(app, config);
 
 	require('./config/errors')(app);
 
-	// ----------------------
+	// ---------------------- 
 
 	app.listen(config.port);
 

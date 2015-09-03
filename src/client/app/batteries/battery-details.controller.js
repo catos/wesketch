@@ -10,14 +10,17 @@
     function BatteryDetailsController($location, $state, $stateParams, $timeout, batteriesService) {
         var vm = this;
         vm.battery = {};
-        vm.title = '';
-        vm.message = '';
+
+        vm.title = '';        
+        vm.message = '';        
+        vm.action = '';
+
         vm.submit = submit;
         vm.addCycle = addCycle;
+        vm.deleteCycle = deleteCycle;
         vm.del = del;
-        vm.action = '';
-        vm.newCycle = {};
 
+        vm.newCycle = { created: new Date() };
         vm.datepickerIsOpened = false;
         vm.toggleDatepicker = toggleDatepicker;
 
@@ -39,41 +42,50 @@
 
                 },
                 function (response) {
-                    vm.message = response.statusText + ' - ' + response.data.message;
+                    setMessage(response.statusText + ' - ' + response.data.message);
                 });
         };
 
+        function setMessage(message) {
+            vm.message = message;
+            $timeout(function() {
+                vm.message = '';
+            }, 2000);
+        }
+        
         function toggleDatepicker() {
             vm.datepickerIsOpened = !vm.datepickerIsOpened;
         }
 
         function addCycle() {
             vm.battery.cycles.push(vm.newCycle);
-            vm.newCycle = {};
+            vm.newCycle = { created: new Date() };
+            submit('Cycle added');
+        }
+        
+        function deleteCycle(index) {
+            vm.battery.cycles.splice(index, 1);
+            submit('Cycle deleted');
         }
 
-        function submit() {
+        function submit(message) {
             if (vm.action === 'update') {
                 vm.battery.$update({ id: vm.battery._id },
                     function (data) {
-                        vm.message = 'Update complete';
+                        setMessage(message || 'Update complete.');
                     },
                     function (response) {
-                        vm.message = response.statusText + ' - ' + response.data.message;
+                        setMessage(response.statusText + ' - ' + response.data.message);
                     });
             } else {
                 vm.battery.$save(
                     function (data) {
-                        vm.message = 'Save complete.';
+                        setMessage('Save complete.');
                     },
                     function (response) {
-                        vm.message = response.statusText + ' - ' + response.data.message;
+                        setMessage(response.statusText + ' - ' + response.data.message);
                     });
             }
-            
-            $timeout(function () {
-                $state.go('batteries.list');
-            }, 3000);
         };
 
         function del() {
@@ -82,7 +94,7 @@
                     $location.path('/');
                 },
                 function (response) {
-                    vm.message = response.statusText + ' - ' + response.data.message;
+                    setMessage(response.statusText + ' - ' + response.data.message);
                 });
         }
 
