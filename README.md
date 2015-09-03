@@ -1,6 +1,7 @@
 # CSA
 Just another CSA Application
 
+```
 src/
 	client/
 		app/
@@ -22,3 +23,4 @@ src/
 		index.html
 		
 	server /
+```
