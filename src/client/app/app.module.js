@@ -11,7 +11,8 @@
             'app.layout',
             'app.home',
             'app.batteries',
-            'app.recipes'
+            'app.recipes',
+            'app.account'            
         ]);
         
         

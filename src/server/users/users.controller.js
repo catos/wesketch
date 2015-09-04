@@ -1,4 +1,5 @@
-var User = require('./users.model');
+var User = require('./users.model'),
+    encrypt = require('../blocks/encryption');
 
 module.exports = {
     init: function (req, res, next) {

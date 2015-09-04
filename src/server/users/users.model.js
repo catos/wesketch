@@ -34,16 +34,16 @@ module.exports = mongoose.model('User', userSchema);
 //         if (collection.length === 0) {
 //             var salt, hash;
 //             salt = encrypt.createSalt();
-//             hash = encrypt.hashPassword(salt, 'cato');
-//             User.create({ firstName: "Cato", lastName: "Skogholt", username: "cato", salt: salt, password: hash, roles: ['admin'] }),
+//             hash = encrypt.hashPassword(salt, 'monzter1');
+//             User.create({ firstName: "Cato", lastName: "Skogholt", username: "cskogholt@gmail.com", salt: salt, password: hash, roles: ['admin'] }),
 
 //             salt = encrypt.createSalt();
 //             hash = encrypt.hashPassword(salt, 'test');
-//             User.create({ firstName: "Test", lastName: "Bruker", username: "test", salt: salt, password: hash, roles: [] }),
+//             User.create({ firstName: "Test", lastName: "Bruker", username: "test@hotmail.com", salt: salt, password: hash, roles: [] }),
 
 //             salt = encrypt.createSalt();
 //             hash = encrypt.hashPassword(salt, 'kim');
-//             User.create({ firstName: "Kim", lastName: "Blix", username: "kim", salt: salt, password: hash, roles: [] })
+//             User.create({ firstName: "Kim", lastName: "Blix", username: "kim@gmail.com", salt: salt, password: hash, roles: [] })
 //         }
 //     });
 // };

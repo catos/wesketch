@@ -41,9 +41,9 @@ module.exports = function (app, config) {
         
     // -- SERVER --------------------------------------------------
 
-    app.post('/login', auth.authenticate);
+    app.post('/server/login', auth.authenticate);
     
-    app.post('/logout', function (req, res) {
+    app.post('/server/logout', function (req, res) {
         req.logout();
         res.end();
     });

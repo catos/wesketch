@@ -8,8 +8,7 @@
     batteriesService.$inject = ['$resource', 'config'];
 
     function batteriesService($resource, config) {
-        return $resource(
-            config.serverPath + '/api/batteries/:id',
+        return $resource(config.serverPath + '/api/batteries/:id',
             { id: '@id' },
             {
                 'get': {

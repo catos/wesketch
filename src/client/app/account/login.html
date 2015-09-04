@@ -1,11 +1,17 @@
 <form>
-  <div class="form-group">
-    <label for="inputUsername">Email address</label>
-    <input type="email" class="form-control" id="inputUsername" placeholder="Email">
-  </div>
-  <div class="form-group">
-    <label for="inputPassword">Password</label>
-    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+    <div class="form-group">
+        <label for="inputUsername">Email address</label>
+        <input type="email" class="form-control" id="inputUsername" placeholder="Email" ng-model="username">
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Password</label>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="password">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" ng-click="vm.login(username, password)">Login</button>
+        <a ui-sref="account.forgotPassword">Forgot password ?</a>
+    </div>  
+    <div class="form-group">
+        <div class="alert alert-info" ng-show="vm.message.length">{{vm.message}}</div>
+    </div>
 </form>

@@ -20,6 +20,7 @@
 - All api-controllers -> /server/api/batteries ... ?
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
 - Put seed-code with schema-definition (*.model.js)
+- Rename server/batteries/batteries.controller.js -> batteries.api.js ?
 
 # TODO Whenever "big"
 - Testing client with *.specs.js

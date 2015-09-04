@@ -11,10 +11,13 @@
 		$stateProvider
 			.state('account', {
 				abstract: true,
-                url: '/account'
+                url: '/account',
+				templateUrl: 'app/account/account.html',
+				// controller: 'AccountController',
+				// controllerAs: 'vm'
             })
 			.state('account.login', {
-				url: '',
+				url: '/login',
 				templateUrl: 'app/account/login.html',
                 controller: 'LoginController',
                 controllerAs: 'vm'
