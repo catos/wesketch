@@ -21,6 +21,8 @@
 		}
 		
 		function login(username, password) {
+			vm.message = '';
+			
 			accountService.login(
 				{ 
 					username: username, 
@@ -29,7 +31,7 @@
 				function (data) {
 					console.log('data: ', data);
 					if (!data.success) {
-						vm.message = 'Wrong username or password.'						
+						vm.message = 'Wrong username or password.';
 					}
 				}
 			);

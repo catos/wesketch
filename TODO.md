@@ -1,4 +1,27 @@
 # TODO Next
+- *Authentication*
+	- http://www.kdelemme.com/2014/03/09/authentication-with-angularjs-and-a-node-js-rest-api/
+	- https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
+- Repetetive code on controllers....need a default controller with crud-methods
+- All api-controllers -> /server/api/batteries ... ?
+- Server-side controllers is not DRY, but what do i do with filters and index() ?
+- Put seed-code with schema-definition (*.model.js)
+- Rename server/batteries/batteries.controller.js -> batteries.api.js ?
+- Gulp automation
+
+# TODO Big tasks, thoughts & reminders
+- Codereview på batteriesService og callbacks / errorhandling
+- få til å fremprovosere en 500 hvor response = render 500.jade 
+- batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
+- if (err) på server api-controllers må/bør returnere json istedenfor next(err)
+- Clean out console.log's
+- Testing client with *.specs.js
+- Proper Error Handling aka. codereview på config/errors.js
+
+# TO-Read
+- http://justbuildsomething.com/node-js-best-practices/#2
+
+# TO DONE
 - ~~Walking skeleton~~
 - ~~Routing, serverside~~
 - ~~Logging with Morgan~~
@@ -13,25 +36,3 @@
 - ~~Fix routing in the client, code is currently inside app.module.js~~
 - ~~Rename /src/server/core/routeHandler.getRouter to routeHandler.getApiRouter~~
 - ~~Continue on batteries.cycles in server api, and update client to reflect model changes~~
-- *Authentication*
-- Repetetive code on controllers....need a default controller with crud-methods
-- Gulp automation
-- I want auth out of users.controller.js
-- All api-controllers -> /server/api/batteries ... ?
-- Server-side controllers is not DRY, but what do i do with filters and index() ?
-- Put seed-code with schema-definition (*.model.js)
-- Rename server/batteries/batteries.controller.js -> batteries.api.js ?
-
-# TODO Whenever "big"
-- Testing client with *.specs.js
-- Proper Error Handling aka. codereview på config/errors.js
-
-# TODO Maybe & Some Thoughts
-- Codereview på batteriesService og callbacks / errorhandling
-- få til å fremprovosere en 500 hvor response = render 500.jade 
-- batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
-- if (err) på server api-controllers må/bør returnere json istedenfor next(err)
-- Clean out console.log's
-
-# TO-Read
-- http://justbuildsomething.com/node-js-best-practices/#2
