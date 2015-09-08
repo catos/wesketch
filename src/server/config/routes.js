@@ -6,6 +6,11 @@ module.exports = function (app, config) {
 
     // -- CLIENT --------------------------------------------------
 
+    app.use(function (req, res, next) {
+        console.log('req.user: ', req.user);
+        next();
+    });
+
     // Serve all files from client directory
     app.use(express.static('./src/client'));
     
@@ -54,9 +59,6 @@ module.exports = function (app, config) {
     });
     
     // Any deep link calls should return index.html
-    app.use('/*', function (req, res) {
-        console.log('req.user: ', req.user);
-    });
     app.use('/*', express.static('./src/client/index.html'));
 
     // 404

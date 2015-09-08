@@ -18,7 +18,11 @@
 				url: '',
 				templateUrl: 'app/recipes/recipes-list.html',
                 controller: 'RecipesController',
-                controllerAs: 'vm'				
+                controllerAs: 'vm',
+				// TODO: ...resolve some shit
+				// resolve: {
+				// 	.....
+				// }				
 			});
 
 	}

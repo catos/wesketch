@@ -1,7 +1,15 @@
 # TODO Next
 - *Authentication*
-	- http://www.kdelemme.com/2014/03/09/authentication-with-angularjs-and-a-node-js-rest-api/
-	- https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
+	- Åpne følgende tabs
+		- https://github.com/catos/Multivision
+		- https://github.com/catos/Multivision/blob/master/public/app/account/mvNavBarLoginCtrl.js
+		- https://github.com/catos/Multivision/blob/master/public/app/account/mvAuth.js
+		- https://github.com/catos/Multivision/blob/master/public/app/account/mvIdentity.js
+		- https://github.com/catos/Multivision/blob/master/public/app/account/mvUser.js
+	- Annet materiale finner du her
+		- https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs
+		- http://www.kdelemme.com/2014/03/09/authentication-with-angularjs-and-a-node-js-rest-api/
+		- https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
 - Repetetive code on controllers....need a default controller with crud-methods
 - All api-controllers -> /server/api/batteries ... ?
 - Server-side controllers is not DRY, but what do i do with filters and index() ?

@@ -5,9 +5,9 @@
 		.module('app.account')
 		.controller('LoginController', LoginController);
 
-	LoginController.$inject = ['accountService'];
+	LoginController.$inject = ['$state', 'accountService'];
 	
-	function LoginController(accountService) {
+	function LoginController($state, accountService) {
 		var vm = this;
 		vm.message = '';
 		vm.identity = {};
@@ -23,20 +23,26 @@
 		function login(username, password) {
 			vm.message = '';
 			
-			accountService.login(
-				{ 
-					username: username, 
-					password: password
-				},
-				function (data) {
-					console.log('data: ', data);
-					if (!data.success) {
-						vm.message = 'Wrong username or password.';
+			accountService
+				.login(username, password)
+				.then(function(success) {
+					if (success) {
+						vm.message = 'Yay!';
+					} else {
+						vm.message = 'Wrong username and/or password.';
 					}
-				}
-			);
+				});
 		}
 		
+		// $scope.signout = function() {
+		// 	mvAuth.logoutUser().then(function() {
+		// 		$scope.username = "";
+		// 		$scope.password = "";
+		// 		mvNotifier.notify("You have successfully signed out!");
+		// 		$location.path("/");
+	
+		// 	})
+		// }		
 		function logout() {
 			console.log('Logout...');
 		}
