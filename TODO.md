@@ -6,6 +6,8 @@
 		- https://github.com/catos/Multivision/blob/master/public/app/account/mvAuth.js
 		- https://github.com/catos/Multivision/blob/master/public/app/account/mvIdentity.js
 		- https://github.com/catos/Multivision/blob/master/public/app/account/mvUser.js
+	- Husk
+		- Begynner å bli endel console.logs på server og client nå....must rydd opp!
 	- Annet materiale finner du her
 		- https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs
 		- http://www.kdelemme.com/2014/03/09/authentication-with-angularjs-and-a-node-js-rest-api/
