@@ -7,7 +7,12 @@ module.exports = function (app, config) {
     // -- CLIENT --------------------------------------------------
 
     app.use(function (req, res, next) {
-        console.log('req.user: ', req.user);
+
+        if (req.user) {
+            console.log('req.user: ', req.user.firstName);
+            res.lol = req.user;
+            console.log('res.lol', res.lol.firstName);
+        }
         next();
     });
 
@@ -24,30 +29,10 @@ module.exports = function (app, config) {
 
     require('../users/users.route.js')(app, config);
 
-    
-    // -- TEST --------------------------------------------------
-
-    app.get('/open', function (req, res) {
-        res.send('Welcome to the open route /open');
-    });
-
-    app.get('/authenticated', auth.requiresApiLogin,
-        function (req, res) {
-            res.send('Welcome to the /authenticated');
-        }
-    );
-    
-    app.get('/authorized', auth.requiresRole('admin'),
-        function (req, res) {
-            res.send('Welcome to /authorized, requires admin-role');
-        }
-    );
-    
-        
     // -- SERVER --------------------------------------------------
 
     app.post('/server/login', auth.authenticate);
-    
+
     app.post('/server/logout', function (req, res) {
         req.logout();
         res.end();

@@ -1,0 +1,56 @@
+<nav class="navbar navbar-default">
+	<div>
+		<div class="navbar-header">
+			<a ui-sref="layout.home" class="navbar-brand"><span class="brand-title">CSA</span></a>
+			<a class="btn navbar-btn navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-toggle="collapse"
+			data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+		</div>
+		<div class="navbar-collapse collapse" ng-class="{'in': !navCollapsed}">
+
+			<div class="pull-left">
+				<ul class="nav navbar-nav pull-right">
+					<li><a ui-sref="layout.batteries.list">Batteries</a></li>
+					<li><a ui-sref="layout.recipes.list">Recipes</a></li>
+				</ul>
+			</div>
+
+			<div class="pull-right navbar-logo">
+				<ul class="nav navbar-nav pull-right">
+					<li dropdown>
+						<a href="#" dropdown-toggle>Dev <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+							<li><a href="/server">Server</a></li>
+							<li class="divider"></li>
+							<li><a href="http://passportjs.org/docs/username-password">Passportjs</a></li>
+							<li><a href="https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs">Authentication in Single Page Applications</a></li>
+							<li class="divider"></li>
+							<li><a href="https://mongolab.com/">Mongolab.com</a></li>
+							<li><a href="http://getbootstrap.com/css/">Bootstrap</a></li>
+							<li><a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
+							<li><a href="https://github.com/johnpapa/angular-styleguide">Angular Styleguide</a></li>
+							<li><a href="https://github.com/catos/Multivision">Multivision</a></li>
+							<li class="divider"></li>
+							<li><a href="http://www.angularjs.org">Angularjs</a></li>
+							<li><a href="http://mongoosejs.com/docs/guide.html">MongooseJs</a></li>
+							<li><a href="https://angular-ui.github.io/">Angular UI</a></li>
+							<li><a href="http://momentjs.com/">Moment.js</a></li>
+						</ul>
+					</li>
+					<li ng-show="vm.identity.isAuthenticated()">
+						<a ui-sref="layout.account">Welcome {{vm.identity.currentUser.firstName}} {{vm.identity.currentUser.lastName}}</a>
+					</li>
+					<li ng-show="vm.identity.isAuthenticated()">
+						<a ui-sref="layout.account.logout">Logout</a>
+					</li>
+					<li ng-show="!vm.identity.isAuthenticated()">
+						<a ui-sref="layout.account.login">Login</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>

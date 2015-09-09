@@ -12,7 +12,14 @@
     </head>
     
     <body>
-        <div ng-include="'app/layout/layout.html'"></div>
+        <!--<div ng-include="'app/layout/layout.html'"></div>-->
+        <div ui-view></div>
+        
+        <script>
+            if (!!bootstrappedUser) {
+                window.bootstrappedUserObject = JSON.stringify(bootstrappedUser);
+            }
+        </script>
         
         <script src="/bower_components/angular/angular.js"></script>        
         <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
@@ -35,22 +42,25 @@
         <!--app.layout-->
         <script src="/app/layout/layout.module.js"></script>
         <script src="/app/layout/layout.controller.js"></script>
+        <script src="/app/layout/layout.route.js"></script>
+        <script src="/app/layout/header.controller.js"></script>
 
         <!--app.home-->
         <script src="/app/home/home.module.js"></script>
         <script src="/app/home/home.route.js"></script>
         <script src="/app/home/home.controller.js"></script>
 
-        <!--app.user-->
-        <script src="/app/users/users.module.js"></script>
-        <script src="/app/users/users.service.js"></script>
-        
         <!--app.account-->
         <script src="/app/account/account.module.js"></script>
         <script src="/app/account/account.route.js"></script>
         <script src="/app/account/account.service.js"></script>
+        <script src="/app/account/account.identity.js"></script>
         <script src="/app/account/login.controller.js"></script>
 
+        <!--app.user-->
+        <script src="/app/users/users.module.js"></script>
+        <script src="/app/users/users.service.js"></script>
+        
         <!--app.batteries-->
         <script src="/app/batteries/batteries.module.js"></script>       
         <script src="/app/batteries/batteries.route.js"></script>       

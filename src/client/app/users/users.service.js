@@ -3,11 +3,11 @@
 
 	angular
 		.module('app.users')
-		.factory('userService', userService);
+		.factory('usersService', usersService);
 
-	userService.$inject = ['$resource', 'config'];
+	usersService.$inject = ['$resource', 'config'];
 
-	function userService($resource, config) {
+	function usersService($resource, config) {
 
         var userResource = $resource(config.serverPath + '/api/batteries/:id',
             { id: '@id' },

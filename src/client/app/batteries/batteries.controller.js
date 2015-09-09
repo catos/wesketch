@@ -9,7 +9,7 @@
 
 	function BatteriesController($state, $stateParams) {
 		var vm = this;
-		vm.message = "";
+		vm.message = 'Hei, fra BatteriesController';
 
 		activate();
 

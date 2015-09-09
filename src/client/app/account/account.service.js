@@ -5,9 +5,9 @@
 		.module('app.account')
 		.factory('accountService', accountService);
 
-	accountService.$inject = ['$http', '$q', 'config'];
+	accountService.$inject = ['$http', '$q', 'accountIdentity', 'config', 'usersService'];
 
-	function accountService($http, $q, config) {
+	function accountService($http, $q, accountIdentity, config, usersService) {
 
 		var service = {
 			login: login,
@@ -26,9 +26,12 @@
 			$http.post('/server/login', { username: username, password: password }).then(function (response) {
 				console.log('response.data: ', response.data);
                 if (response.data.success) {
-                    // var user = new mvUser();
-                    // angular.extend(user, response.data.user);
-                    // mvIdentity.currentUser = user;
+                    var user = new usersService();
+					console.log('user 1: ', user);
+                    angular.extend(user, response.data.user);
+					console.log('user 2: ', user);
+                    accountIdentity.currentUser = user;
+					console.log('accountIdentity.currentUser: ', accountIdentity.currentUser);
                     dfd.resolve(true);
                 } else {
                     dfd.resolve(false);

@@ -5,12 +5,12 @@
 		.module('app.account')
 		.controller('LoginController', LoginController);
 
-	LoginController.$inject = ['$state', 'accountService'];
+	LoginController.$inject = ['$state', 'accountIdentity', 'accountService'];
 	
-	function LoginController($state, accountService) {
+	function LoginController($state, accountIdentity, accountService) {
 		var vm = this;
 		vm.message = '';
-		vm.identity = {};
+		vm.identity = accountIdentity;
 		vm.login = login;
 		vm.logout = logout;
 
@@ -27,7 +27,7 @@
 				.login(username, password)
 				.then(function(success) {
 					if (success) {
-						vm.message = 'Yay!';
+						$state.go('layout');
 					} else {
 						vm.message = 'Wrong username and/or password.';
 					}

@@ -8,6 +8,7 @@
 	/* @ngInject */
 	function HomeController() {
 		var vm = this;
+		vm.message = 'Hei, fra HomeController';
 		
 
 		activate();

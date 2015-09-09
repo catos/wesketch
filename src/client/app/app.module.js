@@ -12,7 +12,8 @@
             'app.home',
             'app.batteries',
             'app.recipes',
-            'app.account'            
+            'app.account',
+            'app.users'            
         ]);
         
         
@@ -22,17 +23,9 @@
     app.config(['$stateProvider', '$urlRouterProvider', configRoutes]);
 
     function configRoutes($stateProvider, $urlRouterProvider) {
-        // TODO: dette er allerede definert i home.route.js...
         
-        // $stateProvider
-        //     .state('home', {
-        //         url: '/',
-        //         templateUrl: 'app/home/home.html',
-        //         controller: 'HomeController',
-        //         controllerAs: 'vm'
-        //     });
-
         $urlRouterProvider.otherwise('/');
+        
     }
 
     app.run(['$state', function ($state) {

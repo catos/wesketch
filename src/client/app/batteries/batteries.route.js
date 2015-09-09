@@ -9,20 +9,24 @@
 
 	function configureRoutes($stateProvider) {
 		$stateProvider
-			.state('batteries', {
+			.state('layout.batteries', {
 				abstract: true,
                 url: '/batteries',
-                templateUrl: 'app/batteries/batteries.html',
-				controller: 'BatteriesController',
-				controllerAs: 'vm'				
+				// views: {
+            	// 	'container@layout': {
+                		templateUrl: 'app/batteries/batteries.html',
+						controller: 'BatteriesController',
+						controllerAs: 'vm'
+					// }
+				// }				
             })
-			.state('batteries.list', {
+			.state('layout.batteries.list', {
 				url: '',
 				templateUrl: 'app/batteries/batteries-list.html',
                 controller: 'BatteriesListController',
                 controllerAs: 'vm'
 			})
-			.state('batteries.details', {
+			.state('layout.batteries.details', {
 				url: '/:id',
 				templateUrl: 'app/batteries/battery-details.html',
 				controller: 'BatteryDetailsController',

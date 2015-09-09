@@ -9,14 +9,14 @@
 
 	function configureRoutes($stateProvider) {
 		$stateProvider
-			.state('account', {
+			.state('layout.account', {
 				abstract: true,
                 url: '/account',
 				templateUrl: 'app/account/account.html',
 				// controller: 'AccountController',
 				// controllerAs: 'vm'
             })
-			.state('account.login', {
+			.state('layout.account.login', {
 				url: '/login',
 				templateUrl: 'app/account/login.html',
                 controller: 'LoginController',
