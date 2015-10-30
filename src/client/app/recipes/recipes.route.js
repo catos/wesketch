@@ -9,12 +9,12 @@
 
 	function configureRoutes($stateProvider) {
 		$stateProvider
-			.state('recipes', {
+			.state('layout.recipes', {
 				abstract: true,
                 url: '/recipes',
                 templateUrl: 'app/recipes/recipes.html',
             })
-			.state('recipes.list', {
+			.state('layout.recipes.list', {
 				url: '',
 				templateUrl: 'app/recipes/recipes-list.html',
                 controller: 'RecipesController',
