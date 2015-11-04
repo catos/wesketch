@@ -1,20 +1,12 @@
 var express = require('express'),
     passport = require('passport'),
-    auth = require('./auth');
+    jwt = require('jwt-simple'),
+    moment = require('moment'),
+    User = require('../api/users/users.model.js');
 
 module.exports = function (app, config) {
 
     // -- CLIENT --------------------------------------------------
-
-    app.use(function (req, res, next) {
-
-        if (req.user) {
-            console.log('req.user: ', req.user.firstName);
-            res.lol = req.user;
-            console.log('res.lol', res.lol.firstName);
-        }
-        next();
-    });
 
     // Serve all files from client directory
     app.use(express.static('./src/client'));
@@ -23,20 +15,38 @@ module.exports = function (app, config) {
     app.use('/bower_components', express.static('bower_components'));
 
 
-    // -- API Routes ----------------------------------------------
+    // -- API ----------------------------------------------
     
-    require('../batteries/batteries.route.js')(app, config);
+    require('../api/batteries/batteries.route.js')(app, config);
 
-    require('../users/users.route.js')(app, config);
+    require('../api/users/users.route.js')(app, config);
 
-    // -- SERVER --------------------------------------------------
+    // -- PASSPORT ---------------------------------
 
-    app.post('/server/login', auth.authenticate);
 
-    app.post('/server/logout', function (req, res) {
-        req.logout();
-        res.end();
+    app.post('/register', passport.authenticate('local-register'), function (req, res) {
+        createSendToken(req.user, res);
     });
+
+    app.post('/login', passport.authenticate('local-login'), function (req, res) {
+        createSendToken(req.user, res);
+    });
+
+    function createSendToken(user, res) {
+        var payload = {
+            sub: user.id,
+            exp: moment().add(10, 'days').unix()
+        }
+
+        var token = jwt.encode(payload, 'shhh..');
+
+        res.status(200).send({
+            user: user.toJSON(),
+            token: token
+        });
+    }
+    
+    // -- SERVER --------------------------------------------------
 
     // Server start page (index.jade)
     app.get('/server', function (req, res) {

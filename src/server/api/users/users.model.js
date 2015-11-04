@@ -1,49 +1,40 @@
-var mongoose = require('mongoose'),
-    encrypt = require('../../blocks/encryption');
+var mongoose = require('mongoose');
+var bcrypt = require('bcrypt-nodejs');
 
-var userSchema = mongoose.Schema({
-    firstName: { type: String, required: '{PATH} is required!' },
-    lastName: { type: String, required: '{PATH} is required!' },
-    username: {
-        type: String,
-        required: '{PATH} is required!',
-        unique: true
-    },
-    salt: { type: String, required: '{PATH} is required!' },
-    password: { type: String, required: '{PATH} is required!' },
-    roles: [String]
+var UserSchema = new mongoose.Schema({
+	email: String,
+	password: String,
+	googleId: String,
+	displayName: String
 });
 
-userSchema.methods = {
-    authenticate: function (passwordToMatch) {
-        return encrypt.hashPassword(this.salt, passwordToMatch) === this.password;
-    },
-    hasRole: function (role) {
-        return this.roles.indexOf(role) > -1;
-    }
+UserSchema.methods.toJSON = function() {
+	var user = this.toObject();	
+	delete user.password;	
+	
+	return user;
 };
 
-module.exports = mongoose.model('User', userSchema);
+UserSchema.methods.comparePasswords = function (password, callback) {
+	bcrypt.compare(password, this.password, callback);
+};
 
-// var User = mongoose.model('User', userSchema);
+UserSchema.pre('save', function(next) {
+	var user = this;
+	if (!user.isModified('password')) {
+		return next();
+	}
+	
+	bcrypt.genSalt(10, function(err, salt) {
+		if (err) return next(err);
+		
+		bcrypt.hash(user.password, salt, null, function(err, hash) {
+			if (err) return next(err);
+			
+			user.password = hash;
+			next();			
+		});
+	} );
+});
 
-// exports.seedUsers = seedUsers;
-
-// function seedUsers() {
-//     User.find({}).exec(function (err, collection) {
-//         if (collection.length === 0) {
-//             var salt, hash;
-//             salt = encrypt.createSalt();
-//             hash = encrypt.hashPassword(salt, 'monzter1');
-//             User.create({ firstName: "Cato", lastName: "Skogholt", username: "cskogholt@gmail.com", salt: salt, password: hash, roles: ['admin'] }),
-
-//             salt = encrypt.createSalt();
-//             hash = encrypt.hashPassword(salt, 'test');
-//             User.create({ firstName: "Test", lastName: "Bruker", username: "test@hotmail.com", salt: salt, password: hash, roles: [] }),
-
-//             salt = encrypt.createSalt();
-//             hash = encrypt.hashPassword(salt, 'kim');
-//             User.create({ firstName: "Kim", lastName: "Blix", username: "kim@gmail.com", salt: salt, password: hash, roles: [] })
-//         }
-//     });
-// };
+module.exports = mongoose.model('User', UserSchema);

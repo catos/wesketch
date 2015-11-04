@@ -9,7 +9,7 @@ module.exports = function (config) {
 		}		
 		
 		var router = express.Router({mergeParams: true}),
-			controller = require('../' + featureName + '/' + typeName + '.controller');
+			controller = require('../api/' + featureName + '/' + typeName + '.controller');
 
 		router.all('*', controller.init);
 		router.get('/', controller.index)
