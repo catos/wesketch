@@ -29,6 +29,8 @@
 - Proper Error Handling aka. codereview på config/errors.js
 - Rename BatteriesController -> Batteries ? (styleguide)
 - Rename batteries.route.js -> batteries.routes.js (plural)
+- JSCS
+- JSHINT
 
 # TO-Read
 - http://justbuildsomething.com/node-js-best-practices/#2

@@ -27,5 +27,13 @@
     "morgan": "^1.6.1",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.12.0",
+    "gulp-load-plugins": "^1.1.0",
+    "gulp-util": "^3.0.7",
+    "jshint-stylish": "^2.0.1",
+    "yargs": "^3.29.0"
   }
 }
