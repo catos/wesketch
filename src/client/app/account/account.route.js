@@ -21,6 +21,10 @@
 				templateUrl: 'app/account/login.html',
                 controller: 'LoginController',
                 controllerAs: 'vm'
+			})
+			.state('layout.account.logout', {
+				url: '/logout',
+                controller: 'LogoutController',
 			});
 	}
 }());

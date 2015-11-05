@@ -24,7 +24,8 @@
 				url: '',
 				templateUrl: 'app/batteries/batteries-list.html',
                 controller: 'BatteriesListController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+				authenticate: true,
 			})
 			.state('layout.batteries.details', {
 				url: '/:id',

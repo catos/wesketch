@@ -5,10 +5,8 @@
 		.module('app.layout')
 		.controller('LayoutController', LayoutController)
 
-	LayoutController.$inject = ['accountIdentity'];
-
 	/* @ngInject */
-	function LayoutController(accountIdentity) {
+	function LayoutController() {
 		var vm = this;
 		vm.message = 'Hei, fra LayoutController';
 

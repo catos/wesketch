@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="/bower_components/fontawesome/css/font-awesome.css" />
         
         <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/theme.min.css" />
     </head>
     
     <body>
@@ -18,20 +19,19 @@
         <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
         <script src="/bower_components/angular-resource/angular-resource.js"></script>
         <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="/bower_components/satellizer/satellizer.js"></script>
         
         
         <!--app.module-->
         <script src="/app/app.module.js"></script>
+        <script src="/app/app.config.js"></script>
         
         <!--blocks-->
         <script src="/app/blocks/logger/logger.module.js"></script>
         <script src="/app/blocks/logger/logger.js"></script>
+        <script src="/app/blocks/alert/alert.module.js"></script>
+        <script src="/app/blocks/alert/alert.js"></script>
                 
-        <!--core-->               
-        <script src="/app/core/core.module.js"></script>
-        <!--<script src="/app/core/core.route.js"></script>-->
-        <script src="/app/core/config.js"></script>
-        
         <!--app.layout-->
         <script src="/app/layout/layout.module.js"></script>
         <script src="/app/layout/layout.controller.js"></script>
@@ -46,14 +46,10 @@
         <!--app.account-->
         <script src="/app/account/account.module.js"></script>
         <script src="/app/account/account.route.js"></script>
-        <script src="/app/account/account.service.js"></script>
-        <script src="/app/account/account.identity.js"></script>
+        <script src="/app/account/identity.js"></script>
         <script src="/app/account/login.controller.js"></script>
+        <script src="/app/account/logout.controller.js"></script>
 
-        <!--app.user-->
-        <script src="/app/users/users.module.js"></script>
-        <script src="/app/users/users.service.js"></script>
-        
         <!--app.batteries-->
         <script src="/app/batteries/batteries.module.js"></script>       
         <script src="/app/batteries/batteries.route.js"></script>       
@@ -61,11 +57,6 @@
         <script src="/app/batteries/batteries-list.controller.js"></script>
         <script src="/app/batteries/battery-details.controller.js"></script>
         <script src="/app/batteries/batteries.service.js"></script>
-
-        <!--app.recipes-->
-        <script src="/app/recipes/recipes.module.js"></script>       
-        <script src="/app/recipes/recipes.route.js"></script>       
-        <script src="/app/recipes/recipes.controller.js"></script>       
 
     </body>
 </html>

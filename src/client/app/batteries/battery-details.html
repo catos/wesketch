@@ -1,70 +1,79 @@
 <section>
-	<h3>
-		{{vm.title}}
-		<small><a ui-sref="batteries.list">Back to index</a></small>
-		<a class="btn btn-danger btn-sm" href="#" data-ng-click="vm.del()">Delete battery</a>
-		<small ng-show="vm.message.length">{{vm.message}}</small>
-	</h1>
 
-	<form>
-		<div class="form-group">
-			<label for="inputId">_id</label>
-			<input type="text" class="form-control" id="inputId" data-ng-model="vm.battery._id" disabled />
+	<div class="row">
+		
+		<div class="col-md-6">
+			<h3>
+				{{vm.title}}
+				<small><a ui-sref="layout.batteries.list">Back to index</a></small>
+				<a class="btn btn-danger btn-sm" href="#" data-ng-click="vm.del()">Delete battery</a>
+				<small ng-show="vm.message.length">{{vm.message}}</small>
+			</h3>
+			
+			<form>
+				<div class="form-group">
+					<label for="inputId">_id</label>
+					<input type="text" class="form-control" id="inputId" data-ng-model="vm.battery._id" disabled />
+				</div>
+				<div class="form-group">
+					<label for="inputNumber">Number</label>
+					<input type="number" class="form-control" id="inputNumber" placeholder="Number" data-ng-model="vm.battery.number" />
+				</div>
+				<div class="form-group">
+					<label for="inputName">Name</label>
+					<input type="text" class="form-control" id="inputName" placeholder="Example: ONBO 3S 1350mah 20C" data-ng-model="vm.battery.name" />
+				</div>
+		
+				<div class="form-group">
+					<label for="inputCreated">Created</label>
+					<input type="datetime" class="form-control" id="inputCreated" placeholder="Created" data-ng-model="vm.battery.created" disabled />
+				</div>
+		
+				<div class="form-group">
+					<button type="submit" class="btn btn-default" data-ng-click="vm.submit()">Submit</button>
+				</div>
+			</form>			
 		</div>
-		<div class="form-group">
-			<label for="inputNumber">Number</label>
-			<input type="number" class="form-control" id="inputNumber" placeholder="Number" data-ng-model="vm.battery.number" />
+		
+		<div class="col-md-6">
+			<form class="form-inline">	
+				<div class="form-group">
+					
+					<h3>Cycles: {{vm.battery.cycles.length}}</h3>
+					<table class="table table-striped table-bordered" ng-show="vm.battery.cycles.length">
+						<tr>
+							<th>Created</th>
+							<th>Comment</th>
+							<th></th>
+						</tr>
+						<tr ng-repeat="cycle in vm.battery.cycles">
+							<td>{{cycle.created | date:'yyyy-MM-dd'}}</td>
+							<td>{{cycle.comment}}</td>
+							<td><a class="btn btn-primary" ng-click="vm.deleteCycle($index)"><i class="fa fa-trash-o"></i></a></td>
+						</tr>
+					</table>
+					
+					<div class="input-group">
+						<input type="datetime" class="form-control" placeholder="Date and time of charge" 
+							is-open="vm.datepickerIsOpened"
+							ng-click="vm.toggleDatepicker()"  
+							datepicker-popup="yyyy-MM-dd" 
+							ng-model="vm.newCycle.created" />
+						
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="vm.toggleDatepicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</div>
+					
+					<input type="text" class="form-control" placeholder="Comment" ng-model="vm.newCycle.comment" value="Just a sample comment..." />
+					<button class="btn btn-primary" ng-click="vm.addCycle()">Add Cycle</button>
+					
+				</div>
+			</form>
 		</div>
-		<div class="form-group">
-			<label for="inputName">Name</label>
-			<input type="text" class="form-control" id="inputName" placeholder="Example: ONBO 3S 1350mah 20C" data-ng-model="vm.battery.name" />
-		</div>
+		
+	</div>
 
-		<div class="form-group">
-			<label for="inputCreated">Created</label>
-			<input type="datetime" class="form-control" id="inputCreated" placeholder="Created" data-ng-model="vm.battery.created" disabled />
-		</div>
 
-		<div class="form-group">
-			<button type="submit" class="btn btn-default" data-ng-click="vm.submit()">Submit</button>
-		</div>
-	</form>
-	
-	<hr />
-
-	<form class="form-inline">	
-		<div class="form-group">
-			
-			<h3>Cycles: {{vm.battery.cycles.length}}</h3>
-			<table class="table table-striped table-bordered" ng-show="vm.battery.cycles.length">
-				<tr>
-					<th>Created</th>
-					<th>Comment</th>
-					<th></th>
-				</tr>
-				<tr ng-repeat="cycle in vm.battery.cycles">
-					<td>{{cycle.created | date:'yyyy-MM-dd'}}</td>
-					<td>{{cycle.comment}}</td>
-					<td><a class="btn btn-primary" ng-click="vm.deleteCycle($index)"><i class="fa fa-trash-o"></i></a></td>
-				</tr>
-			</table>
-			
-			<div class="input-group">
-				<input type="datetime" class="form-control" placeholder="Date and time of charge" 
-					is-open="vm.datepickerIsOpened"
-					ng-click="vm.toggleDatepicker()"  
-					datepicker-popup="yyyy-MM-dd" 
-					ng-model="vm.newCycle.created" />
-				
-				<span class="input-group-btn">
-					<button type="button" class="btn btn-default" ng-click="vm.toggleDatepicker()"><i class="glyphicon glyphicon-calendar"></i></button>
-				</span>
-			</div>
-			
-			<input type="text" class="form-control" placeholder="Comment" ng-model="vm.newCycle.comment" value="Just a sample comment..." />
-			<button class="btn btn-primary" ng-click="vm.addCycle()">Add Cycle</button>
-			
-		</div>
-	</form>
 	
 </section>

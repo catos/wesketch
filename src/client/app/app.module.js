@@ -4,32 +4,19 @@
 
     angular
         .module('app', [
-            'app.core',
+            'ngResource',
+            'satellizer',
             
-        // 'app.widgets',
-
+            'blocks.logger',
+            'blocks.alert', 
+            
+            'ui.router',
+            'ui.bootstrap', 
+            
             'app.layout',
             'app.home',
             'app.batteries',
-            'app.recipes',
-            'app.account',
-            'app.users'            
+            'app.account'
         ]);
         
-        
-    // TODO: flytt i egne filer...
-    var app = angular.module('app');
-
-    app.config(['$stateProvider', '$urlRouterProvider', configRoutes]);
-
-    function configRoutes($stateProvider, $urlRouterProvider) {
-        
-        $urlRouterProvider.otherwise('/');
-        
-    }
-
-    app.run(['$state', function ($state) {
-
-    }]);
-
 } ());

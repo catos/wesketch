@@ -35,7 +35,12 @@ module.exports = function (app, config) {
     function createSendToken(user, res) {
         var payload = {
             sub: user.id,
-            exp: moment().add(10, 'days').unix()
+            exp: moment().add(10, 'days').unix(),
+            user: {
+                email: user.email,
+                name: 'Lol we need to set this',
+                roles: ['admin', 'special', 'lol']
+            }
         }
 
         var token = jwt.encode(payload, 'shhh..');

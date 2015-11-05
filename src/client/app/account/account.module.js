@@ -2,8 +2,6 @@
 	'use strict';
 
 	angular
-		.module('app.account', [
-			'app.core'
-		]);
+		.module('app.account', []);
 		
 })();

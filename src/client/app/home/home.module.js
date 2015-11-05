@@ -2,8 +2,6 @@
 	'use strict';
 
 	angular
-		.module('app.home', [
-			'app.core'
-		]);
+		.module('app.home', []);
 		
 })();

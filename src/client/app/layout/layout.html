@@ -1,9 +1,11 @@
-<div class="container-fluid">
+<header ui-view="header"></header>
+
+<div class="main-content container">
 
 	<small>{{vm.message}}</small>
 
-	<header ui-view="header"></header>
 	<div ui-view="container"></div>
-	<footer ui-view="footer"></footer>
 
 </div>
+
+<footer class="footer" ui-view="footer"></footer>

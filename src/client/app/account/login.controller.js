@@ -5,46 +5,36 @@
 		.module('app.account')
 		.controller('LoginController', LoginController);
 
-	LoginController.$inject = ['$state', 'accountIdentity', 'accountService'];
-	
-	function LoginController($state, accountIdentity, accountService) {
+	LoginController.$inject = ['$auth', '$state'];
+
+	function LoginController($auth, $state) {
 		var vm = this;
-		vm.message = '';
-		vm.identity = accountIdentity;
-		vm.login = login;
-		vm.logout = logout;
+		vm.email = '';
+		vm.password = '';
+		vm.submit = submit;
+        vm.authenticate = authenticate;
 
-		activate();
+		function submit() {
+            $auth
+                .login({
+                    email: vm.email,
+                    password: vm.password
+                })
+                .then(function (res) {
+                    alert('success', 'Welcome!', 'Thanks for coming back, ' + res.data.user.email + '!');
+                })
+                .catch(handleError);
+        }
 
-		function activate() {
+        function authenticate(provider) {
+            $auth.authenticate(provider).then(function (res) {
+                alert('success', 'Welcome!', 'Thanks for coming back, ' + res.data.user.displayName + '!');
+            }, handleError);
+        };
 
-		}
-		
-		function login(username, password) {
-			vm.message = '';
-			
-			accountService
-				.login(username, password)
-				.then(function(success) {
-					if (success) {
-						$state.go('layout');
-					} else {
-						vm.message = 'Wrong username and/or password.';
-					}
-				});
-		}
-		
-		// $scope.signout = function() {
-		// 	mvAuth.logoutUser().then(function() {
-		// 		$scope.username = "";
-		// 		$scope.password = "";
-		// 		mvNotifier.notify("You have successfully signed out!");
-		// 		$location.path("/");
-	
-		// 	})
-		// }		
-		function logout() {
-			console.log('Logout...');
-		}
+		function handleError(err) {
+            // alert.show('warning', 'Something went wrong :(', err.message);
+            console.log('error: ', err);
+        }
 	}
 })();

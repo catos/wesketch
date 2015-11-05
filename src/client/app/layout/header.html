@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default">
-	<div>
+	<div class="container">
 		<div class="navbar-header">
 			<a ui-sref="layout.home" class="navbar-brand"><span class="brand-title">CSA</span></a>
 			<a class="btn navbar-btn navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-toggle="collapse"
@@ -14,7 +14,6 @@
 			<div class="pull-left">
 				<ul class="nav navbar-nav pull-right">
 					<li><a ui-sref="layout.batteries.list">Batteries</a></li>
-					<li><a ui-sref="layout.recipes.list">Recipes</a></li>
 				</ul>
 			</div>
 
@@ -44,12 +43,12 @@
 						</ul>
 					</li>
 					<li ng-show="vm.identity.isAuthenticated()">
-						<a ui-sref="layout.account">Welcome {{vm.identity.currentUser.firstName}} {{vm.identity.currentUser.lastName}}</a>
+						<a ui-sref="layout.account">Welcome {{vm.identity.currentUser.name}}</a>
 					</li>
-					<li ng-show="vm.identity.isAuthenticated()">
+					<li ng-show="vm.identity.isAuthenticated()" ui-sref-active="active">
 						<a ui-sref="layout.account.logout">Logout</a>
 					</li>
-					<li ng-show="!vm.identity.isAuthenticated()">
+					<li ng-hide="vm.identity.isAuthenticated()" ui-sref-active="active">
 						<a ui-sref="layout.account.login">Login</a>
 					</li>
 				</ul>
