@@ -7,7 +7,6 @@
 
     identity.$inject = ['$auth', '$window'];
     
-    // TODO: trenger en provider-versjon av denne for å kunne bruke den i app.run -> sjekk authentication ? https://docs.angularjs.org/guide/providers
     function identity($auth, $window) {
 
         var currentUser;
@@ -18,8 +17,15 @@
 
         var identity = {
             currentUser: currentUser,
+            login: function (user) {
+                this.currentUser = user;                
+            },
+            logout: function () {
+                this.currentUser = undefined;
+                $auth.logout();
+            },
             isAuthenticated: function () {
-                return !!currentUser;
+                return !!this.currentUser;
             },
             isAuthorized: function (role) {
                 return !!currentUser &&
@@ -30,20 +36,7 @@
         return identity;
         
         /////////////////////
-
-        function urlBase64Decode(str) {
-            var output = str.replace(/-/g, '+').replace(/_/g, '/');
-            switch (output.length % 4) {
-                case 0: { break; }
-                case 2: { output += '=='; break; }
-                case 3: { output += '='; break; }
-                default: {
-                    throw 'Illegal base64url string!';
-                }
-            }
-            return $window.decodeURIComponent(escape($window.atob(output))); //polyfill https://github.com/davidchambers/Base64.js
-        }
-
+        
         function getTokenUser() {
             var token = $auth.getToken();
 
@@ -68,6 +61,19 @@
             }
 
             return tokenDecoded.user;
+        }
+
+        function urlBase64Decode(str) {
+            var output = str.replace(/-/g, '+').replace(/_/g, '/');
+            switch (output.length % 4) {
+                case 0: { break; }
+                case 2: { output += '=='; break; }
+                case 3: { output += '='; break; }
+                default: {
+                    throw 'Illegal base64url string!';
+                }
+            }
+            return $window.decodeURIComponent(escape($window.atob(output))); //polyfill https://github.com/davidchambers/Base64.js
         }
 
     }

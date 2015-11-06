@@ -5,9 +5,9 @@
 		.module('app.account')
 		.controller('LoginController', LoginController);
 
-	LoginController.$inject = ['$auth', '$state'];
+	LoginController.$inject = ['$auth', '$state', 'identity'];
 
-	function LoginController($auth, $state) {
+	function LoginController($auth, $state, identity) {
 		var vm = this;
 		vm.email = '';
 		vm.password = '';
@@ -21,14 +21,15 @@
                     password: vm.password
                 })
                 .then(function (res) {
-                    alert('success', 'Welcome!', 'Thanks for coming back, ' + res.data.user.email + '!');
+                    console.log('submit: success - Welcome! - Thanks for coming back, ' + res.data.user.email + '!');
+                    identity.login(res.data.user);
                 })
                 .catch(handleError);
         }
 
         function authenticate(provider) {
             $auth.authenticate(provider).then(function (res) {
-                alert('success', 'Welcome!', 'Thanks for coming back, ' + res.data.user.name + '!');
+                console.log('authenticate:success - Welcome! - Thanks for coming back, ' + res.data.user.name + '!');
             }, handleError);
         };
 

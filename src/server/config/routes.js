@@ -24,8 +24,40 @@ module.exports = function (app, config) {
     // -- PASSPORT ---------------------------------
 
 
-    app.post('/register', passport.authenticate('local-register'), function (req, res) {
-        createSendToken(req.user, res);
+    // app.post('/register', passport.authenticate('local-register'), function (req, res) {
+    //     console.log('req.body: ', req.body);
+    //     console.log('req.user: ', req.user);
+    //     createSendToken(req.user, res);
+    // });
+    app.post('/register', function (req, res) {
+        console.log('req.body: ', req.body);
+
+        User.findOne({ email: req.body.email }, function (err, user) {
+            if (err) {
+                res.status(500).send({ message: err });
+                return;
+            }
+
+            if (user) {
+                res.status(500).send({ message: 'Email already exists' });
+                return;
+            }
+
+            var newUser = new User({
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password
+            });
+
+            newUser.save(function (err) {
+                if (err) {
+                    res.status(500).send({ message: err });
+                    return;
+                }
+
+                createSendToken(newUser, res);
+            });
+        });
     });
 
     app.post('/login', passport.authenticate('local-login'), function (req, res) {
@@ -38,8 +70,8 @@ module.exports = function (app, config) {
             exp: moment().add(10, 'days').unix(),
             user: {
                 email: user.email,
-                name: 'Lol we need to set this',
-                roles: ['admin', 'special', 'lol']
+                name: user.name,
+                // roles: user.roles
             }
         }
 

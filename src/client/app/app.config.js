@@ -13,8 +13,8 @@
 		.config(config)
 		.run(run);
 
-	config.$inject = ['$authProvider', '$httpProvider', '$urlRouterProvider', 'appSettings'];
-	function config($authProvider, $httpProvider, $urlRouterProvider, appSettings) {
+	config.$inject = ['$authProvider', '$urlRouterProvider', 'appSettings'];
+	function config($authProvider, $urlRouterProvider, appSettings) {
 		$urlRouterProvider.otherwise('/');
 
 		$authProvider.loginUrl = appSettings.ApiUrl + 'login';

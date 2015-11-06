@@ -5,9 +5,9 @@
 		.module('app.account')
 		.controller('LogoutController', LogoutController);
 
-	LogoutController.$inject = ['$auth', '$state'];
-	function LogoutController($auth, $state) {
-		$auth.logout();
-		$state.go('layout.home');
+	LogoutController.$inject = ['$state', 'identity'];
+	function LogoutController($state, identity) {
+		identity.logout();
+		$state.go('layout.home');		
 	}
 })();

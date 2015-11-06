@@ -10,7 +10,5 @@
 	function HeaderController(identity) {
 		var vm = this;
 		vm.identity = identity;
-		
-		console.log('vm.identity.currentUser: ', vm.identity.currentUser);
 	}
 })();

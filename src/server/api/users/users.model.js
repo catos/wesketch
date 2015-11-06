@@ -2,16 +2,16 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
 var UserSchema = new mongoose.Schema({
+	name: String,
 	email: String,
 	password: String,
-	googleId: String,
-	name: String
+	googleId: String
 });
 
 UserSchema.methods.toJSON = function() {
 	var user = this.toObject();	
 	delete user.password;	
-	
+
 	return user;
 };
 

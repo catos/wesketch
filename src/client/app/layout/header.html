@@ -30,7 +30,7 @@
 							<li><a href="http://passportjs.org/docs/username-password">Passportjs</a></li>
 							<li><a href="https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs">Authentication in Single Page Applications</a></li>
 							<li class="divider"></li>
-							<li><a href="https://mongolab.com/">Mongolab.com</a></li>
+							<li><a href="https://mongolab.com/"><i class="fa fa-database"></i>&nbsp; Mongolab.com</a></li>
 							<li><a href="http://getbootstrap.com/css/">Bootstrap</a></li>
 							<li><a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
 							<li><a href="https://github.com/johnpapa/angular-styleguide">Angular Styleguide</a></li>
@@ -43,14 +43,14 @@
 						</ul>
 					</li>
 					<li ng-show="vm.identity.isAuthenticated()">
-						<a ui-sref="layout.account">Welcome {{vm.identity.currentUser.name}}</a>
+						<a ui-sref="layout.account">Welcome '{{vm.identity.currentUser.name}}'</a>
 					</li>
 					<li ng-show="vm.identity.isAuthenticated()" ui-sref-active="active">
 						<a ui-sref="layout.account.logout">Logout</a>
 					</li>
 					<li ng-hide="vm.identity.isAuthenticated()" ui-sref-active="active">
 						<a ui-sref="layout.account.login">Login</a>
-					</li>
+					</li>					
 				</ul>
 			</div>
 		</div>
