@@ -22,8 +22,18 @@
 					<li>
 						<a ui-sref="layout.home">{{vm.message}}</a>
 					</li>
+					<li ng-show="vm.identity.isAuthenticated()">
+						<a ui-sref="layout.account">Welcome '{{vm.identity.currentUser.name}}'</a>
+					</li>
+					<li ng-show="vm.identity.isAuthenticated()" ui-sref-active="active">
+						<a ui-sref="layout.account.logout">Logout</a>
+					</li>
+					<li ng-hide="vm.identity.isAuthenticated()" ui-sref-active="active">
+						<a ui-sref="layout.account.login">Login</a>
+					</li>
+					
 					<li dropdown>
-						<a href="#" dropdown-toggle>Dev <span class="caret"></span></a>
+						<a href="#" dropdown-toggle><i class="fa fa-cog"></i> <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
 							<li><a href="/server">Server</a></li>
 							<li class="divider"></li>
@@ -42,15 +52,7 @@
 							<li><a href="http://momentjs.com/">Moment.js</a></li>
 						</ul>
 					</li>
-					<li ng-show="vm.identity.isAuthenticated()">
-						<a ui-sref="layout.account">Welcome '{{vm.identity.currentUser.name}}'</a>
-					</li>
-					<li ng-show="vm.identity.isAuthenticated()" ui-sref-active="active">
-						<a ui-sref="layout.account.logout">Logout</a>
-					</li>
-					<li ng-hide="vm.identity.isAuthenticated()" ui-sref-active="active">
-						<a ui-sref="layout.account.login">Login</a>
-					</li>					
+										
 				</ul>
 			</div>
 		</div>

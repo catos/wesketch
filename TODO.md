@@ -31,6 +31,7 @@
 - Rename batteries.route.js -> batteries.routes.js (plural)
 - JSCS
 - JSHINT
+- Create directive: validate confirm password
 
 # TO-Read
 - http://justbuildsomething.com/node-js-best-practices/#2

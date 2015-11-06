@@ -3,28 +3,30 @@
 
     angular
         .module('app.account')
-        .controller('LoginController', LoginController);
+        .controller('RegisterController', RegisterController);
 
-    LoginController.$inject = ['$auth', 'identity'];
-
-    function LoginController($auth, identity) {
+    RegisterController.$inject = ['$auth', 'identity'];
+    function RegisterController($auth, identity) {
         var vm = this;
+        vm.name = '';
         vm.email = '';
         vm.password = '';
         vm.submit = submit;
 
         function submit() {
             $auth
-                .login({
+                .signup({
+                    name: vm.name,
                     email: vm.email,
                     password: vm.password
                 })
                 .then(function (res) {
-                    console.log('submit: success - Welcome! - Thanks for coming back, ' + res.data.user.email + '!');
+                    console.log('success - Account Created! - Welcome, ' + res.data.user.email + '!');
+                    $auth.setToken(res);
                     identity.login(res.data.user);
                 })
                 .catch(function (err) {
-                    console.log('error: ', err);
+                    console.log('warning - Something went wrong :(', err.message);
                 });
         }
     }

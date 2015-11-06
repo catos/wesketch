@@ -13,8 +13,6 @@
 				abstract: true,
                 url: '/account',
 				templateUrl: 'app/account/account.html',
-				// controller: 'AccountController',
-				// controllerAs: 'vm'
             })
 			.state('layout.account.login', {
 				url: '/login',
@@ -23,8 +21,14 @@
                 controllerAs: 'vm'
 			})
 			.state('layout.account.logout', {
-				url: '/logout',
+				url: '/logout',				
                 controller: 'LogoutController',
+			})
+			.state('layout.account.register', {
+				url: '/register',
+				templateUrl: 'app/account/register.html',
+                controller: 'RegisterController',
+				controllerAs: 'vm'
 			});
 	}
 }());

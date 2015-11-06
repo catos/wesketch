@@ -30,8 +30,6 @@ module.exports = function (app, config) {
     //     createSendToken(req.user, res);
     // });
     app.post('/register', function (req, res) {
-        console.log('req.body: ', req.body);
-
         User.findOne({ email: req.body.email }, function (err, user) {
             if (err) {
                 res.status(500).send({ message: err });
