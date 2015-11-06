@@ -1,4 +1,5 @@
 # TODO Next
+- Delete .vscode from repository and add to .gitignore
 - CRUD on users in the client
 - Restrict users CRUD to roles.contain('admin')
 
