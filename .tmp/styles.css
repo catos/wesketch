@@ -1,0 +1,41 @@
+header .navbar {
+  border-radius: 0;
+  border-right: none;
+  border-left: none;
+}
+.sidebar {
+  border-right: 1px solid #e7e7e7;
+}
+.main-content {
+  margin-bottom: 60px;
+}
+.alert-popup {
+  position: absolute;
+  top: 75px;
+  left: 5px;
+  right: 5px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+/* Sticky footer styles */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  height: 60px;
+  background-color: #f5f5f5;
+  padding: 10px 0;
+}
+.style-test {
+  -webkit-transform-origin: center bottom;
+          transform-origin: center bottom;
+}

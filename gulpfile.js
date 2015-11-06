@@ -4,17 +4,27 @@ var stylish = require('jshint-stylish');
 var config = require('./gulp.config.js')();
 
 var $ = require('gulp-load-plugins')({ lazy: true });
-// var jshint = require('gulp-jshint');
-// var util = require('gulp-util');
 
 gulp.task('vet', function () {
 	log('Analyzing source with JSHint');
 	return gulp
 		.src(config.allJs)
-		// .pipe($.if(args.verbose, $.print()))
+		.pipe($.if(args.verbose, $.print()))
 		.pipe($.jshint())
 		.pipe($.jshint.reporter(stylish));
 		// .pipe($.jshint.reporter('fail'));
+});
+
+
+gulp.task('styles', function () {
+	log('Compiling Less -> CSS');
+	
+	return gulp
+		.src(config.less)
+		.pipe($.less())
+		.pipe($.autoprefixer({ browsers: ['last 2 version', '> 5%'] }))
+		.pipe(gulp.dest(config.temp));	
+	
 });
 
 ///////////////////
