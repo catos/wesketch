@@ -3,7 +3,7 @@
 
 	angular
 		.module('app.layout')
-		.controller('LayoutController', LayoutController)
+		.controller('LayoutController', LayoutController);
 
 	/* @ngInject */
 	function LayoutController() {

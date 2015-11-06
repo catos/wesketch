@@ -63,9 +63,10 @@ module.exports = function (app, config) {
             user: {
                 email: user.email,
                 name: user.name,
+                // TODO: authorization and roles
                 // roles: user.roles
             }
-        }
+        };
 
         var token = jwt.encode(payload, 'shhh..');
 

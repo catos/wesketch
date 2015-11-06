@@ -44,7 +44,7 @@
                 function (response) {
                     setMessage(response.statusText + ' - ' + response.data.message);
                 });
-        };
+        }
 
         function setMessage(message) {
             vm.message = message;
@@ -86,7 +86,7 @@
                         setMessage(response.statusText + ' - ' + response.data.message);
                     });
             }
-        };
+        }
 
         function del() {
             vm.battery.$delete({ id: vm.battery._id },
@@ -98,5 +98,5 @@
                 });
         }
 
-    };
+    }
 } ());

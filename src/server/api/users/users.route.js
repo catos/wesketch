@@ -4,4 +4,4 @@ module.exports = function (app, config) {
 	var usersRouter = routeHandler.getApiRouter('users');
     
     app.use('/api/users', usersRouter);
-}
+};

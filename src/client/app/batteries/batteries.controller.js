@@ -3,7 +3,7 @@
 
 	angular
 		.module('app.batteries')
-		.controller('BatteriesController', BatteriesController)
+		.controller('BatteriesController', BatteriesController);
 
 	BatteriesController.$inject = ['$state', '$stateParams'];
 

@@ -15,7 +15,7 @@
             currentUser = getTokenUser();
         }
 
-        var identity = {
+        var service = {
             currentUser: currentUser,
             login: function (user) {
                 this.currentUser = user;                
@@ -31,9 +31,9 @@
                 return !!currentUser &&
                     currentUser.roles.indexOf('admin') > -1;
             }
-        }
+        };
 
-        return identity;
+        return service;
         
         /////////////////////
         
@@ -41,7 +41,7 @@
             var token = $auth.getToken();
 
             if (!token) {
-                throw new Error('Cannot find token')
+                throw new Error('Cannot find token');
             }
 
             var parts = token.split('.');
@@ -57,7 +57,7 @@
             
             var tokenDecoded = angular.fromJson(decoded);
             if (!tokenDecoded.user) {
-                throw new Error('Cannot find user on token')
+                throw new Error('Cannot find user on token');
             }
 
             return tokenDecoded.user;

@@ -21,7 +21,7 @@
 				function (data) {
 					vm.batteries = data;
 				}
-			)
+			);
 		}
 
 	}

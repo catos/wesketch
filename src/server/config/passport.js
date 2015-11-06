@@ -41,4 +41,4 @@ module.exports = function () {
 
     passport.use('local-login', loginStrategy);
 
-}
+};

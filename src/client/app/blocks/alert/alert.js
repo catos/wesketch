@@ -7,6 +7,8 @@
 
 	alert.$inject = ['$rootScope', '$timeout'];
 	function alert($rootScope, $timeout) {
+		var alertTimeout;
+
 		var service = {
 			show: show
 		};
@@ -14,7 +16,6 @@
 		return service;
 
 		////////////////
-		var alertTimeout;
 
 		function show(type, title, message, timeout) {
 			$rootScope.alert = {

@@ -3,7 +3,7 @@
 
 	angular
 		.module('app.home')
-		.controller('HomeController', HomeController)
+		.controller('HomeController', HomeController);
 
 	/* @ngInject */
 	function HomeController() {
