@@ -12,8 +12,16 @@ header .navbar {
     margin-bottom: 60px;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
+.alert-popup {
+    position: absolute;
+    top: 75px;
+    left: 5px;
+    right: 5px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Sticky footer styles */
 html {
   position: relative;
   min-height: 100%;

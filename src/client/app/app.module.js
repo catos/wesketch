@@ -7,7 +7,6 @@
             'ngResource',
             'satellizer',
             
-            'blocks.logger',
             'blocks.alert', 
             
             'ui.router',

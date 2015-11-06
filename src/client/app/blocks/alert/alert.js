@@ -31,7 +31,6 @@
                 $rootScope.alert.show = false;
             }, timeout || 2000);
 			
-			console.log('message: ' + message);
 		}
 	}
 })();

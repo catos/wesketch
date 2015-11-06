@@ -23,12 +23,6 @@ module.exports = function (app, config) {
 
     // -- PASSPORT ---------------------------------
 
-
-    // app.post('/register', passport.authenticate('local-register'), function (req, res) {
-    //     console.log('req.body: ', req.body);
-    //     console.log('req.user: ', req.user);
-    //     createSendToken(req.user, res);
-    // });
     app.post('/register', function (req, res) {
         User.findOne({ email: req.body.email }, function (err, user) {
             if (err) {

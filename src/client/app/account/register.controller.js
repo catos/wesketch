@@ -21,12 +21,12 @@
                     password: vm.password
                 })
                 .then(function (res) {
-                    console.log('success - Account Created! - Welcome, ' + res.data.user.email + '!');
+                    alert.show('success', 'Account Created!', 'Welcome, ' + res.data.user.email + '!');
                     $auth.setToken(res);
                     identity.login(res.data.user);
                 })
                 .catch(function (err) {
-                    console.log('warning - Something went wrong :(', err.message);
+                    alert.show('warning', 'Something went wrong :(', err.message);
                 });
         }
     }
