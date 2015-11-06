@@ -1,10 +1,11 @@
 # TODO Next
+- CRUD on users in the client
+- Restrict users CRUD to roles.contain('admin')
+
 - Repetetive code on controllers....need a default controller with crud-methods
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
-- Put seed-code with schema-definition (*.model.js)
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
 - Gulp automation
-- Authorization and roles
 - Create directive: validate confirm password
 
 # TODO Big tasks, thoughts & reminders
@@ -25,6 +26,7 @@
 - http://justbuildsomething.com/node-js-best-practices/#2
 
 # TO DONE
+- ~~Seed users~~
 - ~~Moved api-controllers to /server/api~~
 - ~~Authentication with jwt-simple, satellizer and passport~~
 - ~~Walking skeleton~~
