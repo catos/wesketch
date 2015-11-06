@@ -1,13 +1,10 @@
 # TODO Next
 - Repetetive code on controllers....need a default controller with crud-methods
-- All api-controllers -> /server/api/batteries ... ?
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
 - Put seed-code with schema-definition (*.model.js)
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
 - Gulp automation
-- authorization and roles
-- JSCS
-- JSHINT
+- Authorization and roles
 - Create directive: validate confirm password
 
 # TODO Big tasks, thoughts & reminders
@@ -20,11 +17,15 @@
 - Proper Error Handling aka. codereview på config/errors.js
 - Rename BatteriesController -> Batteries ? (styleguide)
 - Rename batteries.route.js -> batteries.routes.js (plural)
+- JSCS
+- JSHINT
+
 
 # TO-Read
 - http://justbuildsomething.com/node-js-best-practices/#2
 
 # TO DONE
+- ~~Moved api-controllers to /server/api~~
 - ~~Authentication with jwt-simple, satellizer and passport~~
 - ~~Walking skeleton~~
 - ~~Routing, serverside~~

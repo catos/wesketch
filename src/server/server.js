@@ -23,6 +23,10 @@
 
 	// ---------------------- 
 
+	require('./api/users/users.seed.js')();
+
+	// ---------------------- 
+
 	app.listen(config.port);
 
 	console.log('Listening on port ' + config.port);

@@ -5,7 +5,7 @@ var UserSchema = new mongoose.Schema({
 	name: String,
 	email: String,
 	password: String,
-	googleId: String
+	roles: [String]
 });
 
 UserSchema.methods.toJSON = function() {
