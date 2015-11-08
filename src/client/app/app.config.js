@@ -4,7 +4,7 @@
 	var appSettings = {
 		ApplicationName: 'Cato Skogholt Application',
 		ApplicationPrefix: 'CSA',
-		ApiUrl: 'http://localhost:3030/'
+		ApiUrl: 'http://localhost:3000/'
 	};
 
 	angular

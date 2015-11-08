@@ -2,12 +2,12 @@
     'use strict';
 
     var express = require('express');
-
-	var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
+	var env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 	var app = express();
 
-	// ----------------------
+	/**
+	 * Config
+	 */
 
 	var config = require('./config/config.js')[env];
 
@@ -21,11 +21,15 @@
 
 	require('./config/errors')(app);
 
-	// ---------------------- 
+	/**
+	 * Initialization
+	 */
 
 	require('./api/users/users.seed.js')();
 
-	// ---------------------- 
+	/**
+	 * Start server
+	 */ 
 
 	app.listen(config.port);
 

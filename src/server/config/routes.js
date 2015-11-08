@@ -10,6 +10,7 @@ module.exports = function (app, config) {
 
     // Serve all files from client directory
     app.use(express.static('./src/client'));
+    app.use(express.static('./'));
     
     // Server all files from bower_components
     app.use('/bower_components', express.static('bower_components'));

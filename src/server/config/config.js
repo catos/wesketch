@@ -3,10 +3,10 @@ var path = require('path');
 var rootPath = path.normalize(__dirname + '/../../');
 
 module.exports = {
-    development: {
+    dev: {
         db: 'mongodb://cato:monzter1@ds031213.mongolab.com:31213/csa',
         rootPath: rootPath,
-        port: process.env.PORT || 3030
+        port: process.env.PORT || 3000
     },
     production: {
         db: 'mongodb://cato:monzter1@ds031213.mongolab.com:31213/csa',

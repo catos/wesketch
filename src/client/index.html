@@ -6,12 +6,20 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <style>
+        .ng-hide { display: none!important; }
+    </style>
+    
+    <!-- bower:css -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="/bower_components/fontawesome/css/font-awesome.css" />
     <link rel="stylesheet" href="/bower_components/animate.css/animate.css" />
+    <!-- endbower -->
 
-    <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/theme.min.css" />
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/.tmp/styles.css">
+    <!-- endinject -->
+    
 </head>
 
 <body>
@@ -20,46 +28,40 @@
 
     <div ng-include="'/app/blocks/alert/alert.html'"></div>
 
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="/bower_components/angular-resource/angular-resource.js"></script>
     <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="/bower_components/satellizer/satellizer.js"></script>
+    <script src="/bower_components/angular-resource/angular-resource.js"></script>
+    <!-- endbower -->
 
-    <!--app.module-->
-    <script src="/app/app.module.js"></script>
-    <script src="/app/app.config.js"></script>
-
-    <!--blocks-->
-    <script src="/app/blocks/alert/alert.module.js"></script>
-    <script src="/app/blocks/alert/alert.js"></script>
-
-    <!--app.layout-->
-    <script src="/app/layout/layout.module.js"></script>
-    <script src="/app/layout/layout.controller.js"></script>
-    <script src="/app/layout/layout.route.js"></script>
-    <script src="/app/layout/header.controller.js"></script>
-
-    <!--app.home-->
-    <script src="/app/home/home.module.js"></script>
-    <script src="/app/home/home.route.js"></script>
-    <script src="/app/home/home.controller.js"></script>
-
-    <!--app.account-->
-    <script src="/app/account/account.module.js"></script>
-    <script src="/app/account/account.route.js"></script>
-    <script src="/app/account/identity.js"></script>
-    <script src="/app/account/login.controller.js"></script>
-    <script src="/app/account/logout.controller.js"></script>
-    <script src="/app/account/register.controller.js"></script>
-
-    <!--app.batteries-->
-    <script src="/app/batteries/batteries.module.js"></script>
-    <script src="/app/batteries/batteries.route.js"></script>
-    <script src="/app/batteries/batteries.controller.js"></script>
-    <script src="/app/batteries/batteries-list.controller.js"></script>
-    <script src="/app/batteries/battery-details.controller.js"></script>
-    <script src="/app/batteries/batteries.service.js"></script>
+    <!-- inject:js -->
+    <script src="/src/client/app/app.module.js"></script>
+    <script src="/src/client/app/account/account.module.js"></script>
+    <script src="/src/client/app/batteries/batteries.module.js"></script>
+    <script src="/src/client/app/home/home.module.js"></script>
+    <script src="/src/client/app/layout/layout.module.js"></script>
+    <script src="/src/client/app/blocks/alert/alert.module.js"></script>
+    <script src="/src/client/app/app.config.js"></script>
+    <script src="/src/client/app/account/account.route.js"></script>
+    <script src="/src/client/app/account/identity.js"></script>
+    <script src="/src/client/app/account/login.controller.js"></script>
+    <script src="/src/client/app/account/logout.controller.js"></script>
+    <script src="/src/client/app/account/register.controller.js"></script>
+    <script src="/src/client/app/batteries/batteries-list.controller.js"></script>
+    <script src="/src/client/app/batteries/batteries.controller.js"></script>
+    <script src="/src/client/app/batteries/batteries.route.js"></script>
+    <script src="/src/client/app/batteries/batteries.service.js"></script>
+    <script src="/src/client/app/batteries/battery-details.controller.js"></script>
+    <script src="/src/client/app/home/home.controller.js"></script>
+    <script src="/src/client/app/home/home.route.js"></script>
+    <script src="/src/client/app/layout/header.controller.js"></script>
+    <script src="/src/client/app/layout/layout.controller.js"></script>
+    <script src="/src/client/app/layout/layout.route.js"></script>
+    <script src="/src/client/app/blocks/alert/alert.js"></script>
+    <!-- endinject -->
 
 </body>
 
