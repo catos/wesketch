@@ -3,7 +3,9 @@
 - Finn ut hvordan man inkluderer vendor-css fra client->styles
 - CRUD on users in the client
 - Restrict users CRUD to roles.contain('admin')
-
+- Node.js best practises:
+	- Never require Modules Inside of Functions
+	- Always “use strict” (mangler endel på server-siden)
 - Repetetive code on controllers....need a default controller with crud-methods
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
@@ -25,9 +27,6 @@
 - Chat
 - TicTacToe
 
-
-# TO-Read
-- http://justbuildsomething.com/node-js-best-practices/#2
 
 # TO DONE
 - ~~Seed users~~

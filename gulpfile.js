@@ -1,11 +1,12 @@
 var gulp = require('gulp');
 var args = require('yargs').argv;
-var browserSync = require('browser-sync');
+// var browserSync = require('browser-sync');
 var stylish = require('jshint-stylish');
 var config = require('./gulp.config.js')();
 var del = require('del');
 var $ = require('gulp-load-plugins')({ lazy: true });
 var port = process.env.PORT || config.defaultPort;
+var wiredep = require('wiredep').stream;
 
 gulp.task('vet', function () {
 	log('Analyzing source with JSHint');
@@ -17,6 +18,14 @@ gulp.task('vet', function () {
 	// .pipe($.jshint.reporter('fail'));
 });
 
+
+gulp.task('css', function () {
+	log('Copying CSS from development styles');
+
+	return gulp
+		.src(config.clientCss)
+		.pipe(gulp.dest(config.temp));
+});
 
 gulp.task('styles', ['clean-styles'], function () {
 	log('Compiling Less -> CSS');
@@ -44,7 +53,10 @@ gulp.task('less-watcher', function () {
 gulp.task('wiredep', function () {
 	log('Wire up the bower css js and our app js into the html');
 	var options = config.getWiredepDefaultOptions();
+<<<<<<< HEAD
 	var wiredep = require('wiredep').stream;
+=======
+>>>>>>> origin/master
 
 	return gulp
 		.src(config.index)
@@ -53,12 +65,16 @@ gulp.task('wiredep', function () {
 		.pipe(gulp.dest(config.client));
 });
 
+<<<<<<< HEAD
 gulp.task('inject', ['wiredep', 'styles'], function () {
+=======
+gulp.task('inject', ['wiredep', 'styles', 'css'], function () {
+>>>>>>> origin/master
 	log('Wire up the app css into the html, and call wiredep');
 
 	return gulp
 		.src(config.index)
-		.pipe($.inject(gulp.src(config.css)))
+		.pipe($.inject(gulp.src(config.tempCss)))
 		.pipe(gulp.dest(config.client));
 });
 
@@ -79,6 +95,7 @@ gulp.task('serve-dev', ['inject'], function () {
 		.on('restart', function (ev) {
 			log('*** nodemon restarted');
 			log('files changed on restart:\n' + ev);
+<<<<<<< HEAD
 			
 			setTimeout(function () {
 				browserSync.notify('reloading now...');
@@ -88,6 +105,12 @@ gulp.task('serve-dev', ['inject'], function () {
 		.on('start', function () {
 			log('*** nodemon started');
 			startBrowserSync();
+=======
+		})
+		.on('start', function () {
+			log('*** nodemon started');
+			// startBrowserSync();
+>>>>>>> origin/master
 		})
 		.on('crash', function () {
 			log('*** nodemon crashed: script crashed for some reason');
@@ -99,6 +122,7 @@ gulp.task('serve-dev', ['inject'], function () {
 
 ///////////////////
 
+<<<<<<< HEAD
 function changeEvent(event) {
 	var srcPattern = new RegExp('/.*(?=/' + config.source + ')/');
 	log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
@@ -139,6 +163,35 @@ function startBrowserSync() {
 
 	browserSync(options);
 }
+=======
+// function startBrowserSync() {
+// 	if (browserSync.active) {
+// 		return;
+// 	}
+	
+// 	log('Starting browser-sync on port: ' + port);
+	
+// 	var options = {
+// 		proxy: 'localhost: ' + port,
+// 		port: 3001,
+// 		files: [config.client + '**/*.*'],
+// 		ghostMode: {
+// 			clicks: true,
+// 			location: false,
+// 			forms: true,
+// 			scroll: true
+// 		},
+// 		injectChanges: true,
+// 		logFileChanges: true,
+// 		logLevel: 'debug',
+// 		logPrefix: 'gulp-patterns',
+// 		notify: true,
+// 		reloadDelay: 1000
+// 	};
+	
+// 	browserSync(options);
+// }
+>>>>>>> origin/master
 
 function clean(path) {
 	log('Cleaning: ' + $.util.colors.blue(path));
