@@ -113,10 +113,11 @@ function changeEvent(event) {
 }
 
 function startBrowserSync() {
-	if (args.nosync || browserSync.active) {
-		return;
-	}
+	// if (args.nosync || browserSync.active) {
+	// 	return;
+	// }
 
+	console.log('startBrowserSync');
 	log('Starting browser-sync on port: ' + port);
 
 	gulp
