@@ -6,6 +6,7 @@ var config = require('./gulp.config.js')();
 var del = require('del');
 var $ = require('gulp-load-plugins')({ lazy: true });
 var port = process.env.PORT || config.defaultPort;
+var wiredep = require('wiredep').stream;
 
 gulp.task('vet', function () {
 	log('Analyzing source with JSHint');
@@ -18,9 +19,9 @@ gulp.task('vet', function () {
 });
 
 
-gulp.task('css', function() {
+gulp.task('css', function () {
 	log('Copying CSS from development styles');
-	
+
 	return gulp
 		.src(config.clientCss)
 		.pipe(gulp.dest(config.temp));
@@ -33,8 +34,8 @@ gulp.task('styles', ['clean-styles'], function () {
 		.src(config.less)
 		.pipe($.plumber()) // exit gracefully if something fails after this
 		.pipe($.less())
-		.pipe($.autoprefixer({ 
-			browsers: ['last 2 version', '> 5%'] 
+		.pipe($.autoprefixer({
+			browsers: ['last 2 version', '> 5%']
 		}))
 		.pipe(gulp.dest(config.temp));
 
@@ -49,11 +50,10 @@ gulp.task('less-watcher', function () {
 	gulp.watch([config.less], ['styles']);
 });
 
-gulp.task('wiredep', function() {
+gulp.task('wiredep', function () {
 	log('Wire up the bower css js and our app js into the html');
 	var options = config.getWiredepDefaultOptions();
-	var wiredep = require('wiredep').stream;
-	
+
 	return gulp
 		.src(config.index)
 		.pipe(wiredep(options))
@@ -61,7 +61,7 @@ gulp.task('wiredep', function() {
 		.pipe(gulp.dest(config.client));
 });
 
-gulp.task('inject', ['wiredep', 'styles', 'css'], function() {
+gulp.task('inject', ['wiredep', 'styles', 'css'], function () {
 	log('Wire up the app css into the html, and call wiredep');
 
 	return gulp
@@ -70,9 +70,9 @@ gulp.task('inject', ['wiredep', 'styles', 'css'], function() {
 		.pipe(gulp.dest(config.client));
 });
 
-gulp.task('serve-dev', ['inject'], function() {
+gulp.task('serve-dev', ['inject'], function () {
 	var isDev = true;
-	
+
 	var nodeOptions = {
 		script: config.nodeServer,
 		delayTime: 1,
@@ -82,22 +82,22 @@ gulp.task('serve-dev', ['inject'], function() {
 		},
 		watch: [config.server]
 	};
-	
+
 	return $.nodemon(nodeOptions)
-		.on('restart', function(ev) {
+		.on('restart', function (ev) {
 			log('*** nodemon restarted');
 			log('files changed on restart:\n' + ev);
-		})	
-		.on('start', function() {
+		})
+		.on('start', function () {
 			log('*** nodemon started');
 			// startBrowserSync();
-		})	
-		.on('crash', function() {
+		})
+		.on('crash', function () {
 			log('*** nodemon crashed: script crashed for some reason');
-		})	
-		.on('exit', function() {
+		})
+		.on('exit', function () {
 			log('*** nodemon exited cleanly');
-		});	
+		});
 });
 
 ///////////////////
