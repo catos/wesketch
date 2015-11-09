@@ -22,8 +22,13 @@ module.exports = function () {
         ],
 		less: client + 'styles/styles.less',
 		server: server,
+		source: 'src/',
 		temp: temp,
-				
+		
+		/**
+		 * Browser sync 
+		 */		
+		browserReloadDelay: 1000,
 
 		/**
 		 * Bower and NPM locations
