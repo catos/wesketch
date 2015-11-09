@@ -18,8 +18,9 @@ module.exports = function (app, config) {
 
     // -- API ----------------------------------------------
     
+    // TODO: Move all require's to top
     require('../api/batteries/batteries.route.js')(app, config);
-
+    // TODO: Move all require's to top
     require('../api/users/users.route.js')(app, config);
 
     // -- PASSPORT ---------------------------------
