@@ -53,10 +53,6 @@ gulp.task('less-watcher', function () {
 gulp.task('wiredep', function () {
 	log('Wire up the bower css js and our app js into the html');
 	var options = config.getWiredepDefaultOptions();
-<<<<<<< HEAD
-	var wiredep = require('wiredep').stream;
-=======
->>>>>>> origin/master
 
 	return gulp
 		.src(config.index)
@@ -65,11 +61,7 @@ gulp.task('wiredep', function () {
 		.pipe(gulp.dest(config.client));
 });
 
-<<<<<<< HEAD
-gulp.task('inject', ['wiredep', 'styles'], function () {
-=======
 gulp.task('inject', ['wiredep', 'styles', 'css'], function () {
->>>>>>> origin/master
 	log('Wire up the app css into the html, and call wiredep');
 
 	return gulp
@@ -95,8 +87,7 @@ gulp.task('serve-dev', ['inject'], function () {
 		.on('restart', function (ev) {
 			log('*** nodemon restarted');
 			log('files changed on restart:\n' + ev);
-<<<<<<< HEAD
-			
+
 			setTimeout(function () {
 				browserSync.notify('reloading now...');
 				browserSync.reload({ stream: false });
@@ -105,12 +96,6 @@ gulp.task('serve-dev', ['inject'], function () {
 		.on('start', function () {
 			log('*** nodemon started');
 			startBrowserSync();
-=======
-		})
-		.on('start', function () {
-			log('*** nodemon started');
-			// startBrowserSync();
->>>>>>> origin/master
 		})
 		.on('crash', function () {
 			log('*** nodemon crashed: script crashed for some reason');
@@ -122,7 +107,6 @@ gulp.task('serve-dev', ['inject'], function () {
 
 ///////////////////
 
-<<<<<<< HEAD
 function changeEvent(event) {
 	var srcPattern = new RegExp('/.*(?=/' + config.source + ')/');
 	log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
@@ -163,35 +147,7 @@ function startBrowserSync() {
 
 	browserSync(options);
 }
-=======
-// function startBrowserSync() {
-// 	if (browserSync.active) {
-// 		return;
-// 	}
-	
-// 	log('Starting browser-sync on port: ' + port);
-	
-// 	var options = {
-// 		proxy: 'localhost: ' + port,
-// 		port: 3001,
-// 		files: [config.client + '**/*.*'],
-// 		ghostMode: {
-// 			clicks: true,
-// 			location: false,
-// 			forms: true,
-// 			scroll: true
-// 		},
-// 		injectChanges: true,
-// 		logFileChanges: true,
-// 		logLevel: 'debug',
-// 		logPrefix: 'gulp-patterns',
-// 		notify: true,
-// 		reloadDelay: 1000
-// 	};
-	
-// 	browserSync(options);
-// }
->>>>>>> origin/master
+
 
 function clean(path) {
 	log('Cleaning: ' + $.util.colors.blue(path));

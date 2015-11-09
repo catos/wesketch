@@ -24,16 +24,13 @@ module.exports = function () {
 		server: server,
 		source: 'src/',
 		temp: temp,
-<<<<<<< HEAD
+		tempCss: temp + '**/*.css',
 		
 		/**
 		 * Browser sync 
 		 */		
 		browserReloadDelay: 1000,
-=======
-		tempCss: temp + '**/*.css', //'styles.css',
-				
->>>>>>> origin/master
+
 
 		/**
 		 * Bower and NPM locations
