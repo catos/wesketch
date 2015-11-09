@@ -13,16 +13,17 @@ module.exports = function () {
 			'./*.js'
 		],
 		client: client,
-		css: temp + 'styles.css',
 		index: client + 'index.html',
 		js: [
             clientApp + '**/*.module.js',
             clientApp + '**/*.js',
             '!' + clientApp + '**/*.spec.js'
         ],
+		clientCss: client + 'styles/**/*.css',
 		less: client + 'styles/styles.less',
 		server: server,
 		temp: temp,
+		tempCss: temp + '**/*.css', //'styles.css',
 				
 
 		/**
