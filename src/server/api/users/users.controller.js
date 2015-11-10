@@ -26,9 +26,9 @@ module.exports = {
     },
 
     get: function (req, res, next) {
-        if (req.params.batteriesId !== '0') {
+        if (req.params.usersId !== '0') {
             User
-                .findOne({ '_id': req.params.batteriesId })
+                .findOne({ '_id': req.params.usersId })
                 .exec(function callback(err, data) {
                     if (err) {
                         return next(err);
@@ -42,7 +42,7 @@ module.exports = {
     },
 
     update: function (req, res, next) {
-        User.findByIdAndUpdate(req.params.batteriesId, req.body, { new: true }, function (err, data) {
+        User.findByIdAndUpdate(req.params.usersId, req.body, { new: true }, function (err, data) {
             if (err) {
                 return next(err);
             }
@@ -61,7 +61,7 @@ module.exports = {
     },
 
     destroy: function (req, res, next) {
-        User.findByIdAndRemove(req.params.batteriesId, req.body, function (err, data) {
+        User.findByIdAndRemove(req.params.usersId, req.body, function (err, data) {
             if (err) {
                 return next(err);
             }

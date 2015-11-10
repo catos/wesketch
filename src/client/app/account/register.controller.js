@@ -5,8 +5,8 @@
         .module('app.account')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['$auth', 'identity'];
-    function RegisterController($auth, identity) {
+    RegisterController.$inject = ['$auth', 'alert', 'identity'];
+    function RegisterController($auth, alert, identity) {
         var vm = this;
         vm.name = '';
         vm.email = '';

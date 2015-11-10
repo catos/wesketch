@@ -1,6 +1,5 @@
 # TODO Next
 - Gulp
-- Finn ut hvordan man inkluderer vendor-css fra client->styles
 - CRUD on users in the client
 - Restrict users CRUD to roles.contain('admin')
 - Node.js best practises:

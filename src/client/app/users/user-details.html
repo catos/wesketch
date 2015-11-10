@@ -1,0 +1,36 @@
+<section>
+	<div class="row">
+		<div class="col-md-12">
+			<h3>{{vm.title}}</h3>
+
+			<form>
+				
+				<div class="form-group">
+					<label for="inputId">_id</label>
+					<input type="text" class="form-control" id="inputId" data-ng-model="vm.user._id" disabled />
+				</div>
+				
+				<div class="form-group">
+					<label for="inputName">Name</label>
+					<input type="name" class="form-control" id="inputName" placeholder="Name" data-ng-model="vm.user.name" required />
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail">Email</label>
+					<input type="text" class="form-control" id="inputEmail" placeholder="foo@bar.com" data-ng-model="vm.user.email" required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label for="inputRoles">Roles</label>
+					<input type="text" class="form-control" id="inputRoles" placeholder="Roles" data-ng-model="vm.user.roles" />
+				</div>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-default pull-right" data-ng-click="vm.submit()">Submit</button>					
+					<a class="btn btn-danger" href="#" ng-show="vm.isUpdateAction" data-ng-click="vm.del()">Delete user</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>

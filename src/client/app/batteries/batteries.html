@@ -1,12 +1,12 @@
 <section>
-	<small>{{vm.message}}</small>
-	<h1>
-		<i class="fa fa-battery-full"></i> Batteries 
-		<a ui-sref="batteries.details({ id: 0 })" class="btn btn-primary btn-sm">New Battery</a>
-	</h1>
 
-	<hr />
+	<small>{{vm.message}}</small>
 	
-	<div ui-view></div>
+	<ul class="nav nav-tabs">
+		<li ui-sref-active="active"><a ui-sref="layout.batteries.list">List</a></li>
+		<li ui-sref-active="active"><a ui-sref="layout.batteries.details({ id: 0 })">New battery</a></li>
+	</ul>
+	
+	<ui-view/>	
 	
 </section>

@@ -17,6 +17,12 @@ header .navbar {
   max-width: 400px;
   margin: 0 auto;
 }
+/**
+ * Tables
+ */
+.table .table-main-column {
+  width: 100%;
+}
 /* Sticky footer styles */
 html {
   position: relative;

@@ -14,8 +14,10 @@
             
             'app.layout',
             'app.home',
-            'app.batteries',
-            'app.account'
+            'app.account',
+
+            'app.users',
+            'app.batteries'
         ]);
         
 } ());

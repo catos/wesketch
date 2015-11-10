@@ -1,0 +1,16 @@
+<h3>Users <small>Count: {{vm.users.length}}</small></h3>
+
+<table class="table table-striped table-bordered table-hover">
+	<tr>
+		<th>_id</th>
+		<th class="table-main-column">Name</th>
+		<th>Username</th>
+		<th>Roles</th>
+	</tr>
+	<tr data-ng-repeat="user in vm.users">
+		<td>{{user._id}}</td>
+		<td><a ui-sref="layout.users.details({ id: user._id})">{{user.name}}</a></td>
+		<td>{{user.email}}</td>
+		<td>{{user.roles}}</td>
+	</tr>
+</table>
