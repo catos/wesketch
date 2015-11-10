@@ -68,11 +68,11 @@
             submit('Cycle deleted');
         }
 
-        function submit(message) {
+        function submit() {
             if (vm.action === 'update') {
                 vm.battery.$update({ id: vm.battery._id },
                     function (data) {
-                        setMessage(message || 'Update complete.');
+                        setMessage('Update complete.');
                     },
                     function (response) {
                         setMessage(response.statusText + ' - ' + response.data.message);

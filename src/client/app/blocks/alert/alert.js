@@ -30,7 +30,7 @@
 
             alertTimeout = $timeout(function () {
                 $rootScope.alert.show = false;
-            }, timeout || 2000);
+            }, timeout || 5000);
 			
 		}
 	}

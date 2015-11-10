@@ -11,10 +11,9 @@ module.exports = function (app, config) {
 
     function clientErrorHandler(err, req, res, next) {
         res.status(500);
-
-
+        
         if (req.accepts('json')) {
-            res.json({ message: err.message });
+            res.json({ name: err.name, message: err.message });
             return;
         }
 

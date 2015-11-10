@@ -2,10 +2,11 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
 var UserSchema = new mongoose.Schema({
-	name: String,
-	email: String,
-	password: String,
-	roles: [String]
+	name: { type: String, required: '{PATH} is required!'},
+	email: { type: String, required: '{PATH} is required!', unique: true},
+	password: { type: String, required: '{PATH} is required!'},
+	roles: [String],
+	created: { type: Date, default: Date.now, required: '{PATH} is required!' }
 });
 
 UserSchema.methods.toJSON = function() {
@@ -21,6 +22,7 @@ UserSchema.methods.comparePasswords = function (password, callback) {
 
 UserSchema.pre('save', function(next) {
 	var user = this;
+	
 	if (!user.isModified('password')) {
 		return next();
 	}
