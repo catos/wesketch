@@ -55,6 +55,7 @@ module.exports = function (app, config) {
     });
 
     app.post('/login', passport.authenticate('local-login'), function (req, res) {
+        console.log('login...');
         createSendToken(req.user, res);
     });
 

@@ -23,7 +23,7 @@
 						controllerAs: 'vm'
 					},
 					'container@layout': {
-						template: '<ui-view/>',
+						template: '<div ui-view></div>',
 					},
 					'footer@layout': {
 						templateUrl: 'app/layout/footer.html',

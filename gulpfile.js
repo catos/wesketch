@@ -1,12 +1,13 @@
-var gulp = require('gulp');
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
-var stylish = require('jshint-stylish');
 var config = require('./gulp.config.js')();
 var del = require('del');
-var $ = require('gulp-load-plugins')({ lazy: true });
-var port = process.env.PORT || config.defaultPort;
+var gulp = require('gulp');
+var stylish = require('jshint-stylish');
 var wiredep = require('wiredep').stream;
+var $ = require('gulp-load-plugins')({ lazy: true });
+
+var port = process.env.PORT || config.defaultPort;
 
 gulp.task('vet', function () {
 	log('Analyzing source with JSHint');
@@ -31,7 +32,7 @@ gulp.task('clean-styles', function () {
 	clean(files);
 });
 
-gulp.task('styles', ['clean-styles'], function () {
+gulp.task('styles', ['clean-styles', 'css'], function () {
 	log('Compiling Less -> CSS');
 
 	return gulp
@@ -125,7 +126,7 @@ function startBrowserSync() {
 
 	var options = {
 		proxy: 'localhost:' + port,
-		port: 3001,
+		port: 3000,
 		files: [
 			config.client + '**/*.*',
 			'!' + config.less,

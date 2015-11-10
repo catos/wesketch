@@ -8,15 +8,15 @@
 	/**
 	 * Config
 	 */
-	var config = require('./config/config.js')[env];
+	var settings = require('./config/settings.js')[env];
 
-	require('./config/express')(app, config);
+	require('./config/express')(app, settings);
 
-	require('./config/mongoose')(config);
+	require('./config/mongoose')(settings);
 
 	require('./config/passport')();
 
-	require('./config/routes')(app, config);
+	require('./config/routes')(app, settings);
 
 	require('./config/errors')(app);
 
@@ -28,9 +28,9 @@
 	/**
 	 * Start server
 	 */
-	app.listen(config.port);
+	app.listen(settings.port);
 
-	console.log('Listening on port ' + config.port);
+	console.log('Listening on port ' + settings.port);
 	console.log('\tenv = ' + env + '\n\t__dirname = ' + __dirname + '\n\tprocess.cwd = ' + process.cwd());
 	console.log('_o\\   \\o|   |o|   |o/   /o_');
 

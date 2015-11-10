@@ -44,7 +44,7 @@ module.exports = function () {
 		/**
 		 * Node settings
 		 */
-		defaultPort: 3000,
+		defaultPort: '7203',
 		nodeServer: './src/server/server.js'
 	};
 
