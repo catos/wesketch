@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     var express = require('express');
@@ -8,7 +8,6 @@
 	/**
 	 * Config
 	 */
-
 	var config = require('./config/config.js')[env];
 
 	require('./config/express')(app, config);
@@ -24,21 +23,15 @@
 	/**
 	 * Initialization
 	 */
-
 	require('./api/users/users.seed.js')();
 
 	/**
 	 * Start server
-	 */ 
-
+	 */
 	app.listen(config.port);
 
 	console.log('Listening on port ' + config.port);
-	console.log(
-		'\tenv = ' + env +
-		'\n\t__dirname = ' + __dirname  +
-        '\n\tprocess.cwd = ' + process.cwd());
-		
+	console.log('\tenv = ' + env + '\n\t__dirname = ' + __dirname + '\n\tprocess.cwd = ' + process.cwd());
 	console.log('_o\\   \\o|   |o|   |o/   /o_');
 
-}());
+} ());

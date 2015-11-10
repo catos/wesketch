@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var args = require('yargs').argv;
-// var browserSync = require('browser-sync');
+var browserSync = require('browser-sync');
 var stylish = require('jshint-stylish');
 var config = require('./gulp.config.js')();
 var del = require('del');
@@ -15,7 +15,6 @@ gulp.task('vet', function () {
 		.pipe($.if(args.verbose, $.print()))
 		.pipe($.jshint())
 		.pipe($.jshint.reporter(stylish));
-	// .pipe($.jshint.reporter('fail'));
 });
 
 
@@ -25,6 +24,11 @@ gulp.task('css', function () {
 	return gulp
 		.src(config.clientCss)
 		.pipe(gulp.dest(config.temp));
+});
+
+gulp.task('clean-styles', function () {
+	var files = config.temp + '**/*.css';
+	clean(files);
 });
 
 gulp.task('styles', ['clean-styles'], function () {
@@ -41,14 +45,9 @@ gulp.task('styles', ['clean-styles'], function () {
 
 });
 
-gulp.task('clean-styles', function () {
-	var files = config.temp + '**/*.css';
-	clean(files);
-});
-
-gulp.task('less-watcher', function () {
-	gulp.watch([config.less], ['styles']);
-});
+// gulp.task('less-watcher', function () {
+// 	gulp.watch([config.less], ['styles']);
+// });
 
 gulp.task('wiredep', function () {
 	log('Wire up the bower css js and our app js into the html');
@@ -70,7 +69,7 @@ gulp.task('inject', ['wiredep', 'styles', 'css'], function () {
 		.pipe(gulp.dest(config.client));
 });
 
-gulp.task('serve-dev', ['inject'], function () {
+gulp.task('serve-dev', ['inject', 'vet'], function () {
 	var isDev = true;
 
 	var nodeOptions = {
@@ -88,14 +87,14 @@ gulp.task('serve-dev', ['inject'], function () {
 			log('*** nodemon restarted');
 			log('files changed on restart:\n' + ev);
 
-			// setTimeout(function () {
-			// 	browserSync.notify('reloading now...');
-			// 	browserSync.reload({ stream: false });
-			// }, config.browserReloadDelay);
+			setTimeout(function () {
+				browserSync.notify('reloading now...');
+				browserSync.reload({ stream: false });
+			}, config.browserReloadDelay);
 		})
 		.on('start', function () {
 			log('*** nodemon started');
-			// startBrowserSync();
+			startBrowserSync();
 		})
 		.on('crash', function () {
 			log('*** nodemon crashed: script crashed for some reason');
@@ -112,42 +111,42 @@ function changeEvent(event) {
 	log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
 }
 
-// function startBrowserSync() {
-// 	// if (args.nosync || browserSync.active) {
-// 	// 	return;
-// 	// }
+function startBrowserSync() {
+	if (args.nosync || browserSync.active) {
+		return;
+	}
 
-// 	console.log('startBrowserSync');
-// 	log('Starting browser-sync on port: ' + port);
+	console.log('startBrowserSync');
+	log('Starting browser-sync on port: ' + port);
 
-// 	gulp
-// 		.watch([config.less], ['styles'])
-// 		.on('change', function (event) { changeEvent(event); });
+	gulp
+		.watch([config.less], ['styles'])
+		.on('change', function (event) { changeEvent(event); });
 
-// 	var options = {
-// 		proxy: 'localhost:' + port,
-// 		port: 3001,
-// 		files: [
-// 			config.client + '**/*.*',
-// 			'!' + config.less,
-// 			config.temp + '**/*.css'
-// 		],
-// 		ghostMode: {
-// 			clicks: true,
-// 			location: false,
-// 			forms: true,
-// 			scroll: true
-// 		},
-// 		injectChanges: true,
-// 		logFileChanges: true,
-// 		logLevel: 'debug',
-// 		logPrefix: 'gulp-patterns',
-// 		notify: true,
-// 		reloadDelay: 0 // 1000
-// 	};
+	var options = {
+		proxy: 'localhost:' + port,
+		port: 3001,
+		files: [
+			config.client + '**/*.*',
+			'!' + config.less,
+			config.temp + '**/*.css'
+		],
+		ghostMode: {
+			clicks: true,
+			location: false,
+			forms: true,
+			scroll: true
+		},
+		injectChanges: true,
+		logFileChanges: true,
+		logLevel: 'debug',
+		logPrefix: 'gulp-patterns',
+		notify: true,
+		reloadDelay: 0 // 1000
+	};
 
-// 	browserSync(options);
-// }
+	browserSync(options);
+}
 
 
 function clean(path) {
