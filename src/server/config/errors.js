@@ -1,4 +1,4 @@
-module.exports = function (app, config) {
+module.exports = function(app, config) {
 
     // app.use(logErrors);
     app.use(clientErrorHandler);
@@ -11,17 +11,21 @@ module.exports = function (app, config) {
 
     function clientErrorHandler(err, req, res, next) {
         res.status(500);
-        
+
+        var response = {
+            title: err.name || '...',
+            message: err.message || '...'
+        };
+
         if (req.accepts('json')) {
-            res.json({ name: err.name, message: err.message });
+            res.json(response);
             return;
         }
 
         if (req.accepts('html')) {
-            res.render(config.rootPath + 'server/views/500', { message: err.message });
+            res.render(config.rootPath + 'server/views/500', response);
             return;
         }
-
 
         next(err);
     }
@@ -32,7 +36,9 @@ module.exports = function (app, config) {
             return next(err);
         }
 
-        res.status(500).send({ message: err.message });
+        res.status(500).send({
+            message: err.message
+        });
     }
 
 };

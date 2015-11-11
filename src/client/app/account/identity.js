@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -6,7 +6,7 @@
         .factory('identity', identity);
 
     identity.$inject = ['$auth', '$window'];
-    
+
     function identity($auth, $window) {
 
         var currentUser;
@@ -17,26 +17,26 @@
 
         var service = {
             currentUser: currentUser,
-            login: function (user) {
-                this.currentUser = user;                
+            login: function(user) {
+                this.currentUser = user;
             },
-            logout: function () {
+            logout: function() {
                 this.currentUser = undefined;
                 $auth.logout();
             },
-            isAuthenticated: function () {
+            isAuthenticated: function() {
                 return !!this.currentUser;
             },
-            isAuthorized: function (role) {
+            isAuthorized: function(role) {
                 return !!currentUser &&
                     currentUser.roles.indexOf('admin') > -1;
             }
         };
 
         return service;
-        
-        /////////////////////
-        
+
+        // ------------------------------------
+
         function getTokenUser() {
             var token = $auth.getToken();
 
@@ -54,7 +54,7 @@
             if (!decoded) {
                 throw new Error('Cannot decode the token');
             }
-            
+
             var tokenDecoded = angular.fromJson(decoded);
             if (!tokenDecoded.user) {
                 throw new Error('Cannot find user on token');
@@ -66,14 +66,24 @@
         function urlBase64Decode(str) {
             var output = str.replace(/-/g, '+').replace(/_/g, '/');
             switch (output.length % 4) {
-                case 0: { break; }
-                case 2: { output += '=='; break; }
-                case 3: { output += '='; break; }
+                case 0: {
+                    break;
+                }
+                case 2: {
+                    output += '==';
+                    break;
+                }
+                case 3: {
+                    output += '=';
+                    break;
+                }
                 default: {
                     throw 'Illegal base64url string!';
                 }
             }
-            return $window.decodeURIComponent(escape($window.atob(output))); //polyfill https://github.com/davidchambers/Base64.js
+
+            // polyfill https://github.com/davidchambers/Base64.js
+            return $window.decodeURIComponent(escape($window.atob(output)));
         }
 
     }

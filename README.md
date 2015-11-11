@@ -13,7 +13,7 @@
 
 # TODO Big tasks, thoughts & reminders
 - Codereview på batteriesService og callbacks / errorhandling
-- få til å fremprovosere en 500 hvor response = render 500.jade 
+- få til å fremprovosere en 500 hvor response = render 500.jade
 - batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
 - if (err) på server api-controllers må/bør returnere json istedenfor next(err)
 - Clean out console.log's
@@ -21,13 +21,13 @@
 - Proper Error Handling aka. codereview på config/errors.js
 - Rename BatteriesController -> Batteries ? (styleguide)
 - Rename batteries.route.js -> batteries.routes.js (plural)
-- JSCS
-- JSHINT
 - Chat
 - TicTacToe
 
 
 # TO DONE
+- ~~JSCS~~
+- ~~JSHINT~~
 - ~~Seed users~~
 - ~~Moved api-controllers to /server/api~~
 - ~~Authentication with jwt-simple, satellizer and passport~~
@@ -68,7 +68,7 @@ src/
 		images/
 		favicon.ico
 		index.html
-		
+
 	server /
 ```
 

@@ -2,15 +2,17 @@ var Battery = require('./batteries.model');
 
 module.exports = {
 
-    init: function (req, res, next) {
+    init: function(req, res, next) {
         next();
     },
 
-    index: function (req, res, next) {
+    index: function(req, res, next) {
         Battery
             .find({})
             .limit(10)
-            .sort({ number: -1 })
+            .sort({
+                number: -1
+            })
             .exec(function callback(err, data) {
                 if (err) {
                     return next(err);
@@ -20,10 +22,12 @@ module.exports = {
 
     },
 
-    get: function (req, res, next) {
+    get: function(req, res, next) {
         if (req.params.batteriesId !== '0') {
             Battery
-                .findOne({ '_id': req.params.batteriesId })
+                .findOne({
+                    _id: req.params.batteriesId
+                })
                 .exec(function callback(err, data) {
                     if (err) {
                         return next(err);
@@ -36,8 +40,10 @@ module.exports = {
         }
     },
 
-    update: function (req, res, next) {
-        Battery.findByIdAndUpdate(req.params.batteriesId, req.body, { new: true }, function (err, data) {
+    update: function(req, res, next) {
+        Battery.findByIdAndUpdate(req.params.batteriesId, req.body, {
+            new: true
+        }, function(err, data) {
             if (err) {
                 return next(err);
             }
@@ -45,8 +51,8 @@ module.exports = {
         });
     },
 
-    create: function (req, res, next) {
-        Battery.create(req.body, function (err, data) {
+    create: function(req, res, next) {
+        Battery.create(req.body, function(err, data) {
             if (err) {
                 return next(err);
             }
@@ -55,13 +61,16 @@ module.exports = {
         });
     },
 
-    destroy: function (req, res, next) {
-        Battery.findByIdAndRemove(req.params.batteriesId, req.body, function (err, data) {
-            if (err) {
-                return next(err);
-            }
+    destroy: function(req, res, next) {
+        Battery.findByIdAndRemove(
+            req.params.batteriesId,
+            req.body,
+            function(err, data) {
+                if (err) {
+                    return next(err);
+                }
 
-            res.json(data);
-        });
+                res.json(data);
+            });
     }
 };
