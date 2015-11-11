@@ -1,4 +1,4 @@
-// {
+{
 //     "disallowKeywords": ["with"],
 //     "disallowKeywordsOnNewLine": ["else"],
 //     "disallowMixedSpacesAndTabs": true,
@@ -41,4 +41,4 @@
 //     "requireTrailingComma": false,
 //     "validateIndentation": 4,
 //     "validateQuoteMarks": "'"
-// }
+}

@@ -5,12 +5,10 @@
 		<th>_id</th>
 		<th class="table-main-column">Name</th>
 		<th>Username</th>
-		<th>Roles</th>
 	</tr>
 	<tr data-ng-repeat="user in vm.users">
 		<td>{{user._id}}</td>
-		<td><a ui-sref="layout.users.details({ id: user._id})">{{user.name}}</a></td>
+		<td><a ui-sref="layout.users.details({ id: user._id})">{{user.name}}</a> <span ng-show="user.isAdmin" class="label label-info">Admin</span></td>
 		<td>{{user.email}}</td>
-		<td>{{user.roles}}</td>
 	</tr>
 </table>

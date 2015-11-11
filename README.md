@@ -1,4 +1,5 @@
 # TODO Next
+- !!! Update user -> reset's password
 - Gulp
 - CRUD on users in the client
 - Restrict users CRUD to roles.contain('admin')
@@ -10,20 +11,18 @@
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
 - Gulp automation
 - Create directive: validate confirm password
+- Styleguide
+	- Rename BatteriesController -> Batteries ? (styleguide)
+	- Rename batteries.route.js -> batteries.routes.js (plural)
 
-# TODO Big tasks, thoughts & reminders
+# TODO Later
 - Codereview på batteriesService og callbacks / errorhandling
-- få til å fremprovosere en 500 hvor response = render 500.jade
 - batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
 - if (err) på server api-controllers må/bør returnere json istedenfor next(err)
-- Clean out console.log's
+- Validation i mongoose, client friendly error messages
 - Testing client with *.specs.js
-- Proper Error Handling aka. codereview på config/errors.js
-- Rename BatteriesController -> Batteries ? (styleguide)
-- Rename batteries.route.js -> batteries.routes.js (plural)
 - Chat
 - TicTacToe
-
 
 # TO DONE
 - ~~JSCS~~

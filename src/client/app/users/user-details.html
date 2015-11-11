@@ -17,7 +17,8 @@
 
                 <div class="form-group">
                     <label for="inputEmail">Email</label>
-                    <input type="text" class="form-control" id="inputEmail" placeholder="foo@bar.com" data-ng-model="vm.user.email" required />
+                    <input type="text" class="form-control" id="inputEmail" placeholder="foo@bar.com" data-ng-model="vm.user.email" required
+                    />
                 </div>
 
                 <div class="form-group">
@@ -31,15 +32,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="inputRoles">Roles</label>
-                    <input type="text" class="form-control" id="inputRoles" placeholder="Roles" data-ng-model="vm.user.roles" />
-
-                    <div data-ng-repeat="role in vm.allRoles">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" value="" ng-checked="role.userHasRole"> {{role.name}}
-                            </label>
-                        </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="" ng-checked="vm.user.isAdmin"> Administrator
+                        </label>
                     </div>
                 </div>
 
