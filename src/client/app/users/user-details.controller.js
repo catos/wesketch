@@ -10,7 +10,7 @@
         var vm = this;
         vm.user = {};
         vm.title = '';
-        vm.isUpdateAction;
+        vm.isUpdateAction = false;
         vm.submit = submit;
 
         activate();

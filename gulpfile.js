@@ -1,5 +1,6 @@
 var args = require('yargs').argv;
-var browserSync = require('browser-sync');
+// var browserSync = require('browser-sync');
+// "browser-sync": "^2.9.12",
 var config = require('./gulp.config.js')();
 var del = require('del');
 var gulp = require('gulp');
@@ -88,14 +89,14 @@ gulp.task('serve-dev', ['inject', 'vet'], function () {
 			log('*** nodemon restarted');
 			log('files changed on restart:\n' + ev);
 
-			setTimeout(function () {
-				browserSync.notify('reloading now...');
-				browserSync.reload({ stream: false });
-			}, config.browserReloadDelay);
+			// setTimeout(function () {
+			// 	browserSync.notify('reloading now...');
+			// 	browserSync.reload({ stream: false });
+			// }, config.browserReloadDelay);
 		})
 		.on('start', function () {
 			log('*** nodemon started');
-			startBrowserSync();
+			// startBrowserSync();
 		})
 		.on('crash', function () {
 			log('*** nodemon crashed: script crashed for some reason');
@@ -112,42 +113,42 @@ function changeEvent(event) {
 	log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
 }
 
-function startBrowserSync() {
-	if (args.nosync || browserSync.active) {
-		return;
-	}
+// function startBrowserSync() {
+// 	if (args.nosync || browserSync.active) {
+// 		return;
+// 	}
 
-	console.log('startBrowserSync');
-	log('Starting browser-sync on port: ' + port);
+// 	console.log('startBrowserSync');
+// 	log('Starting browser-sync on port: ' + port);
 
-	gulp
-		.watch([config.less], ['styles'])
-		.on('change', function (event) { changeEvent(event); });
+// 	gulp
+// 		.watch([config.less], ['styles'])
+// 		.on('change', function (event) { changeEvent(event); });
 
-	var options = {
-		proxy: 'localhost:' + port,
-		port: 3000,
-		files: [
-			config.client + '**/*.*',
-			'!' + config.less,
-			config.temp + '**/*.css'
-		],
-		ghostMode: {
-			clicks: true,
-			location: false,
-			forms: true,
-			scroll: true
-		},
-		injectChanges: true,
-		logFileChanges: true,
-		logLevel: 'debug',
-		logPrefix: 'gulp-patterns',
-		notify: true,
-		reloadDelay: 0 // 1000
-	};
+// 	var options = {
+// 		proxy: 'localhost:' + port,
+// 		port: 3000,
+// 		files: [
+// 			config.client + '**/*.*',
+// 			'!' + config.less,
+// 			config.temp + '**/*.css'
+// 		],
+// 		ghostMode: {
+// 			clicks: true,
+// 			location: false,
+// 			forms: true,
+// 			scroll: true
+// 		},
+// 		injectChanges: true,
+// 		logFileChanges: true,
+// 		logLevel: 'debug',
+// 		logPrefix: 'gulp-patterns',
+// 		notify: true,
+// 		reloadDelay: 0 // 1000
+// 	};
 
-	browserSync(options);
-}
+// 	browserSync(options);
+// }
 
 
 function clean(path) {
