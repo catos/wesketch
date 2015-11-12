@@ -10,13 +10,15 @@
      */
     var settings = require('./config/settings.js')[env];
 
-    require('./config/express')(app, settings);
-
+    require('./config/express')(app);
+    
     require('./config/mongoose')(settings);
 
     require('./config/passport')();
 
     require('./config/routes')(app, settings);
+
+    require('./config/socket-io')(app, settings);
 
     require('./config/errors')(app);
 

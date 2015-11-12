@@ -4,9 +4,9 @@ var express = require('express'),
     passport = require('passport'),
     cors = require('cors');
 
-module.exports = function (app, config) {
+module.exports = function (app) {
     app.set('view engine', 'jade');
-    app.use(morgan('dev'));
+    // app.use(morgan('dev'));
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(cors());

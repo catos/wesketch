@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
-module.exports = function (config) {
-	mongoose.connect(config.db);
+module.exports = function (settings) {
+	mongoose.connect(settings.db);
 
 	var db = mongoose.connection;
 

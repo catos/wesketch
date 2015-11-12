@@ -4,7 +4,7 @@ var express = require('express'),
     moment = require('moment'),
     User = require('../api/users/users.model.js');
 
-module.exports = function (app, config) {
+module.exports = function (app, settings) {
 
     // -- CLIENT --------------------------------------------------
 
@@ -19,9 +19,9 @@ module.exports = function (app, config) {
     // -- API ----------------------------------------------
     
     // TODO: Move all require's to top
-    require('../api/batteries/batteries.route.js')(app, config);
+    require('../api/batteries/batteries.route.js')(app, settings);
     // TODO: Move all require's to top
-    require('../api/users/users.route.js')(app, config);
+    require('../api/users/users.route.js')(app, settings);
 
     // -- PASSPORT ---------------------------------
 
@@ -55,7 +55,6 @@ module.exports = function (app, config) {
     });
 
     app.post('/login', passport.authenticate('local-login'), function (req, res) {
-        console.log('login...');
         createSendToken(req.user, res);
     });
 
@@ -82,7 +81,7 @@ module.exports = function (app, config) {
 
     // Server start page (index.jade)
     app.get('/server', function (req, res) {
-        res.render(config.rootPath + 'server/views/index');
+        res.render(settings.rootPath + 'server/views/index');
     });
     
     // Any deep link calls should return index.html
@@ -97,7 +96,7 @@ module.exports = function (app, config) {
         };
 
         if (req.accepts('html')) {
-            res.render(config.rootPath + 'server/views/404', response);
+            res.render(settings.rootPath + 'server/views/404', response);
             return;
         }
 

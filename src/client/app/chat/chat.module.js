@@ -1,5 +1,5 @@
 (function() {
 	'use strict';
 
-	angular.module('app.users', []);
+	angular.module('app.chat', []);
 })();
