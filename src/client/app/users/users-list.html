@@ -8,7 +8,7 @@
 	</tr>
 	<tr data-ng-repeat="user in vm.users">
 		<td>{{user._id}}</td>
-		<td><a ui-sref="layout.users.details({ id: user._id})">{{user.name}}</a> <span ng-show="user.isAdmin" class="label label-info">Admin</span></td>
+		<td><a ui-sref="layout.users.edit({ id: user._id})">{{user.name}}</a> <span ng-show="user.isAdmin" class="label label-info">Admin</span></td>
 		<td>{{user.email}}</td>
 	</tr>
 </table>

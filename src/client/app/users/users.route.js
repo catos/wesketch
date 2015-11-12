@@ -21,10 +21,17 @@
                 controllerAs: 'vm',
 				authenticate: true,
 			})
-			.state('layout.users.details', {
-				url: '/:id',
-				templateUrl: 'app/users/user-details.html',
-                controller: 'UserDetailsController',
+			.state('layout.users.edit', {
+				url: '/:id/edit',
+				templateUrl: 'app/users/user-edit.html',
+                controller: 'UserEditController',
+                controllerAs: 'vm',
+				authenticate: true,
+			})
+			.state('layout.users.create', {
+				url: '/create',
+				templateUrl: 'app/users/user-create.html',
+                controller: 'UserCreateController',
                 controllerAs: 'vm',
 				authenticate: true,
 			});

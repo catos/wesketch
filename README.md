@@ -1,5 +1,6 @@
 # TODO Next
 - !!! Update user -> reset's password
+- Remove /.tmp and add to .gitignore
 - Gulp
 - CRUD on users in the client
 - Restrict users CRUD to roles.contain('admin')

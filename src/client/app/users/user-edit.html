@@ -1,0 +1,39 @@
+<section>
+    <div class="row">
+        <div class="col-md-12">
+            
+            <h3>Edit '{{vm.user.name}}' <small>#{{vm.user._id}}</small></h3>
+
+            <hr/>
+
+            <a class="btn btn-danger btn-sm" href="#" data-ng-click="vm.del()">Delete user</a>
+            <a class="btn btn-info btn-sm" href="#" data-ng-click="vm.resetPassword()">Reset password</a>
+
+            <form>
+
+                <div class="form-group">
+                    <label for="inputName">Name</label>
+                    <input type="name" class="form-control" id="inputName" placeholder="Name" data-ng-model="vm.user.name" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="inputEmail">Email</label>
+                    <input type="text" class="form-control" id="inputEmail" placeholder="foo@bar.com" data-ng-model="vm.user.email" required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="" ng-model="vm.user.isAdmin"> Administrator
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default pull-right" data-ng-click="vm.submit()">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
