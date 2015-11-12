@@ -1,12 +1,15 @@
-<header ui-view="header"></header>
+<div ui-view="sidebar"></div>
 
-<div class="main-content container">
+<div class="fw-page-wrapper">
 
-	<small class="text-muted">{{vm.message}}</small>
-	<hr>
+	<header ui-view="header"></header>
 
-	<div ui-view="container"></div>
+	<div class="main-content">
+
+		<div ui-view="container"></div>
+
+	</div>
+
+	<footer class="footer" ui-view="footer"></footer>
 
 </div>
-
-<footer class="footer" ui-view="footer"></footer>

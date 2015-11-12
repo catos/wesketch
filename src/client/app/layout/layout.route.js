@@ -22,6 +22,11 @@
 						controller: 'HeaderController',
 						controllerAs: 'vm'
 					},
+					'sidebar@layout': {
+						templateUrl: 'app/layout/sidebar.html',
+						controller: 'SidebarController',
+						controllerAs: 'vm'
+					},
 					'container@layout': {
 						template: '<div ui-view></div>',
 					},

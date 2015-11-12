@@ -7,13 +7,5 @@
 
 	/* @ngInject */
 	function LayoutController() {
-		var vm = this;
-		vm.message = 'Hei, fra LayoutController';
-
-		activate();
-
-		function activate() {
-			// Insert initial 
-		}
 	}
 }());
