@@ -1,13 +1,13 @@
 # TODO Next
 - Reset password
-- New admin-layout
+- Create directive: validate confirm password
+	- http://toddmotto.com/killing-it-with-angular-directives-structure-and-mvvm/
 - Node.js best practises:
 	- Never require Modules Inside of Functions
 	- Always “use strict” (mangler endel på server-siden)
 - Repetetive code on controllers....need a default controller with crud-methods
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
-- Create directive: validate confirm password
 - Styleguide
 	- Rename BatteriesController -> Batteries ? (styleguide)
 	- Rename batteries.route.js -> batteries.routes.js (plural)

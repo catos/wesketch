@@ -1,15 +1,14 @@
-<div ui-view="sidebar"></div>
+<header ui-view="header"></header>
 
-<div class="fw-page-wrapper">
-
-	<header ui-view="header"></header>
-
-	<div class="main-content">
-
-		<div ui-view="container"></div>
-
+<div class="container">
+	<div class="row">
+		<div class="col-md-3 fw-sidebar">
+			<div ui-view="sidebar"></div>	
+		</div>
+		<div class="col-md-9 fw-main-content">
+			<div ui-view="container"></div>		
+		</div>
 	</div>
-
-	<footer class="footer" ui-view="footer"></footer>
-
 </div>
+
+<footer class="footer" ui-view="footer"></footer>
