@@ -36,16 +36,6 @@
 						// controllerAs: 'vm'
 					}
 				},
-            })
-			.state('layout.home', {
-				url: '/',
-				views: {
-					'container@layout': {
-						templateUrl: 'app/home/home.html',
-						controller: 'HomeController',
-						controllerAs: 'vm'
-					}
-				}
-			});
+            });
 	}
 } ());

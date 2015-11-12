@@ -19,21 +19,33 @@
 				templateUrl: 'app/users/users-list.html',
                 controller: 'UsersListController',
                 controllerAs: 'vm',
-				authenticate: true,
+				restricted: {
+					requiresLogin: true,
+					requiresAdmin: true
+				}
+
 			})
 			.state('layout.users.edit', {
 				url: '/:id/edit',
 				templateUrl: 'app/users/user-edit.html',
                 controller: 'UserEditController',
                 controllerAs: 'vm',
-				authenticate: true,
+				restricted: {
+					requiresLogin: true,
+					requiresAdmin: true
+				}
+
 			})
 			.state('layout.users.create', {
 				url: '/create',
 				templateUrl: 'app/users/user-create.html',
                 controller: 'UserCreateController',
                 controllerAs: 'vm',
-				authenticate: true,
+				restricted: {
+					requiresLogin: true,
+					requiresAdmin: true
+				}
+
 			});
 
 	}

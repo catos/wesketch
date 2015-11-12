@@ -16,7 +16,7 @@
 						<a ui-sref="layout.home">{{vm.message}}</a>
 					</li>
 					<li ng-show="vm.identity.isAuthenticated()">
-						<a ui-sref="layout.account">Welcome '{{vm.identity.currentUser.name}}'</a>
+						<a ui-sref="layout.account">Welcome '{{vm.identity.currentUser.name}}', admin: {{vm.identity.currentUser.isAdmin}}</a>
 					</li>
 					<li ng-show="vm.identity.isAuthenticated()" ui-sref-active="active">
 						<a ui-sref="layout.account.logout">Logout</a>

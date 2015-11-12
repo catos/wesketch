@@ -27,9 +27,8 @@
             isAuthenticated: function() {
                 return !!this.currentUser;
             },
-            isAuthorized: function(role) {
-                return !!currentUser &&
-                    currentUser.roles.indexOf('admin') > -1;
+            isAdmin: function() {
+                return !!this.currentUser && this.currentUser.isAdmin;
             }
         };
 

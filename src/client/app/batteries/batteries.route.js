@@ -25,7 +25,9 @@
 				templateUrl: 'app/batteries/batteries-list.html',
                 controller: 'BatteriesListController',
                 controllerAs: 'vm',
-				authenticate: true,
+				restricted: {
+					requiresLogin: true					
+				}
 			})
 			.state('layout.batteries.details', {
 				url: '/:id',

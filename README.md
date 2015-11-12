@@ -1,22 +1,19 @@
 # TODO Next
-- !!! Update user -> reset's password
-- Remove /.tmp and add to .gitignore
-- Gulp
-- CRUD on users in the client
-- Restrict users CRUD to roles.contain('admin')
+- Reset password
+- New admin-layout
 - Node.js best practises:
 	- Never require Modules Inside of Functions
 	- Always “use strict” (mangler endel på server-siden)
 - Repetetive code on controllers....need a default controller with crud-methods
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
-- Gulp automation
 - Create directive: validate confirm password
 - Styleguide
 	- Rename BatteriesController -> Batteries ? (styleguide)
 	- Rename batteries.route.js -> batteries.routes.js (plural)
 
 # TODO Later
+- Gulp
 - Codereview på batteriesService og callbacks / errorhandling
 - batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
 - if (err) på server api-controllers må/bør returnere json istedenfor next(err)
@@ -26,6 +23,7 @@
 - TicTacToe
 
 # TO DONE
+- ~~ Simple CRUD on users in the client~~
 - ~~JSCS~~
 - ~~JSHINT~~
 - ~~Seed users~~

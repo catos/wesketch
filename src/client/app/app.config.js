@@ -23,15 +23,29 @@
         $authProvider.tokenPrefix = appSettings.ApplicationPrefix;
     }
 
-    run.$inject = ['$rootScope', '$state', '$auth'];
+    run.$inject = ['$rootScope', '$state', '$auth', 'alert', 'identity'];
 
-    function run($rootScope, $state, $auth) {
+    function run($rootScope, $state, $auth, alert, identity) {
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams) {
-                if (toState.authenticate && !$auth.isAuthenticated()) {
-                    $state.transitionTo('layout.account.login');
-                    event.preventDefault();
+                
+                if (toState.restricted) {
+                    
+                    if (toState.restricted.requiresLogin && !identity.isAuthenticated())
+                    {
+                        $state.transitionTo('layout.account.login');
+                        event.preventDefault();
+                    }
+                    
+                    if (toState.restricted.requiresAdmin && !identity.isAdmin())
+                    {
+                        alert.show('info', 'Restricted area', 'You do not have sufficient permissions to enter this area');
+                        $state.go('layout.home');
+                        event.preventDefault();
+                    }
+                    
                 }
+
             });
     }
 })();
