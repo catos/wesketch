@@ -1,3 +1,4 @@
+/* global io */
 (function () {
 	'use strict';
 
@@ -26,7 +27,7 @@
 							callback.apply(socket, args);
 						}
 					});
-				})
+				});
 			}
 		};
 

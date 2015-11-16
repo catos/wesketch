@@ -5,10 +5,10 @@
 		.module('app.layout')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['identity'];
+	HeaderController.$inject = ['tokenIdentity'];
 
-	function HeaderController(identity) {
+	function HeaderController(tokenIdentity) {
 		var vm = this;
-		vm.identity = identity;
+		vm.tokenIdentity = tokenIdentity;
 	}
 })();

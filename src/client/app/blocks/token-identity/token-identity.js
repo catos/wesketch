@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('app.account')
-        .factory('identity', identity);
+        .module('blocks.tokenIdentity')
+        .factory('tokenIdentity', tokenIdentity);
 
-    identity.$inject = ['$auth', '$window'];
+    tokenIdentity.$inject = ['$auth', '$window'];
 
-    function identity($auth, $window) {
+    function tokenIdentity($auth, $window) {
 
         var currentUser;
 

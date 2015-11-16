@@ -2,17 +2,17 @@
 	'use strict';
 
 	angular
-		.module('app.chat')
+		.module('app.draw')
 		.config(configureRoutes);
 
 	configureRoutes.$inject = ['$stateProvider'];
 
 	function configureRoutes($stateProvider) {
 		$stateProvider
-			.state('layout.chat', {
-                url: '/chat',
-				templateUrl: 'app/chat/chat.html',
-				controller: 'ChatController',
+			.state('layout.draw', {
+                url: '/draw',
+				templateUrl: 'app/draw/draw.html',
+				controller: 'DrawController',
 				controllerAs: 'vm',
                 restricted: {
 					requiresLogin: true

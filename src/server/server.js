@@ -38,5 +38,4 @@
         '\n\t__dirname = ' + __dirname +
         '\n\tprocess.cwd = ' + process.cwd());
     console.log('_o\\   \\o|   |o|   |o/   /o_');
-
 }());

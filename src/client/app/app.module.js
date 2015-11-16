@@ -9,6 +9,7 @@
 
             'blocks.alert',
             'blocks.sawkit',
+            'blocks.tokenIdentity',
 
             'ui.router',
             'ui.bootstrap',
@@ -19,7 +20,8 @@
 
             'app.users',
             'app.chat',
-            'app.batteries'
+            'app.draw',
+            'app.batteries',
         ]);
 
 } ());

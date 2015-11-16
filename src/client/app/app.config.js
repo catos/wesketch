@@ -5,7 +5,7 @@
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
         ApiUrl: 'http://localhost:7203/',
-        
+
         SocketUrl: 'http://localhost:7204/'
     };
 
@@ -25,27 +25,30 @@
         $authProvider.tokenPrefix = appSettings.ApplicationPrefix;
     }
 
-    run.$inject = ['$rootScope', '$state', '$auth', 'alert', 'identity'];
+    run.$inject = ['$rootScope', '$state', '$auth', 'alert', 'tokenIdentity'];
 
-    function run($rootScope, $state, $auth, alert, identity) {
+    function run($rootScope, $state, $auth, alert, tokenIdentity) {
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams) {
-                
+
                 if (toState.restricted) {
-                    
-                    if (toState.restricted.requiresLogin && !identity.isAuthenticated())
+
+                    if (toState.restricted.requiresLogin && !tokenIdentity.isAuthenticated())
                     {
                         $state.transitionTo('layout.account.login');
                         event.preventDefault();
                     }
-                    
-                    if (toState.restricted.requiresAdmin && !identity.isAdmin())
+
+                    if (toState.restricted.requiresAdmin && !tokenIdentity.isAdmin())
                     {
-                        alert.show('info', 'Restricted area', 'You do not have sufficient permissions to enter this area');
+                        alert.show(
+                            'info', 
+                            'Restricted area', 
+                            'You do not have sufficient permissions to enter this area');
                         $state.go('layout.home');
                         event.preventDefault();
                     }
-                    
+
                 }
 
             });

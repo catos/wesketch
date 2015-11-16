@@ -3,7 +3,6 @@
 - Reset password
 - Create directive: validate confirm password
 	- http://toddmotto.com/killing-it-with-angular-directives-structure-and-mvvm/
-	- til chat: http://codepen.io/TheLarkInn/post/angularjs-directive-labs-ngenterkey
 - Node.js best practises:
 	- Never require Modules Inside of Functions
 	- Always “use strict” (mangler endel på server-siden)
@@ -13,6 +12,7 @@
 - Styleguide
 	- Rename BatteriesController -> Batteries ? (styleguide)
 	- Rename batteries.route.js -> batteries.routes.js (plural)
+- https://github.com/johnpapa/gulp-patterns
 
 # TODO Later
 - Gulp
@@ -24,13 +24,13 @@
 - Chat
 	- http://briantford.com/blog/angular-socket-io
 	- https://github.com/btford/angular-socket-io-im
-	
+
 	- http://chariotsolutions.com/blog/post/getting-chatty-angular-socket-io-nodeexpress-bootstrap/
 	- http://www.hutchinson.io/building-a-real-time-application-with-express-socketio-and-ember/
 	- http://fdietz.github.io/2015/04/16/day-4-how-to-build-your-own-team-chat-in-five-days-expressjs-socket-io-and-angularjs-component-based-design-patterns.html
 	- https://github.com/fdietz/how_to_build_your_own_team_chat_in_five_days/tree/master/day_4/nodejs_express_socketio_chat/public/app
 - iSketch
-	- http://jsfiddle.net/MartinThoma/vSDTW/2/
+	- http://stackoverflow.com/a/27025090
 
 # TO DONE
 - ~~ Simple CRUD on users in the client~~

@@ -14,13 +14,13 @@
 				<li>
 					<a ui-sref="layout.home">{{vm.message}}</a>
 				</li>
-				<li ng-show="vm.identity.isAuthenticated()">
-					<a ui-sref="layout.account">Welcome '{{vm.identity.currentUser.name}}'</a>
+				<li ng-show="vm.tokenIdentity.isAuthenticated()">
+					<a ui-sref="layout.account">Welcome '{{vm.tokenIdentity.currentUser.name}}'</a>
 				</li>
-				<li ng-show="vm.identity.isAuthenticated()" ui-sref-active="active">
+				<li ng-show="vm.tokenIdentity.isAuthenticated()" ui-sref-active="active">
 					<a ui-sref="layout.account.logout">Logout</a>
 				</li>
-				<li ng-hide="vm.identity.isAuthenticated()" ui-sref-active="active">
+				<li ng-hide="vm.tokenIdentity.isAuthenticated()" ui-sref-active="active">
 					<a ui-sref="layout.account.login">Login</a>
 				</li>
 
@@ -35,7 +35,7 @@
 						<li><a href="https://mongolab.com/"><i class="fa fa-database"></i> Mongolab.com</a></li>
 						<li><a href="http://getbootstrap.com/css/">Bootstrap</a></li>
 						<li><a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
-						<li><a href="https://github.com/johnpapa/angular-styleguide"><i class="fa fa-github"></i> Angular Styleguide</a></li>
+						<li><a href="https://github.com/johnpapa/angular-styleguide"><i class="fa fa-github"></i> <strong>Angular Styleguide</strong></a></li>
 						<li><a href="https://github.com/catos/Multivision"><i class="fa fa-github"></i> Multivision</a></li>
 						<li class="divider"></li>
 						<li><a href="http://www.angularjs.org"><i class="fa fa-html5"></i> Angularjs</a></li>

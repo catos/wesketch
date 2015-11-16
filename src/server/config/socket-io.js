@@ -1,37 +1,51 @@
-var moment = require('moment');
+module.exports = function(app, settings) {
+    var http = require('http').Server(app);
+    var io = require('socket.io')(http);
 
-module.exports = function (app, settings) {
-	var http = require('http').Server(app);
-	var io = require('socket.io')(http);
+    var users = [];
 
-	io.on('connection', function (socket) {
+    io.on('connection', function(socket) {
 
-		// sendMessage(socket, 'user-join', 'User joined message!');
-		io.emit('user-join', {
-			name: socket.id
-		});
+        socket.on('user-join', function(user) {
+            var userAlreadyExist = false;
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].name === user.name) {
+                    userAlreadyExist = true;
+                }
+            }
 
-		socket.on('user-message', function (message) {
-			message.timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
-			console.log('[ WS user-message ] - ', message);
-			io.emit('user-message', message);
-			// socket.broadcast.emit('user-message', message);
-		});
+            if (!userAlreadyExist) {
+                users.push(user);
+            }
+            io.emit('user-join', users);
+        });
 
-		socket.on('disconnect', function () {
-			console.log('[ WS disconnect ] - User disconnected');
-		});
+        socket.on('user-message', function(message) {
+            ioEmit('user-message', message);
+            // var received = Date.now();
+            // message.latency = received - message.sent;
+            // message.received = received;
+            // io.emit('user-message', message);
+        });
 
-	});
+        socket.on('user-disconnect', function() {
+            io.emit({
+                message: 'User disconnected'
+            });
+            console.log('[ WS disconnect ] - User disconnected');
+        });
 
-	http.listen(settings.websocketsPort, function () {
-		console.log('listening on *:' + settings.websocketsPort);
-	});
+    });
 
-	// function sendMessage(socket, event, message) {
-	// 	// io.emit('user-message', message);
-		
-	// 	socket.broadcast.emit('user-message', message);
-	// 	console.log('[ WS ' + event + ' ] - ' + message);
-	// }
-}
+    http.listen(settings.websocketsPort, function() {
+        console.log('Socket.io listening on *:' + settings.websocketsPort);
+    });
+
+    function ioEmit(eventType, message) {
+        var received = Date.now();
+        message.latency = received - message.sent;
+        message.received = received;
+        io.emit(eventType, message);
+        console.log('[ WS ' + eventType + ' ] - ' + message);
+    };
+};

@@ -5,10 +5,10 @@
 		.module('app.account')
 		.controller('LogoutController', LogoutController);
 
-	LogoutController.$inject = ['$state', 'alert', 'identity'];
-	function LogoutController($state, alert, identity) {
+	LogoutController.$inject = ['$state', 'alert', 'tokenIdentity'];
+	function LogoutController($state, alert, tokenIdentity) {
 		alert.show('info', 'Snakkes!', 'Welcome back at later time yes');
-		identity.logout();
-		$state.go('layout.home');		
+		tokenIdentity.logout();
+		$state.go('layout.home');
 	}
 })();

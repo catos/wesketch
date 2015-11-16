@@ -5,9 +5,9 @@
         .module('app.account')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$auth', '$state', 'alert', 'identity'];
+    LoginController.$inject = ['$auth', '$state', 'alert', 'tokenIdentity'];
 
-    function LoginController($auth, $state, alert, identity) {
+    function LoginController($auth, $state, alert, tokenIdentity) {
         var vm = this;
         vm.email = '';
         vm.password = '';
@@ -21,7 +21,7 @@
                 })
                 .then(function (res) {
                     alert.show('info', 'Welcome!', 'Thanks for coming back, ' + res.data.user.email + '!');
-                    identity.login(res.data.user);
+                    tokenIdentity.login(res.data.user);
                     $state.go('layout.home');
                 })
                 .catch(function (err) {

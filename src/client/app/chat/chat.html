@@ -2,16 +2,29 @@
 
 <hr />
 
-<div class="chat" ng-repeat="message in vm.messages">
-	<div><small>{{message.timestamp}}</small> <strong>{{message.user}}</strong>: {{message.message}}</div>
-</div>
+<div class="chat">
+    <div class="row">
+        <div class="col-md-9 messages">
+            <div ng-repeat="msg in vm.messages">
+                <small ng-show="msg.received">{{msg.received | date:'HH:mm:ss'}} ({{msg.latency}}ms)</small>
+                <strong ng-show="msg.user">{{msg.user.name}}: </strong> {{msg.message}}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <ul class="list-unstyled" ng-repeat="user in vm.users">
+                <li>{{user.name}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group">
+                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.sendMessage(vm.newMessage) : null">
 
-<hr />
-
-<div class="input-group">
-	<input class="form-control" type="text" ng-model="vm.newMessage" ui-keypress="{enter: 'vm.sendMessage(vm.newMessage)'}">
-
-	<span class="input-group-btn">
-		<button class="btn btn-primary" type="button" ng-click="vm.sendMessage(vm.newMessage)">Send</button>
-	</span>
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="vm.sendMessage(vm.newMessage)">Send</button>
+                </span>
+            </div>
+        </div>
+    </div>
 </div>

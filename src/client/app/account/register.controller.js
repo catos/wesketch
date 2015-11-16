@@ -5,8 +5,8 @@
         .module('app.account')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['$auth', 'alert', 'identity'];
-    function RegisterController($auth, alert, identity) {
+    RegisterController.$inject = ['$auth', 'alert', 'tokenIdentity'];
+    function RegisterController($auth, alert, tokenIdentity) {
         var vm = this;
         vm.name = '';
         vm.email = '';
@@ -23,7 +23,7 @@
                 .then(function (res) {
                     alert.show('success', 'Account Created!', 'Welcome, ' + res.data.user.email + '!');
                     $auth.setToken(res);
-                    identity.login(res.data.user);
+                    tokenIdentity.login(res.data.user);
                 })
                 .catch(function (err) {
                     alert.show('warning', 'Something went wrong :(', err.message);
