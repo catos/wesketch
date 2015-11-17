@@ -4,13 +4,13 @@
 
 <div class="chat">
     <div class="row">
-        <div class="col-md-9 messages">
+        <div class="col-xs-9 messages">
             <div ng-repeat="msg in vm.messages">
                 <small ng-show="msg.received">{{msg.received | date:'HH:mm:ss'}} ({{msg.latency}}ms)</small>
                 <strong ng-show="msg.user">{{msg.user.name}}: </strong> {{msg.message}}
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-xs-3">
             <ul class="list-unstyled" ng-repeat="user in vm.users">
                 <li>{{user.name}}</li>
             </ul>

@@ -1,4 +1,6 @@
 # TODO Next
+- Prefix sawkit -> csaSawkit ?
+- Delete Drawing-directive ?
 - Rename identity -> tokenIdentity og flytt til /blocks
 - Reset password
 - Create directive: validate confirm password

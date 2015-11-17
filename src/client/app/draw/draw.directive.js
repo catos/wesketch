@@ -24,6 +24,7 @@
 
         function link(scope, element, attrs, ctrl) {
             var ctx = element[0].getContext('2d');
+            ctrl.init(ctx);
 
             // variable that decides if something should be drawn on mousemove
             var drawing = false;
@@ -77,30 +78,61 @@
                 element[0].width = element[0].width;
             }
 
-            function draw(lX, lY, cX, cY) {
-                ctrl.log();
-                
-                // line from
-                ctx.moveTo(lX, lY);
-                // to
-                ctx.lineTo(cX, cY);
-                // color
-                ctx.strokeStyle = "#4bf";
-                // draw it
-                ctx.stroke();
+            function draw(lastX, lastY, currentX, currentY) {
+
+                // ctrl.update(lX, lY, cX, cY);
+                ctrl.update({ lastX, lastY, currentX, currentY });
+
+                // // line from
+                // ctx.moveTo(lX, lY);
+                // // to
+                // ctx.lineTo(cX, cY);
+                // // color
+                // ctx.strokeStyle = "#4bf";
+                // // draw it
+                // ctx.stroke();
             }
         }
     }
 
-    DrawingController.$inject = ['$scope'];
+    DrawingController.$inject = ['$scope', 'sawkit'];
 
-    function DrawingController($scope) {
+    function DrawingController($scope, sawkit) {
         var vm = this;
+        var ctx;
+        vm.init = init;
+        vm.draw = draw;
+        vm.update = update;
 
-        vm.log = log;
+        function init(_ctx) {
+            console.log('ctrl->init');
+            if (ctx == null) {
+                ctx = _ctx;
+            }
+            console.log('ctx: ', ctx);
+        }
 
-        function log() {
-            console.log('draw');
+        sawkit.on('draw', function (coords) {
+            // console.log('on.draw: ', coords);
+            draw(coords);
+        });
+
+        function draw(coords) {
+            // console.log('draw, coords: ', coords);
+
+            // line from
+            ctx.moveTo(coords.lastX, coords.lastY);
+            // to
+            ctx.lineTo(coords.currentX, coords.currentY);
+            // color
+            ctx.strokeStyle = "#f99"; //"#4bf";
+            // draw it
+            ctx.stroke();
+        }
+
+        function update(coords) {
+            // console.log('update, coords: ', coords);
+            sawkit.emit('draw', coords);
         }
 
     }

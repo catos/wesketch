@@ -6,6 +6,9 @@ module.exports = function(app, settings) {
 
     io.on('connection', function(socket) {
 
+        /**
+         * Chat
+         */
         socket.on('user-join', function(user) {
             var userAlreadyExist = false;
             for (var i = 0; i < users.length; i++) {
@@ -35,6 +38,13 @@ module.exports = function(app, settings) {
             console.log('[ WS disconnect ] - User disconnected');
         });
 
+        /**
+         * Draw
+         */
+         socket.on('draw-update', function (coords) {
+            //  console.log('draw-update');
+             io.emit('draw-update', coords);
+         });
     });
 
     http.listen(settings.websocketsPort, function() {
