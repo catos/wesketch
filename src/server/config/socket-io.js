@@ -45,6 +45,11 @@ module.exports = function(app, settings) {
             //  console.log('draw-update');
              io.emit('draw-update', coords);
          });
+
+         socket.on('draw-message', function (message) {
+            //  console.log('draw-message');
+             io.emit('draw-message', message);
+         });
     });
 
     http.listen(settings.websocketsPort, function() {

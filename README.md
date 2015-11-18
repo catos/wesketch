@@ -15,6 +15,8 @@
 	- Rename BatteriesController -> Batteries ? (styleguide)
 	- Rename batteries.route.js -> batteries.routes.js (plural)
 - https://github.com/johnpapa/gulp-patterns
+- Draw
+	- http://codepen.io/goker/pen/kbEdn
 
 # TODO Later
 - Gulp
