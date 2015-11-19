@@ -1,4 +1,7 @@
 # TODO Next
+- Opprett feature "iSketch" som skal bruke både chat og draw (new name pending)
+- Rename draw-* til noe annet og gjør det til en komponent
+- Sjekk sailsjs hvordan de setter opp websockets, splitt opp server/config/sockets-io.js i komponenter
 - Delete Drawing-directive ?
 - Reset password
 - Create directive: validate confirm password
@@ -32,7 +35,9 @@
 	- http://codepen.io/goker/pen/kbEdn
 
 # TO DONE
-- ~~ Simple CRUD on users in the client~~
+- ~~Prototype draw-feature with sockets.io~~
+- ~~Prototype chat with sockets.io~~
+- ~~Simple CRUD on users in the client~~
 - ~~JSCS~~
 - ~~JSHINT~~
 - ~~Seed users~~

@@ -70,6 +70,7 @@
                  * Socket listeners
                  */
                 sawkit.on('draw-update', function (coords) {
+                    console.log('draw-update');
                     draw(coords);
                 });
 
@@ -95,6 +96,7 @@
                 service.coords.to = coords;
 
                 sawkit.emit('draw-update', service.coords);
+                draw(service.coords);
 
                 // set current coordinates to last one
                 service.coords.from = service.coords.to;
