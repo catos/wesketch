@@ -44,9 +44,6 @@
                     lastY = event.layerY - event.currentTarget.offsetTop;
                 }
 
-                // begins new line
-                ctx.beginPath();
-
                 drawing = true;
             });
             element.bind('mousemove', function (event) {
@@ -120,6 +117,8 @@
         function draw(coords) {
             // console.log('draw, coords: ', coords);
 
+            // begins new line
+            ctx.beginPath();
             // line from
             ctx.moveTo(coords.lastX, coords.lastY);
             // to

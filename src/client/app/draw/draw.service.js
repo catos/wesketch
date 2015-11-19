@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -12,7 +12,8 @@
         var settings = {
             strokeStyle: "#333",
             lineWidth: 2,
-            lineJoin: 'round'
+            lineJoin: 'round',  // 'butt', 'round', 'square'
+            lineCap: 'round'    // 'bevel', 'round', 'miter'
         };
 
         var service = {
@@ -50,7 +51,7 @@
             // console.log('draw.service -> init');
             if (service.ctx == null) {
                 service.canvas = canvas;
-                
+
                 service.canvas.onmousedown = start;
                 service.canvas.onmouseup = stop;
                 service.canvas.onmousemove = move;
@@ -58,18 +59,21 @@
 
                 service.ctx = canvas.getContext('2d');
 
+                // Settings
                 service.ctx.strokeStyle = settings.strokeStyle;
                 service.ctx.lineWidth = settings.lineWidth;
                 service.ctx.lineJoin = settings.lineJoin;
+                service.ctx.lineCap = settings.lineCap;
+
 
                 /**
                  * Socket listeners
                  */
-                sawkit.on('draw-update', function(coords) {
+                sawkit.on('draw-update', function (coords) {
                     draw(coords);
                 });
 
-                sawkit.on('draw-message', function(message) {
+                sawkit.on('draw-message', function (message) {
                     handleMessage(message);
                 });
 
@@ -101,7 +105,7 @@
         function stop(event) {
             service.drawing = false;
         }
-        
+
         function leave(event) {
             service.drawing = false;
             console.log('leaving canvas!');
@@ -110,7 +114,6 @@
         function draw(coords) {
             // console.log('draw.service->draw');
             service.ctx.beginPath();
-
             service.ctx.moveTo(coords.from.x, coords.from.y);
             service.ctx.lineTo(coords.to.x, coords.to.y);
             service.ctx.stroke();
@@ -142,10 +145,21 @@
         }
 
         function getCoords(event) {
-            return {
-                x: event.offsetX,
-                y: event.offsetY
+            var coords = {
+                x: 0,
+                y: 0
             };
+
+            if (event.offsetX !== undefined) {
+                coords.x = event.offsetX;
+                coords.y = event.offsetY;
+            } else { 
+                // Firefox compatibility
+                coords.x = event.layerX - event.currentTarget.offsetLeft;
+                coords.y = event.layerY - event.currentTarget.offsetTop;
+            }
+            
+            return coords;
         }
 
 

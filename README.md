@@ -1,22 +1,15 @@
 # TODO Next
-- Prefix sawkit -> csaSawkit ?
 - Delete Drawing-directive ?
-- Rename identity -> tokenIdentity og flytt til /blocks
 - Reset password
 - Create directive: validate confirm password
 	- http://toddmotto.com/killing-it-with-angular-directives-structure-and-mvvm/
-- Node.js best practises:
-	- Never require Modules Inside of Functions
-	- Always “use strict” (mangler endel på server-siden)
-- Repetetive code on controllers....need a default controller with crud-methods
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
+	- Repetetive code on controllers....need a default controller with crud-methods
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
 - Styleguide
 	- Rename BatteriesController -> Batteries ? (styleguide)
 	- Rename batteries.route.js -> batteries.routes.js (plural)
 - https://github.com/johnpapa/gulp-patterns
-- Draw
-	- http://codepen.io/goker/pen/kbEdn
 
 # TODO Later
 - Gulp
@@ -35,6 +28,8 @@
 	- https://github.com/fdietz/how_to_build_your_own_team_chat_in_five_days/tree/master/day_4/nodejs_express_socketio_chat/public/app
 - iSketch
 	- http://stackoverflow.com/a/27025090
+	- http://www.jacklmoore.com/notes/mouse-position/
+	- http://codepen.io/goker/pen/kbEdn
 
 # TO DONE
 - ~~ Simple CRUD on users in the client~~
