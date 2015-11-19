@@ -50,9 +50,11 @@
             // console.log('draw.service -> init');
             if (service.ctx == null) {
                 service.canvas = canvas;
+                
                 service.canvas.onmousedown = start;
                 service.canvas.onmouseup = stop;
                 service.canvas.onmousemove = move;
+                service.canvas.onmouseleave = leave;
 
                 service.ctx = canvas.getContext('2d');
 
@@ -98,6 +100,11 @@
 
         function stop(event) {
             service.drawing = false;
+        }
+        
+        function leave(event) {
+            service.drawing = false;
+            console.log('leaving canvas!');
         }
 
         function draw(coords) {
