@@ -5,40 +5,42 @@
         .module('app.draw')
         .controller('DrawController', DrawController);
 
-    DrawController.$inject = ['drawService', 'sawkit'];
-
-    function DrawController(drawService, sawkit) {
-        var canvas = null;
+    function DrawController() {
         var vm = this;
-        vm.clear = clear;
-        vm.drawService = drawService;
-        vm.modifyLineWidth = modifyLineWidth;
-        vm.debug = {
-            updates: 0,
-            messages: 0,
-        };
-
-        init();
-
-        function init() {
-            if (canvas == null) {
-                canvas = document.getElementById("canvas");
-                vm.drawService.init(canvas);
-            }
-        }
-
-        function clear() {
-            sawkit.emit('draw-message', {
-                type: 'clear'
-            });
-        }
-
-        function modifyLineWidth(modifier) {
-            sawkit.emit('draw-message', {
-                type: 'modify-line-width',
-                modifier: modifier
-            });
-        }
-
     }
 })();
+
+// function DrawController(drawService, sawkit) {
+//     var canvas = null;
+//     var vm = this;
+//     vm.clear = clear;
+//     vm.drawService = drawService;
+//     vm.modifyLineWidth = modifyLineWidth;
+//     vm.debug = {
+//         updates: 0,
+//         messages: 0,
+//     };
+//
+//     init();
+//
+//     function init() {
+//         if (canvas == null) {
+//             canvas = document.getElementById("canvas");
+//             vm.drawService.init(canvas);
+//         }
+//     }
+//
+//     function clear() {
+//         sawkit.emit('draw-message', {
+//             type: 'clear'
+//         });
+//     }
+//
+//     function modifyLineWidth(modifier) {
+//         sawkit.emit('draw-message', {
+//             type: 'modify-line-width',
+//             modifier: modifier
+//         });
+//     }
+//
+// }

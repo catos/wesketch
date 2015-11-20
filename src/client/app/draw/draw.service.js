@@ -155,12 +155,12 @@
             if (event.offsetX !== undefined) {
                 coords.x = event.offsetX;
                 coords.y = event.offsetY;
-            } else { 
+            } else {
                 // Firefox compatibility
                 coords.x = event.layerX - event.currentTarget.offsetLeft;
                 coords.y = event.layerY - event.currentTarget.offsetTop;
             }
-            
+
             return coords;
         }
 

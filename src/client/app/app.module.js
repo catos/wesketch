@@ -11,6 +11,8 @@
             'blocks.sawkit',
             'blocks.tokenIdentity',
 
+            'components.csadraw',
+
             'ui.router',
             'ui.bootstrap',
 
