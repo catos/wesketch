@@ -40,7 +40,7 @@ module.exports = function (app, settings) {
     });
 
     io.on('connection', function (socket) {
-         
+
         /**
          * Draw
          */
@@ -51,7 +51,7 @@ module.exports = function (app, settings) {
 
         socket.on('draw-message', function (message) {
             //  console.log('draw-message');
-            io.emit('draw-message', message);
+            socket.broadcast.emit('draw-message', message);
         });
     });
 
