@@ -20,7 +20,12 @@
         return directive;
 
         function linkFunc(scope, el, attr, ctrl) {
-            ctrl.init();
+            // ctrl.init();
+
+            el.bind('mousedown', ctrl.onMouseDown);
+            el.bind('mouseup', ctrl.onMouseUp);
+            el.bind('mousemove', ctrl.onMouseMove);
+            el.bind('mouseleave', ctrl.onMouseLeave);
         }
     }
 })();
