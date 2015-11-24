@@ -24,11 +24,6 @@
             }
         };
 
-        vm.onMouseUp = onMouseUp;
-        vm.onMouseDown = onMouseDown;
-        vm.onMouseMove = onMouseMove;
-        vm.onMouseLeave = onMouseLeave;
-
         vm.clear = clear;
         vm.init = init;
 
@@ -36,11 +31,13 @@
 
         function init() {
             vm.canvas = document.getElementById('canvas');
+
             if (vm.canvas !== undefined) {
-                // vm.canvas.onmousedown = onMouseDown;
-                // vm.canvas.onmouseup = onMouseUp;
-                // vm.canvas.onmousemove = onMouseMove;
-                // vm.canvas.onmouseleave = onMouseLeave;
+                vm.canvas.onmousedown = onMouseDown;
+                vm.canvas.onmouseup = onMouseUp;
+                vm.canvas.onmousemove = onMouseMove;
+                vm.canvas.onmouseleave = onMouseLeave;
+
                 vm.ctx = vm.canvas.getContext('2d');
             }
         }

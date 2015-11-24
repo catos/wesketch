@@ -1,13 +1,35 @@
-module.exports = function (app, settings) {
-    var http = require('http').Server(app);
-    var io = require('socket.io')(http);
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-    // require('../sockets/chat-sockets.js', io);
-    // require('../sockets/draw-sockets.js', io);
+module.exports = function(app, settings) {
+    // var http = require('http').Server(app);
+    // var io = require('socket.io')(http);
+    //
+    // io.on('connection', function(socket) {
+    //     // require('../sockets/chat-sockets.js', io);
+    //     // require('../sockets/draw-sockets.js', io);
+    //
+    //     socket.on('draw-update', function(coords) {
+    //         console.log('draw-update');
+    //         socket.broadcast.emit('draw-update', coords);
+    //     });
+    //
+    //     socket.on('draw-message', function(message) {
+    //         console.log('draw-message');
+    //         socket.broadcast.emit('draw-message', message);
+    //     });
+    // });
+    //
+    // http.listen(settings.websocketsPort, function() {
+    //     console.log('Socket.io listening on *:' + settings.websocketsPort);
+    // });
+
     io.on('connection', function(socket) {
+        // require('../sockets/chat-sockets.js', io);
+        // require('../sockets/draw-sockets.js', io);
 
         socket.on('draw-update', function(coords) {
-            // console.log('draw-update');
+            console.log('draw-update');
             socket.broadcast.emit('draw-update', coords);
         });
 
@@ -17,8 +39,7 @@ module.exports = function (app, settings) {
         });
     });
 
-    http.listen(settings.websocketsPort, function () {
+    http.listen(settings.websocketsPort, function() {
         console.log('Socket.io listening on *:' + settings.websocketsPort);
     });
-
 };
