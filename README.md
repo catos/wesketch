@@ -33,6 +33,7 @@
 	- http://stackoverflow.com/a/27025090
 	- http://www.jacklmoore.com/notes/mouse-position/
 	- http://codepen.io/goker/pen/kbEdn
+    - Game-loop = http://buildnewgames.com/real-time-multiplayer/
 
 # TO DONE
 - ~~Prototype draw-feature with sockets.io~~

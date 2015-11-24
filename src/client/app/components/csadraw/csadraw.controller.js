@@ -1,3 +1,17 @@
+/*
+
+BROADCAST:
+
+[Client]
+    Change Color Event
+    Send Message
+[Server]
+    On Broadcast Message -> Send Broadcast Message
+[Client]
+    Receieve Message
+    Change Color
+
+*/
 (function() {
     'use strict';
 
@@ -24,23 +38,19 @@
             }
         };
 
-        vm.onMouseUp = onMouseUp;
-        vm.onMouseDown = onMouseDown;
-        vm.onMouseMove = onMouseMove;
-        vm.onMouseLeave = onMouseLeave;
-
         vm.clear = clear;
         vm.init = init;
 
         init();
 
         function init() {
+            sawkit.connect('chat');
             vm.canvas = document.getElementById('canvas');
             if (vm.canvas !== undefined) {
-                // vm.canvas.onmousedown = onMouseDown;
-                // vm.canvas.onmouseup = onMouseUp;
-                // vm.canvas.onmousemove = onMouseMove;
-                // vm.canvas.onmouseleave = onMouseLeave;
+                vm.canvas.onmousedown = onMouseDown;
+                vm.canvas.onmouseup = onMouseUp;
+                vm.canvas.onmousemove = onMouseMove;
+                vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
             }
         }
@@ -63,11 +73,12 @@
             //  console.log('onMouseMove: ', getCoords(event));
             if (vm.drawing) {
                 vm.coords.to = getCoords(event);
-                //  console.log('drawing...', vm.coords);
+                // console.log('drawing...', vm.coords);
 
-                sawkit.emit('draw-update', vm.coords);
-                // console.log(sawkit);
-                draw(vm.coords);
+                sawkit.emit('message', {
+                    type: 'draw',
+                    coords: vm.coords
+                });
 
                 // set current coordinates to last one
                 vm.coords.from = vm.coords.to;
@@ -83,12 +94,7 @@
         /**
          * Socket events
          */
-        sawkit.on('draw-update', function(coords) {
-            // console.log('draw-update: ', coords);
-            draw(coords);
-        });
-
-        sawkit.on('draw-message', function(message) {
+        sawkit.on('message', function(message) {
             handleMessage(message);
         });
 
@@ -101,10 +107,6 @@
             //     type: 'clear'
             // });
             vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
-        }
-
-        function test() {
-            console.log('test');
         }
 
         /**
@@ -122,6 +124,9 @@
                     break;
                 case 'clear':
                     clear();
+                    break;
+                case 'draw':
+                    draw(message.coords);
                     break;
                 default:
                     return;
