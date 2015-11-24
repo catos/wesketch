@@ -22,5 +22,4 @@ module.exports = function(app, settings) {
     http.listen(settings.websocketsPort, function() {
         console.log('Socket.io listening on *:' + settings.websocketsPort);
     });
-
 };

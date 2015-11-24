@@ -46,6 +46,7 @@ BROADCAST:
         function init() {
             sawkit.connect('chat');
             vm.canvas = document.getElementById('canvas');
+
             if (vm.canvas !== undefined) {
                 vm.canvas.onmousedown = onMouseDown;
                 vm.canvas.onmouseup = onMouseUp;
