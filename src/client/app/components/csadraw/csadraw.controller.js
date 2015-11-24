@@ -19,9 +19,9 @@ BROADCAST:
         .module('components.csadraw')
         .controller('CsadrawController', CsadrawController);
 
-    CsadrawController.$inject = ['sawkit'];
+    CsadrawController.$inject = ['alert', 'sawkit'];
 
-    function CsadrawController(sawkit) {
+    function CsadrawController(alert, sawkit) {
         var vm = this;
 
         vm.canvas = null;
@@ -37,8 +37,14 @@ BROADCAST:
                 y: 0
             }
         };
+        vm.settings = {
+            strokeStyle: '#333',
+            lineWidth: 2,
+            lineJoin: 'round',  // 'butt', 'round', 'square'
+            lineCap: 'round'    // 'bevel', 'round', 'miter'
+        };
 
-        vm.clear = clear;
+        vm.clientMessage = clientMessage;
         vm.init = init;
 
         init();
@@ -54,90 +60,90 @@ BROADCAST:
                 vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
             }
+
         }
+
+        sawkit.on('message', function(message) {
+            if (message.type !== 'draw') {
+                console.log('handleMessage: ' + message.type);
+            }
+
+            switch (message.type) {
+                case 'set-stroke-style':
+                    vm.settings.strokeStyle = message.value;
+                    break;
+                case 'set-line-width':
+                    vm.settings.lineWidth = message.value;
+                    break;
+                case 'clear':
+                    vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+                    break;
+                case 'draw':
+                    draw(message.coords);
+                    break;
+                default:
+                    alert.show('warning', 'Csadraw!', 'handler not found for message, type = ' + message.type);
+                    return;
+            }
+        });
 
         /**
          * Events
          */
         function onMouseDown(event) {
-            console.log('onMouseDown: ', getCoords(event));
             vm.coords.from = getCoords(event);
             vm.drawing = true;
         }
 
         function onMouseUp(event) {
-            console.log('onMouseUp: ', getCoords(event));
             vm.drawing = false;
         }
 
         function onMouseMove(event) {
-            //  console.log('onMouseMove: ', getCoords(event));
             if (vm.drawing) {
                 vm.coords.to = getCoords(event);
-                // console.log('drawing...', vm.coords);
 
                 sawkit.emit('message', {
                     type: 'draw',
                     coords: vm.coords
                 });
 
-                // set current coordinates to last one
                 vm.coords.from = vm.coords.to;
-
             }
         }
 
         function onMouseLeave(event) {
-            console.log('onMouseLeave: ', getCoords(event));
             vm.drawing = false;
         }
 
-        /**
-         * Socket events
-         */
-        sawkit.on('message', function(message) {
-            handleMessage(message);
-        });
+        function clientMessage(message) {
+            validateClientMessage(message, function(err, message) {
 
-        /**
-         * Public functions
-         */
-        function clear() {
-            console.log('clear');
-            // sawkit.emit('draw-message', {
-            //     type: 'clear'
-            // });
-            vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+                if (err) {
+                    alert.show('warning', 'Csadraw!', 'Invalid client message: ' + err.message);
+                    return;
+                }
+
+                sawkit.emit('message', {
+                    type: message.type,
+                    value: message.value
+                });
+            });
+
         }
 
         /**
          * Private functions
          */
-        function handleMessage(message) {
-            switch (message.type) {
-                case 'set-stroke-style':
-                    console.log('set-stroke-style: ' + message.strokeStyle);
-                    vm.ctx.strokeStyle = message.strokeStyle;
-                    break;
-                case 'modify-line-width':
-                    vm.ctx.lineWidth += message.modifier;
-                    console.log('new line-width: ' + vm.ctx.lineWidth);
-                    break;
-                case 'clear':
-                    clear();
-                    break;
-                case 'draw':
-                    draw(message.coords);
-                    break;
-                default:
-                    return;
-            }
-        }
-
-
         function draw(coords) {
-            // console.log('draw.service->draw');
             vm.ctx.beginPath();
+
+            // Settings
+            vm.ctx.strokeStyle = vm.settings.strokeStyle;
+            vm.ctx.lineWidth = vm.settings.lineWidth;
+            vm.ctx.lineJoin = vm.settings.lineJoin;
+            vm.ctx.lineCap = vm.settings.lineCap;
+
             vm.ctx.moveTo(coords.from.x, coords.from.y);
             vm.ctx.lineTo(coords.to.x, coords.to.y);
             vm.ctx.stroke();
@@ -159,6 +165,26 @@ BROADCAST:
             }
 
             return coords;
+        }
+
+        function validateClientMessage(message, cb) {
+            var validTypes = [
+                'clear',
+                'set-stroke-style',
+                'set-line-width'
+            ];
+
+            if (!message.type) {
+                cb(new Error('Type is undefined'));
+                return;
+            }
+
+            if (validTypes.indexOf(message.type) === -1) {
+                cb(new Error('Invalid type: "' + message.type + '"'));
+                return;
+            }
+
+            cb(null, message);
         }
     }
 })();

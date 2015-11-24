@@ -1,4 +1,3 @@
-
 <div class="row csadraw">
     <div class="col-xs-9">
         <h3>csadraw</h3>
@@ -6,26 +5,51 @@
         </canvas>
     </div>
     <div class="col-xs-3">
-        test: {{vm.test}}
+        <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage({ type: 'clear' })">Clear</button>
 
-        <button type="button" name="button" class="btn btn-default" ng-click="vm.clear()">Clear</button>
-
-        <!--<button type="button" name="button" class="btn btn-primary btn-sm" ng-click="vm.drawService.setStrokeStyle('#33f')">&nbsp;</button>
+        <button type="button" name="button" class="btn btn-primary btn-sm" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#ace' })">&nbsp;</button>
 
         <div class="btn-toolbar">
             <div class="btn-group">
-                <button type="button" class="btn btn-default" ng-click="vm.modifyLineWidth(1)"><i class="fa fa-paint-brush"></i>+</button>
-                <button type="button" class="btn btn-default" ng-click="vm.modifyLineWidth(-1)"><i class="fa fa-paint-brush"></i>-</button>
+                <button type="button" class="btn btn-info" ng-click="vm.clientMessage({ type: 'set-line-width', value: vm.settings.lineWidth + 1 })">+</button>
+                <button type="button" class="btn btn-info" ng-click="vm.clientMessage({ type: 'set-line-width', value: vm.settings.lineWidth - 1 })">-</button>
             </div>
         </div>
 
+        <div class="color-widget">
+            <div class="current-color" style="background-color: {{vm.settings.strokeStyle}}"></div>
 
-         -->
-         <div>
-             Drawing: {{vm.drawing}}
-             <br> Coords: {{vm.coords.to.x}}, {{vm.coords.to.y}}
-             <!-- <br> <strong>socket->updates: </strong>{{vm.debug.updates}}
+            <div class="colors">
+                <div style="background-color: #000" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#000' })"></div>
+                <div style="background-color: #fff" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#fff' })"></div>
+                <div style="background-color: #ccc" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#ccc' })"></div>
+                <div style="background-color: #f00" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#f00' })"></div>
+                <div style="background-color: #0f0" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#0f0' })"></div>
+                <div style="background-color: #00f" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#00f' })"></div>
+                <div style="background-color: #ff0" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#ff0' })"></div>
+                <div style="background-color: #0ff" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#0ff' })"></div>
+                <div style="background-color: #f0f" ng-click="vm.clientMessage({ type: 'set-stroke-style', value: '#f0f' })"></div>
+            </div>
+        </div>
+
+        <div>
+            <hr>
+            <h2>Debug</h2>
+            Drawing: {{vm.drawing}}
+            <br> Coords: {{vm.coords.to.x}}, {{vm.coords.to.y}}
+            <p>
+                Settings: {{vm.settings}}
+            </p>
+            <!-- <br> <strong>socket->updates: </strong>{{vm.debug.updates}}
              <br> <strong>socket->messages: </strong>{{vm.debug.messages}} -->
-         </div>
+
+            <div class="btn-group">
+                <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage({})">Type is not defined</button>
+                <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage({ type: '' })">Type is empty</button>
+                <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage({ type: 'illegalType' })">illegalType</button>
+            </div>
+
+        </div>
+
     </div>
 </div>
