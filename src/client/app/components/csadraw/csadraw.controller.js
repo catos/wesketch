@@ -22,8 +22,24 @@ BROADCAST:
     CsadrawController.$inject = ['alert', 'sawkit'];
 
     function CsadrawController(alert, sawkit) {
-        var vm = this;
+        /**
+         * Private variables
+         */
+        var strokeStyles = [{
+            code: '#000',
+            current: true
+        }, {
+            code: '#fff',
+            current: false
+        }, {
+            code: '#ccc',
+            current: false
+        }, ];
 
+        /**
+         * Viewmodel
+         */
+        var vm = this;
         vm.canvas = null;
         vm.ctx = null;
         vm.drawing = false;
@@ -38,10 +54,16 @@ BROADCAST:
             }
         };
         vm.settings = {
-            strokeStyle: '#333',
             lineWidth: 2,
-            lineJoin: 'round',  // 'butt', 'round', 'square'
-            lineCap: 'round'    // 'bevel', 'round', 'miter'
+            lineJoin: 'round', // 'butt', 'round', 'square'
+            lineCap: 'round', // 'bevel', 'round', 'miter',
+
+            currentStrokeStyle: strokeStyles.find(function(element) {
+                if (element.current) {
+                    return element;
+                }
+            }),
+            strokeStyles: strokeStyles,
         };
 
         vm.clientMessage = clientMessage;
@@ -60,20 +82,30 @@ BROADCAST:
                 vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
             }
-
         }
 
         sawkit.on('message', function(message) {
             if (message.type !== 'draw') {
-                console.log('handleMessage: ' + message.type);
+                console.log('handleMessage: type = ' + message.type + ', value = ' + message.value);
             }
 
             switch (message.type) {
                 case 'set-stroke-style':
-                    vm.settings.strokeStyle = message.value;
+                    // TODO: review on strokeStyles (rename to colors, since that is the only applicable option ?)
+                    vm.settings.strokeStyles.every(function(element) {
+                        element.current = false;
+                    });
+
+                    vm.settings.strokeStyles.find(function (element) {
+                        if (element.code === message.value) {
+                            element.current = true;
+                            return;
+                        }
+                    });
+                    console.log(vm.settings.strokeStyles);
                     break;
                 case 'set-line-width':
-                    vm.settings.lineWidth = message.value;
+                    vm.settings.lineWidth = message.value < 2 ? 2 : message.value;
                     break;
                 case 'clear':
                     vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
@@ -116,7 +148,11 @@ BROADCAST:
             vm.drawing = false;
         }
 
-        function clientMessage(message) {
+        function clientMessage(type, value) {
+            var message = {
+                type: type,
+                value: value
+            };
             validateClientMessage(message, function(err, message) {
 
                 if (err) {
@@ -139,7 +175,7 @@ BROADCAST:
             vm.ctx.beginPath();
 
             // Settings
-            vm.ctx.strokeStyle = vm.settings.strokeStyle;
+            vm.ctx.strokeStyle = vm.settings.currentStrokeStyle;
             vm.ctx.lineWidth = vm.settings.lineWidth;
             vm.ctx.lineJoin = vm.settings.lineJoin;
             vm.ctx.lineCap = vm.settings.lineCap;
@@ -167,6 +203,7 @@ BROADCAST:
             return coords;
         }
 
+        // TODO: Move validation to server ? Let client just fire away messages ?
         function validateClientMessage(message, cb) {
             var validTypes = [
                 'clear',
