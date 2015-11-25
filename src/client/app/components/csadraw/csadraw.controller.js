@@ -25,17 +25,8 @@ BROADCAST:
         /**
          * Private variables
          */
-        var tools = [
-            { type: 'brush', current: true },
-            { type: 'eraser', current: false },
-            { type: 'fill', current: false }
-        ];
-
-        var strokeStyles = [
-            { color: '#000', current: true },
-            { color: '#fff', current: false },
-            { color: '#ccc', current: false }
-        ];
+        var tools = [ 'brush', 'eraser', 'fill' ];
+        var colors = [ '#000', '#fff', '#ccc', '#ace' ];
 
         /**
          * Viewmodel
@@ -59,17 +50,19 @@ BROADCAST:
             lineJoin: 'round', // 'butt', 'round', 'square'
             lineCap: 'round', // 'bevel', 'round', 'miter',
 
-            currentTool: getCurrent(tools),
+            currentTool: tools[0],
             tools: tools,
 
-            currentStrokeStyle: getCurrent(strokeStyles),
-            strokeStyles: strokeStyles,
+            strokeStyle: colors[0],
+            colors: colors,
         };
 
         vm.clientMessage = clientMessage;
         vm.init = init;
 
         init();
+        
+        // TODO: Width 100% og scale for different client viewports!
 
         function init() {
             sawkit.connect('chat');
@@ -100,7 +93,7 @@ BROADCAST:
             if (vm.drawing) {
                 vm.coords.to = getCoords(event);
                 sawkit.emit('message', {
-                    type: vm.settings.currentTool.type,
+                    type: vm.settings.currentTool,
                     coords: vm.coords
                 });
 
@@ -138,10 +131,8 @@ BROADCAST:
         function brush(coords) {
             vm.ctx.beginPath();
 
-            console.log('vm.settings.currentStrokeStyle: ', vm.settings.currentStrokeStyle);
-
             // Settings
-            vm.ctx.currentStrokeStyle = vm.settings.currentStrokeStyle;
+            vm.ctx.strokeStyle = vm.settings.strokeStyle;
             vm.ctx.lineWidth = vm.settings.lineWidth;
             vm.ctx.lineJoin = vm.settings.lineJoin;
             vm.ctx.lineCap = vm.settings.lineCap;
@@ -182,7 +173,7 @@ BROADCAST:
             return coords;
         }
 
-        // TODO: Move validation to server ? Let client just fire away messages ?
+        // TODO: Move validation to server... Let client just fire away messages ?
         function validateClientMessage(message, cb) {
             var validTypes = [
                 'clear',
@@ -210,20 +201,7 @@ BROADCAST:
 
             switch (message.type) {
                 case 'set-stroke-style':
-                    // TODO: review on strokeStyles (rename to colors, since that is the only applicable option ?)
-                    console.log('currentStrokeStyle: ', vm.settings.currentStrokeStyle);
-
-                    for (var i = 0; i < vm.settings.strokeStyles.length; i++) {
-                        console.log('strokeStyle.color: ' + vm.settings.strokeStyles[i].color + ', message.value: ' + message.value);
-                        if (vm.settings.strokeStyles[i].color === message.value) {
-                            console.log('mathc!');
-                            vm.settings.strokeStyles[i].current = true;
-                        } else {
-                            vm.settings.strokeStyles[i].current = false;
-                        }
-                    };
-
-                    console.log('currentStrokeStyle: ', vm.settings.currentStrokeStyle);
+                    vm.settings.strokeStyle = message.value;
                     break;
                 case 'set-line-width':
                     vm.settings.lineWidth = message.value < 2 ? 2 : message.value;

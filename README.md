@@ -1,8 +1,12 @@
 # TODO Next
-- Opprett feature "iSketch" som skal bruke både chat og draw (new name pending)
-- Rename draw-* til noe annet og gjør det til en komponent
-- Sjekk sailsjs hvordan de setter opp websockets, splitt opp server/config/sockets-io.js i komponenter
-- Delete Drawing-directive ?
+- iSketch
+	- Reset (emit settings to all clients)
+	- All messages should send all settings to ensure the clients are identical (even the latecomers)
+	- Undo / Redo
+	- http://stackoverflow.com/a/27025090
+	- http://www.jacklmoore.com/notes/mouse-position/
+	- http://codepen.io/goker/pen/kbEdn
+    - Game-loop = http://buildnewgames.com/real-time-multiplayer/
 - Reset password
 - Create directive: validate confirm password
 	- http://toddmotto.com/killing-it-with-angular-directives-structure-and-mvvm/
@@ -12,7 +16,6 @@
 - Styleguide
 	- Rename BatteriesController -> Batteries ? (styleguide)
 	- Rename batteries.route.js -> batteries.routes.js (plural)
-- https://github.com/johnpapa/gulp-patterns
 
 # TODO Later
 - Gulp
@@ -29,11 +32,6 @@
 	- http://www.hutchinson.io/building-a-real-time-application-with-express-socketio-and-ember/
 	- http://fdietz.github.io/2015/04/16/day-4-how-to-build-your-own-team-chat-in-five-days-expressjs-socket-io-and-angularjs-component-based-design-patterns.html
 	- https://github.com/fdietz/how_to_build_your_own_team_chat_in_five_days/tree/master/day_4/nodejs_express_socketio_chat/public/app
-- iSketch
-	- http://stackoverflow.com/a/27025090
-	- http://www.jacklmoore.com/notes/mouse-position/
-	- http://codepen.io/goker/pen/kbEdn
-    - Game-loop = http://buildnewgames.com/real-time-multiplayer/
 
 # TO DONE
 - ~~Prototype draw-feature with sockets.io~~

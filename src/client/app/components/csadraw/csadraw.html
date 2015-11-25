@@ -22,22 +22,21 @@
             <div class="current-color" style="background-color: {{vm.settings.currentStrokeStyle}}"></div>
 
             <div class="colors">
-                <div style="background-color: {{strokeStyle.color}}" ng-repeat="strokeStyle in vm.settings.strokeStyles" ng-class="strokeStyle.current ? 'current' : ''"
-                ng-click="vm.clientMessage('set-stroke-style', strokeStyle.color)"></div>
+                <div 
+                    ng-repeat="color in vm.settings.colors" 
+                    style="background-color: {{color}}"
+                    ng-class="color === vm.settings.strokeStyle ? 'current' : ''"
+                    ng-click="vm.clientMessage('set-stroke-style', color)"></div>
             </div>
         </div>
 
         <div>
             <hr>
-            <h2>Debug</h2>
-            <p>Drawing: {{vm.drawing}}</p>
-            <p>Coords: {{vm.coords.to.x}}, {{vm.coords.to.y}}</p>
-            <p>
-                currentStrokeStyle: {{vm.currentStrokeStyle()}}
-            </p>
-            <p>Settings:
-                <pre>{{vm.settings}}</pre>
-            </p>
+            <h4>Debug</h4>
+            Coords: {{vm.coords.to.x}}, {{vm.coords.to.y}}<br />
+            Tool: {{vm.settings.currentTool}}, size: {{vm.settings.lineWidth}}, color: {{vm.settings.strokeStyle}}<br />
+            Settings<br />
+            <pre>{{vm.settings}}</pre>
 
         </div>
 

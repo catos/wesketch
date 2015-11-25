@@ -5,7 +5,7 @@ module.exports = function(io) {
 
             socket.on('message', function(message) {
 
-                if (message.type !== 'draw') {
+                if (message.type !== 'brush') {
                     console.log(message);
                 }
 
