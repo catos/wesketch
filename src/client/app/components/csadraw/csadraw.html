@@ -5,24 +5,25 @@
         </canvas>
     </div>
     <div class="col-xs-3">
-        <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage('clear')">Clear</button>
 
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                <i class="fa fa-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth - 2)"></i>
-                <i class="fa fa-circle fa-2x" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth + 2)"></i>
-            </div>
+        <div class="csa-widget tools-widget">
+            <div class="tool" ng-click="vm.clientMessage('clear')"><i class="fa fa-times"></i></div>
+            <div class="tool" ng-click="vm.clientMessage('change-tool', 'brush')"><i class="fa fa-paint-brush"></i></div>
+            <div class="tool" ng-click="vm.clientMessage('change-tool', 'eraser')"><i class="fa fa-eraser"></i></div>
+            <div class="tool" ng-click="vm.clientMessage('change-tool', 'fill')"><i class="fa fa-magic"></i></div>
         </div>
 
-        <div class="color-widget">
+        <div class="csa-widget brush-size-widget">
+            <div class="brush-size"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth - 2)"></i></div>
+            <div class="brush-size"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth + 2)"></i></div>
+        </div>
+
+        <div class="csa-widget color-widget">
             <div class="current-color" style="background-color: {{vm.settings.currentStrokeStyle}}"></div>
 
             <div class="colors">
-                <div
-                    style="background-color: {{strokeStyle.code}}"
-                    ng-repeat="strokeStyle in vm.settings.strokeStyles"
-                    ng-class="strokeStyle.current ? 'current' : ''"
-                    ng-click="vm.clientMessage('set-stroke-style', strokeStyle.code)"></div>
+                <div style="background-color: {{strokeStyle.color}}" ng-repeat="strokeStyle in vm.settings.strokeStyles" ng-class="strokeStyle.current ? 'current' : ''"
+                ng-click="vm.clientMessage('set-stroke-style', strokeStyle.color)"></div>
             </div>
         </div>
 
@@ -35,14 +36,8 @@
                 currentStrokeStyle: {{vm.currentStrokeStyle()}}
             </p>
             <p>Settings:
-               <pre>{{vm.settings}}</pre>
+                <pre>{{vm.settings}}</pre>
             </p>
-
-            <div class="btn-group">
-                <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage({})">Type is not defined</button>
-                <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage('')">Type is empty</button>
-                <button type="button" name="button" class="btn btn-default" ng-click="vm.clientMessage('illegalType')">illegalType</button>
-            </div>
 
         </div>
 

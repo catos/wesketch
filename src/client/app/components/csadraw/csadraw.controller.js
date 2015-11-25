@@ -12,7 +12,7 @@ BROADCAST:
     Change Color
 
 */
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -25,16 +25,17 @@ BROADCAST:
         /**
          * Private variables
          */
-        var strokeStyles = [{
-            code: '#000',
-            current: true
-        }, {
-            code: '#fff',
-            current: false
-        }, {
-            code: '#ccc',
-            current: false
-        }, ];
+        var tools = [
+            { type: 'brush', current: true },
+            { type: 'eraser', current: false },
+            { type: 'fill', current: false }
+        ];
+
+        var strokeStyles = [
+            { color: '#000', current: true },
+            { color: '#fff', current: false },
+            { color: '#ccc', current: false }
+        ];
 
         /**
          * Viewmodel
@@ -58,11 +59,10 @@ BROADCAST:
             lineJoin: 'round', // 'butt', 'round', 'square'
             lineCap: 'round', // 'bevel', 'round', 'miter',
 
-            currentStrokeStyle: strokeStyles.find(function(element) {
-                if (element.current) {
-                    return element;
-                }
-            }),
+            currentTool: getCurrent(tools),
+            tools: tools,
+
+            currentStrokeStyle: getCurrent(strokeStyles),
             strokeStyles: strokeStyles,
         };
 
@@ -84,41 +84,6 @@ BROADCAST:
             }
         }
 
-        sawkit.on('message', function(message) {
-            if (message.type !== 'draw') {
-                console.log('handleMessage: type = ' + message.type + ', value = ' + message.value);
-            }
-
-            switch (message.type) {
-                case 'set-stroke-style':
-                    // TODO: review on strokeStyles (rename to colors, since that is the only applicable option ?)
-                    vm.settings.strokeStyles.every(function(element) {
-                        element.current = false;
-                    });
-
-                    vm.settings.strokeStyles.find(function (element) {
-                        if (element.code === message.value) {
-                            element.current = true;
-                            return;
-                        }
-                    });
-                    console.log(vm.settings.strokeStyles);
-                    break;
-                case 'set-line-width':
-                    vm.settings.lineWidth = message.value < 2 ? 2 : message.value;
-                    break;
-                case 'clear':
-                    vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
-                    break;
-                case 'draw':
-                    draw(message.coords);
-                    break;
-                default:
-                    alert.show('warning', 'Csadraw!', 'handler not found for message, type = ' + message.type);
-                    return;
-            }
-        });
-
         /**
          * Events
          */
@@ -134,9 +99,8 @@ BROADCAST:
         function onMouseMove(event) {
             if (vm.drawing) {
                 vm.coords.to = getCoords(event);
-
                 sawkit.emit('message', {
-                    type: 'draw',
+                    type: vm.settings.currentTool.type,
                     coords: vm.coords
                 });
 
@@ -153,7 +117,7 @@ BROADCAST:
                 type: type,
                 value: value
             };
-            validateClientMessage(message, function(err, message) {
+            validateClientMessage(message, function (err, message) {
 
                 if (err) {
                     alert.show('warning', 'Csadraw!', 'Invalid client message: ' + err.message);
@@ -171,11 +135,13 @@ BROADCAST:
         /**
          * Private functions
          */
-        function draw(coords) {
+        function brush(coords) {
             vm.ctx.beginPath();
 
+            console.log('vm.settings.currentStrokeStyle: ', vm.settings.currentStrokeStyle);
+
             // Settings
-            vm.ctx.strokeStyle = vm.settings.currentStrokeStyle;
+            vm.ctx.currentStrokeStyle = vm.settings.currentStrokeStyle;
             vm.ctx.lineWidth = vm.settings.lineWidth;
             vm.ctx.lineJoin = vm.settings.lineJoin;
             vm.ctx.lineCap = vm.settings.lineCap;
@@ -183,6 +149,19 @@ BROADCAST:
             vm.ctx.moveTo(coords.from.x, coords.from.y);
             vm.ctx.lineTo(coords.to.x, coords.to.y);
             vm.ctx.stroke();
+        }
+
+        function floodFill(coords) {
+            console.log('floodfill!');
+        }
+
+        function getCurrent(elements) {
+            for (var i = 0; i < elements.length; i++) {
+                if (elements[i].current) {
+                    return elements[i];
+                }
+            };
+            return null;
         }
 
         function getCoords(event) {
@@ -223,5 +202,44 @@ BROADCAST:
 
             cb(null, message);
         }
+
+        sawkit.on('message', function (message) {
+            if (message.type !== 'brush') {
+                console.log('handleMessage: type = ' + message.type + ', value = ' + message.value);
+            }
+
+            switch (message.type) {
+                case 'set-stroke-style':
+                    // TODO: review on strokeStyles (rename to colors, since that is the only applicable option ?)
+                    console.log('currentStrokeStyle: ', vm.settings.currentStrokeStyle);
+
+                    for (var i = 0; i < vm.settings.strokeStyles.length; i++) {
+                        console.log('strokeStyle.color: ' + vm.settings.strokeStyles[i].color + ', message.value: ' + message.value);
+                        if (vm.settings.strokeStyles[i].color === message.value) {
+                            console.log('mathc!');
+                            vm.settings.strokeStyles[i].current = true;
+                        } else {
+                            vm.settings.strokeStyles[i].current = false;
+                        }
+                    };
+
+                    console.log('currentStrokeStyle: ', vm.settings.currentStrokeStyle);
+                    break;
+                case 'set-line-width':
+                    vm.settings.lineWidth = message.value < 2 ? 2 : message.value;
+                    break;
+                case 'clear':
+                    vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+                    break;
+                case 'brush':
+                    brush(message.coords);
+                    break;
+                default:
+                    alert.show('warning', 'Csadraw!', 'handler not found for message, type = ' + message.type);
+                    return;
+            }
+        });
+
+
     }
 })();
