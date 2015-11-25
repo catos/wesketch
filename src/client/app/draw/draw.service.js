@@ -10,7 +10,7 @@
     /* @ngInject */
     function drawService(sawkit) {
         var settings = {
-            strokeStyle: "#333",
+            strokeStyle: '#333',
             lineWidth: 2,
             lineJoin: 'round',  // 'butt', 'round', 'square'
             lineCap: 'round'    // 'bevel', 'round', 'miter'

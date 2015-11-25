@@ -1,6 +1,4 @@
 var args = require('yargs').argv;
-// var browserSync = require('browser-sync');
-// "browser-sync": "^2.9.12",
 var config = require('./gulp.config.js')();
 var del = require('del');
 var gulp = require('gulp');
@@ -12,7 +10,7 @@ var $ = require('gulp-load-plugins')({
 
 var port = process.env.PORT || config.defaultPort;
 
-gulp.task('vet', function() {
+gulp.task('lint', function() {
     log('Analyzing source with JSHint');
     return gulp
         .src(config.allJs)
@@ -21,17 +19,17 @@ gulp.task('vet', function() {
         .pipe($.jshint.reporter(stylish));
 });
 
+gulp.task('clean-styles', function() {
+    var files = config.temp + '**/*.css';
+    clean(files);
+});
+
 gulp.task('css', function() {
     log('Copying CSS from development styles');
 
     return gulp
         .src(config.clientCss)
         .pipe(gulp.dest(config.temp));
-});
-
-gulp.task('clean-styles', function() {
-    var files = config.temp + '**/*.css';
-    clean(files);
 });
 
 gulp.task('styles', ['clean-styles', 'css'], function() {
@@ -72,38 +70,38 @@ gulp.task('inject', ['wiredep', 'styles', 'css'], function() {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('serve-dev', ['inject', 'vet'], function() {
+gulp.task('serve-dev', function() {
     var isDev = true;
 
     var nodeOptions = {
         script: config.nodeServer,
-        delayTime: 1,
+        ext: 'js less',
+        ignore: [
+            config.index
+        ],
         env: {
             PORT: port,
             NODE_ENV: isDev ? 'dev' : 'build'
         },
-        watch: [config.server]
+        watch: [config.source],
+        // delayTime: 1,
+        // tasks: ['inject', 'lint']
     };
 
     return $.nodemon(nodeOptions)
         .on('restart', function(ev) {
-            log('*** nodemon restarted');
+            log('****************** nodemon restarted');
             log('files changed on restart:\n' + ev);
-
-            // setTimeout(function () {
-            // 	browserSync.notify('reloading now...');
-            // 	browserSync.reload({ stream: false });
-            // }, config.browserReloadDelay);
         })
-        .on('start', function() {
-            log('*** nodemon started');
+        .on('start', ['inject', 'lint'], function() {
+            log('****************** nodemon started');
             // startBrowserSync();
         })
         .on('crash', function() {
-            log('*** nodemon crashed: script crashed for some reason');
+            log('****************** nodemon crashed: script crashed for some reason');
         })
         .on('exit', function() {
-            log('*** nodemon exited cleanly');
+            log('****************** nodemon exited cleanly.');
         });
 });
 
@@ -113,43 +111,6 @@ function changeEvent(event) {
     var srcPattern = new RegExp('/.*(?=/' + config.source + ')/');
     log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
 }
-
-// function startBrowserSync() {
-// 	if (args.nosync || browserSync.active) {
-// 		return;
-// 	}
-
-// 	console.log('startBrowserSync');
-// 	log('Starting browser-sync on port: ' + port);
-
-// 	gulp
-// 		.watch([config.less], ['styles'])
-// 		.on('change', function (event) { changeEvent(event); });
-
-// 	var options = {
-// 		proxy: 'localhost:' + port,
-// 		port: 3000,
-// 		files: [
-// 			config.client + '**/*.*',
-// 			'!' + config.less,
-// 			config.temp + '**/*.css'
-// 		],
-// 		ghostMode: {
-// 			clicks: true,
-// 			location: false,
-// 			forms: true,
-// 			scroll: true
-// 		},
-// 		injectChanges: true,
-// 		logFileChanges: true,
-// 		logLevel: 'debug',
-// 		logPrefix: 'gulp-patterns',
-// 		notify: true,
-// 		reloadDelay: 0 // 1000
-// 	};
-
-// 	browserSync(options);
-// }
 
 function clean(path) {
     log('Cleaning: ' + $.util.colors.blue(path));

@@ -78,7 +78,7 @@
             function draw(lastX, lastY, currentX, currentY) {
 
                 // ctrl.update(lX, lY, cX, cY);
-                ctrl.update({ lastX, lastY, currentX, currentY });
+                // ctrl.update({ lastX, lastY, currentX, currentY });
 
                 // // line from
                 // ctx.moveTo(lX, lY);
@@ -124,7 +124,7 @@
             // to
             ctx.lineTo(coords.currentX, coords.currentY);
             // color
-            ctx.strokeStyle = "#f99"; //"#4bf";
+            ctx.strokeStyle = '#f99'; //"#4bf";
             // draw it
             ctx.stroke();
         }

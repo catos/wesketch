@@ -5,9 +5,9 @@
         .module('app.users')
         .controller('UserEditController', UserEditController);
 
-    UserEditController.$inject = ['$state', '$stateParams', 'alert', 'usersService'];
+    UserEditController.$inject = ['$state', '$stateParams', 'alert', 'UsersService'];
 
-    function UserEditController($state, $stateParams, alert, usersService) {
+    function UserEditController($state, $stateParams, alert, UsersService) {
         var vm = this;
         vm.user = {};
         vm.submit = submit;
@@ -17,7 +17,7 @@
 
         function activate() {
 
-            usersService.get(
+            UsersService.get(
                 {
                     id: $stateParams.id
                 },

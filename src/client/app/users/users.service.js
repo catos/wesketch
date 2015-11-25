@@ -3,11 +3,11 @@
 
     angular
         .module('app.users')
-        .factory('usersService', usersService);
+        .factory('UsersService', UsersService);
 
-    usersService.$inject = ['$resource', 'appSettings'];
+    UsersService.$inject = ['$resource', 'appSettings'];
 
-    function usersService($resource, appSettings) {
+    function UsersService($resource, appSettings) {
         return $resource(appSettings.ApiUrl + 'api/users/:id',
             { id: '@id' },
             {

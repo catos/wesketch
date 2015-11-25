@@ -5,10 +5,10 @@
 		.module('app.users')
 		.controller('UserCreateController', UserCreateController);
 
-	UserCreateController.$inject = ['$state', 'alert', 'usersService'];
-	function UserCreateController($state, alert, usersService) {
+	UserCreateController.$inject = ['$state', 'alert', 'UsersService'];
+	function UserCreateController($state, alert, UsersService) {
         var vm = this;
-        vm.user = new usersService();
+        vm.user = new UsersService();
         vm.submit = submit;
 
 		function submit() {

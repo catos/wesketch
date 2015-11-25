@@ -5,15 +5,15 @@
 		.module('app.users')
 		.controller('UsersListController', UsersListController);
 
-	UsersListController.$inject = ['usersService'];
-	function UsersListController(usersService) {
+	UsersListController.$inject = ['UsersService'];
+	function UsersListController(UsersService) {
 		var vm = this;
 		vm.users = [];
 		
 		activate();
 		
 		function activate() {
-			usersService.query(
+			UsersService.query(
 				{},
 				function (data) {
 					vm.users = data;
