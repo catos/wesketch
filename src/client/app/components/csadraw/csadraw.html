@@ -1,44 +1,68 @@
-<div class="row csadraw">
-    <div class="col-xs-9">
-        <h3>csadraw</h3>
-        <canvas width="500" height="500" id="canvas">
-        </canvas>
-    </div>
-    <div class="col-xs-3">
+<div class="csadraw">
 
-        <div class="csa-widget tools-widget">
-            <div class="tool" ng-click="vm.clientMessage('clear')"><i class="fa fa-times"></i></div>
-            <div class="tool" ng-click="vm.clientMessage('change-tool', 'brush')"><i class="fa fa-paint-brush"></i></div>
-            <div class="tool" ng-click="vm.clientMessage('change-tool', 'eraser')"><i class="fa fa-eraser"></i></div>
-            <div class="tool" ng-click="vm.clientMessage('change-tool', 'fill')"><i class="fa fa-magic"></i></div>
-        </div>
+    <div class="row">
+        <div class="col-xs-12">
 
-        <div class="csa-widget brush-size-widget">
-            <div class="brush-size"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth - 2)"></i></div>
-            <div class="brush-size"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth + 2)"></i></div>
-        </div>
+            <div class="row">
+                <div class="col-xs-9">
 
-        <div class="csa-widget color-widget">
-            <div class="current-color" style="background-color: {{vm.settings.currentStrokeStyle}}"></div>
+                    <canvas width="500" height="500" id="canvas">
+                    </canvas>
 
-            <div class="colors">
-                <div 
-                    ng-repeat="color in vm.settings.colors" 
-                    style="background-color: {{color}}"
-                    ng-class="color === vm.settings.strokeStyle ? 'current' : ''"
-                    ng-click="vm.clientMessage('set-stroke-style', color)"></div>
+                </div>
+                <div class="col-xs-3">
+
+                    <div class="csa-widget tools-widget">
+                        <div class="tool" ng-click="vm.clientMessage('clear')"><i class="fa fa-times"></i></div>
+                        <div class="tool" ng-click="vm.clientMessage('change-tool', 'brush')"><i class="fa fa-paint-brush"></i></div>
+                        <div class="tool" ng-click="vm.clientMessage('change-tool', 'eraser')"><i class="fa fa-eraser"></i></div>
+                        <div class="tool" ng-click="vm.clientMessage('change-tool', 'fill')"><i class="fa fa-magic"></i></div>
+                    </div>
+
+                    <div class="csa-widget brush-size-widget">
+                        <div class="brush-size"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth - 2)"></i></div>
+                        <div class="brush-size"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth + 2)"></i></div>
+                    </div>
+
+                    <div class="csa-widget color-widget">
+                        <div class="current-color" style="background-color: {{vm.settings.currentStrokeStyle}}"></div>
+
+                        <div class="colors">
+                            <div ng-repeat="color in vm.settings.colors" style="background-color: {{color}}" ng-class="color === vm.settings.strokeStyle ? 'current' : ''"
+                            ng-click="vm.clientMessage('set-stroke-style', color)"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <hr>
+                        <h4>Debug</h4> Coords: {{vm.coords.to.x}}, {{vm.coords.to.y}}
+                        <br /> Tool: {{vm.settings.currentTool}}, size: {{vm.settings.lineWidth}}, color: {{vm.settings.strokeStyle}}
+                        <br /> Settings
+                        <br />
+                        <pre>{{vm.settings}}</pre>
+
+                    </div>
+
+                </div>
+                <!--col-xs-3-->
             </div>
-        </div>
-
-        <div>
-            <hr>
-            <h4>Debug</h4>
-            Coords: {{vm.coords.to.x}}, {{vm.coords.to.y}}<br />
-            Tool: {{vm.settings.currentTool}}, size: {{vm.settings.lineWidth}}, color: {{vm.settings.strokeStyle}}<br />
-            Settings<br />
-            <pre>{{vm.settings}}</pre>
+            <!--row-->
 
         </div>
-
+        <!--col-xs-12-->
     </div>
+    <!--row-->
+
+    <div class="row">
+        <div class="col-sm-9">
+            Chat her...
+        </div>
+        <div class="col-sm-3">
+            <h3>Players</h3>
+            <ul>
+                <li ng-repeat="player in vm.players">{{player.name}}</li>
+            </ul>
+        </div>
+    </div>
+
 </div>

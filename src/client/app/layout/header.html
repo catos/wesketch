@@ -1,50 +1,49 @@
 <nav class="navbar navbar-default">
-	<div class="container">
-		<div class="navbar-header">
-			<a ui-sref="layout.home" class="navbar-brand"><span class="brand-title">CSA</span></a>
-			<a class="btn navbar-btn navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-toggle="collapse"
-			data-target=".navbar-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</a>
-		</div>
-		<div class="navbar-collapse collapse" ng-class="{'in': !navCollapsed}">
-			<ul class="nav navbar-nav navbar-right">
-				<li>
-					<a ui-sref="layout.home">{{vm.message}}</a>
-				</li>
-				<li ng-show="vm.tokenIdentity.isAuthenticated()">
-					<a ui-sref="layout.account">Welcome '{{vm.tokenIdentity.currentUser.name}}'</a>
-				</li>
-				<li ng-show="vm.tokenIdentity.isAuthenticated()" ui-sref-active="active">
-					<a ui-sref="layout.account.logout">Logout</a>
-				</li>
-				<li ng-hide="vm.tokenIdentity.isAuthenticated()" ui-sref-active="active">
-					<a ui-sref="layout.account.login">Login</a>
-				</li>
+	<div class="navbar-header">
+		<a class="btn navbar-btn navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-toggle="collapse"
+		data-target=".navbar-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</a>
+	</div>
+	<div class="navbar-collapse collapse" ng-class="{'in': !navCollapsed}">
+		<ul class="nav navbar-nav navbar-right">
+			<li>
+				<a ui-sref="layout.home">{{vm.message}}</a>
+			</li>
+			<li ng-show="vm.tokenIdentity.isAuthenticated()">
+				<a ui-sref="layout.account">Welcome '{{vm.tokenIdentity.currentUser.name}}'</a>
+			</li>
+			<li ng-show="vm.tokenIdentity.isAuthenticated()" ui-sref-active="active">
+				<a ui-sref="layout.account.logout">Logout</a>
+			</li>
+			<li ng-hide="vm.tokenIdentity.isAuthenticated()" ui-sref-active="active">
+				<a ui-sref="layout.account.login">Login</a>
+			</li>
 
-				<li dropdown>
-					<a href="#" dropdown-toggle><i class="fa fa-cog"></i> <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-						<li><a href="/server">Server</a></li>
-						<li class="divider"></li>
-						<li><a href="http://passportjs.org/docs/username-password">Passportjs</a></li>
-						<li><a href="https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs">Authentication in Single Page Applications</a></li>
-						<li class="divider"></li>
-						<li><a href="https://mongolab.com/"><i class="fa fa-database"></i> Mongolab.com</a></li>
-						<li><a href="http://getbootstrap.com/css/">Bootstrap</a></li>
-						<li><a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
-						<li><a href="https://github.com/johnpapa/angular-styleguide"><i class="fa fa-github"></i> <strong>Angular Styleguide</strong></a></li>
-						<li><a href="https://github.com/catos/Multivision"><i class="fa fa-github"></i> Multivision</a></li>
-						<li class="divider"></li>
-						<li><a href="http://www.angularjs.org"><i class="fa fa-html5"></i> Angularjs</a></li>
-						<li><a href="http://mongoosejs.com/docs/guide.html">MongooseJs</a></li>
-						<li><a href="https://angular-ui.github.io/">Angular UI</a></li>
-						<li><a href="http://momentjs.com/">Moment.js</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
+			<li ng-show="vm.tokenIdentity.isAdmin()" dropdown>
+				<a href="#" dropdown-toggle><i class="fa fa-cog"></i> <span class="caret"></span></a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+					<li><a href="/server">Server</a></li>
+					<li class="divider"></li>
+					<li><a href="http://passportjs.org/docs/username-password">Passportjs</a></li>
+					<li><a href="https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs">Authentication in Single Page Applications</a></li>
+					<li class="divider"></li>
+					<li><a href="https://mongolab.com/"><i class="fa fa-database"></i> Mongolab.com</a></li>
+					<li><a href="http://getbootstrap.com/css/">Bootstrap</a></li>
+					<li><a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
+					<li><a href="https://github.com/johnpapa/angular-styleguide"><i class="fa fa-github"></i> <strong>Angular Styleguide</strong></a></li>
+					<li><a href="https://github.com/catos/Multivision"><i class="fa fa-github"></i> Multivision</a></li>
+					<li class="divider"></li>
+					<li><a href="http://www.angularjs.org"><i class="fa fa-html5"></i> Angularjs</a></li>
+					<li><a href="http://mongoosejs.com/docs/guide.html">MongooseJs</a></li>
+					<li><a href="https://angular-ui.github.io/">Angular UI</a></li>
+					<li><a href="http://momentjs.com/">Moment.js</a></li>
+					<li class="divider"></li>
+					<li><a href="http://webapplayers.com/inspinia_admin-v2.3/">Inspiration</a></li>
+				</ul>
+			</li>
+		</ul>
 	</div>
 </nav>

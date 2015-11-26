@@ -11,7 +11,7 @@
     var settings = require('./config/settings.js')[env];
 
     require('./config/express')(app);
-    
+
     require('./config/mongoose')(settings);
 
     require('./config/passport')();

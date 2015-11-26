@@ -1,37 +1,48 @@
-# TODO Next
-- iSketch
-	- Reset (emit settings to all clients)
-	- All messages should send all settings to ensure the clients are identical (even the latecomers)
-	- Undo / Redo
+# TODO
+
+## iSketch
+- Move validation to server... Let client just fire away messages ?
+- Liste med spillere og deres poeng
+- Chat
+- Turn-change, who is drawing now
+- Timer, 60 sec
+- Dictionary
+- Points
+- End game after x turns, show score
+- All messages should send all settings to ensure the clients are identical (even the latecomers)
+- Reset (emit settings to all clients)
+- Undo / Redo
+- Reading material
 	- http://stackoverflow.com/a/27025090
 	- http://www.jacklmoore.com/notes/mouse-position/
 	- http://codepen.io/goker/pen/kbEdn
-    - Game-loop = http://buildnewgames.com/real-time-multiplayer/
+	- Game-loop = http://buildnewgames.com/real-time-multiplayer/
+
+## Chat
+- http://briantford.com/blog/angular-socket-io
+- https://github.com/btford/angular-socket-io-im
+- http://chariotsolutions.com/blog/post/getting-chatty-angular-socket-io-nodeexpress-bootstrap/
+- http://www.hutchinson.io/building-a-real-time-application-with-express-socketio-and-ember/
+- http://fdietz.github.io/2015/04/16/day-4-how-to-build-your-own-team-chat-in-five-days-expressjs-socket-io-and-angularjs-component-based-design-patterns.html
+- https://github.com/fdietz/how_to_build_your_own_team_chat_in_five_days/tree/master/day_4/nodejs_express_socketio_chat/public/app
+
+## Client
 - Reset password
 - Create directive: validate confirm password
 	- http://toddmotto.com/killing-it-with-angular-directives-structure-and-mvvm/
+
+## Server
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
 	- Repetetive code on controllers....need a default controller with crud-methods
 - Rename server/batteries/batteries.controller.js -> batteries.api.js ?
 - Styleguide
 	- Rename BatteriesController -> Batteries ? (styleguide)
 	- Rename batteries.route.js -> batteries.routes.js (plural)
-
-# TODO Later
-- Gulp
 - Codereview på batteriesService og callbacks / errorhandling
 - batteries.controller.js => if (err) return next(err): finnes det en bedre måte å håndtere feil i mongoose på ?
 - if (err) på server api-controllers må/bør returnere json istedenfor next(err)
 - Validation i mongoose, client friendly error messages
 - Testing client with *.specs.js
-- Chat
-	- http://briantford.com/blog/angular-socket-io
-	- https://github.com/btford/angular-socket-io-im
-
-	- http://chariotsolutions.com/blog/post/getting-chatty-angular-socket-io-nodeexpress-bootstrap/
-	- http://www.hutchinson.io/building-a-real-time-application-with-express-socketio-and-ember/
-	- http://fdietz.github.io/2015/04/16/day-4-how-to-build-your-own-team-chat-in-five-days-expressjs-socket-io-and-angularjs-component-based-design-patterns.html
-	- https://github.com/fdietz/how_to_build_your_own_team_chat_in_five_days/tree/master/day_4/nodejs_express_socketio_chat/public/app
 
 # TO DONE
 - ~~Prototype draw-feature with sockets.io~~
@@ -56,6 +67,7 @@
 - ~~Fix routing in the client, code is currently inside app.module.js~~
 - ~~Rename /src/server/core/routeHandler.getRouter to routeHandler.getApiRouter~~
 - ~~Continue on batteries.cycles in server api, and update client to reflect model changes~~
+
 
 # Project layout
 
@@ -83,14 +95,16 @@ src/
 	server /
 ```
 
-# Food sites
+# MDK
+
+## Food sites
 - http://allrecipes.com/
 - http://www.frutimian.no/
 - http://trinesmatblogg.no/
 - http://matprat.no
 - http://foodwishes.blogspot.no/
 
-# Recipe model
+## Schema
 ```
 Recipe
 	Name

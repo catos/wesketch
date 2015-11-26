@@ -12,16 +12,16 @@ BROADCAST:
     Change Color
 
 */
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('components.csadraw')
         .controller('CsadrawController', CsadrawController);
 
-    CsadrawController.$inject = ['alert', 'sawkit'];
+    CsadrawController.$inject = ['alert', 'sawkit', 'tokenIdentity'];
 
-    function CsadrawController(alert, sawkit) {
+    function CsadrawController(alert, sawkit, tokenIdentity) {
         /**
          * Private variables
          */
@@ -45,6 +45,7 @@ BROADCAST:
                 y: 0
             }
         };
+        vm.players = [];
         vm.settings = {
             lineWidth: 2,
             lineJoin: 'round', // 'butt', 'round', 'square'
@@ -61,7 +62,7 @@ BROADCAST:
         vm.init = init;
 
         init();
-        
+
         // TODO: Width 100% og scale for different client viewports!
 
         function init() {
@@ -75,6 +76,8 @@ BROADCAST:
                 vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
             }
+
+            clientMessage('player-joined', { name: tokenIdentity.currentUser.name })
         }
 
         /**
@@ -110,7 +113,7 @@ BROADCAST:
                 type: type,
                 value: value
             };
-            validateClientMessage(message, function (err, message) {
+            validateClientMessage(message, function(err, message) {
 
                 if (err) {
                     alert.show('warning', 'Csadraw!', 'Invalid client message: ' + err.message);
@@ -178,7 +181,8 @@ BROADCAST:
             var validTypes = [
                 'clear',
                 'set-stroke-style',
-                'set-line-width'
+                'set-line-width',
+                'player-joined'
             ];
 
             if (!message.type) {
@@ -194,27 +198,36 @@ BROADCAST:
             cb(null, message);
         }
 
-        sawkit.on('message', function (message) {
+        sawkit.on('message', function(message) {
             if (message.type !== 'brush') {
                 console.log('handleMessage: type = ' + message.type + ', value = ' + message.value);
             }
 
             switch (message.type) {
-                case 'set-stroke-style':
+                case 'set-stroke-style': {
                     vm.settings.strokeStyle = message.value;
                     break;
-                case 'set-line-width':
+                }
+                case 'set-line-width': {
                     vm.settings.lineWidth = message.value < 2 ? 2 : message.value;
                     break;
-                case 'clear':
+                }
+                case 'clear': {
                     vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
                     break;
-                case 'brush':
+                }
+                case 'brush': {
                     brush(message.coords);
                     break;
-                default:
+                }
+                case 'player-joined': {
+                    vm.players = message.value;
+                    break;
+                }
+                default: {
                     alert.show('warning', 'Csadraw!', 'handler not found for message, type = ' + message.type);
                     return;
+                }
             }
         });
 
