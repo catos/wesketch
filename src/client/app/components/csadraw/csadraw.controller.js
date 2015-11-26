@@ -1,17 +1,3 @@
-/*
-
-BROADCAST:
-
-[Client]
-    Change Color Event
-    Send Message
-[Server]
-    On Broadcast Message -> Send Broadcast Message
-[Client]
-    Receieve Message
-    Change Color
-
-*/
 (function() {
     'use strict';
 
@@ -62,8 +48,6 @@ BROADCAST:
         vm.init = init;
 
         init();
-
-        // TODO: Width 100% og scale for different client viewports!
 
         function init() {
             sawkit.connect('chat');

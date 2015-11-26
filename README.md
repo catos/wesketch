@@ -2,6 +2,7 @@
 
 ## iSketch
 - Move validation to server... Let client just fire away messages ?
+- Update-settings replaces all modifications to vm.settings, server emit's all settings to all clients
 - Liste med spillere og deres poeng
 - Chat
 - Turn-change, who is drawing now
@@ -9,9 +10,10 @@
 - Dictionary
 - Points
 - End game after x turns, show score
-- All messages should send all settings to ensure the clients are identical (even the latecomers)
 - Reset (emit settings to all clients)
+	- Message-history table on server, updates latecomers
 - Undo / Redo
+- Width 100% og scale for different client viewports!
 - Reading material
 	- http://stackoverflow.com/a/27025090
 	- http://www.jacklmoore.com/notes/mouse-position/
