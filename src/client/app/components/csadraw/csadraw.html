@@ -15,13 +15,13 @@
                     <div class="csa-widget tools-widget">
                         <div class="tool" ng-click="vm.clientMessage('clear')"><i class="fa fa-times"></i></div>
                         <div class="tool" ng-click="vm.clientMessage('change-tool', 'brush')"><i class="fa fa-paint-brush"></i></div>
-                        <div class="tool" ng-click="vm.clientMessage('change-tool', 'eraser')"><i class="fa fa-eraser"></i></div>
-                        <div class="tool" ng-click="vm.clientMessage('change-tool', 'fill')"><i class="fa fa-magic"></i></div>
+                        <!--<div class="tool" ng-click="vm.clientMessage('change-tool', 'eraser')"><i class="fa fa-eraser"></i></div>
+                        <div class="tool" ng-click="vm.clientMessage('change-tool', 'fill')"><i class="fa fa-magic"></i></div>-->
                     </div>
 
                     <div class="csa-widget brush-size-widget">
-                        <div class="brush-size"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth - 2)"></i></div>
-                        <div class="brush-size"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('set-line-width', vm.settings.lineWidth + 2)"></i></div>
+                        <div class="brush-size"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('update-settings', { lineWidth: vm.settings.lineWidth - 2 })   "></i></div>
+                        <div class="brush-size"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('update-settings', { lineWidth: vm.settings.lineWidth + 2 })"></i></div>
                     </div>
 
                     <div class="csa-widget color-widget">
@@ -29,7 +29,7 @@
 
                         <div class="colors">
                             <div ng-repeat="color in vm.settings.colors" style="background-color: {{color}}" ng-class="color === vm.settings.strokeStyle ? 'current' : ''"
-                            ng-click="vm.clientMessage('set-stroke-style', color)"></div>
+                            ng-click="vm.clientMessage('update-settings', { strokeStyle: color })"></div>
                         </div>
                     </div>
 

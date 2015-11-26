@@ -3,7 +3,7 @@ module.exports = function(app, settings) {
     var io = require('socket.io')(http);
 
     // require('../sockets/chat-sockets.js', io);
-    require('../sockets/draw-sockets.js')(io);
+    require('../wesketch/wesketch.sockets.js')(io);
 
     http.listen(settings.websocketsPort, function() {
         console.log('Socket.io listening on *:' + settings.websocketsPort);

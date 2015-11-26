@@ -1,8 +1,6 @@
 # TODO
 
 ## iSketch
-- Move validation to server... Let client just fire away messages ?
-- Update-settings replaces all modifications to vm.settings, server emit's all settings to all clients
 - Liste med spillere og deres poeng
 - Chat
 - Turn-change, who is drawing now
