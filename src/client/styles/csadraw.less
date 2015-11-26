@@ -4,7 +4,6 @@
     }
     
     canvas {
-        background-color: #f1f1f1;
         border: 2px solid #ccc;
         display: block;
         cursor: crosshair;
@@ -13,51 +12,54 @@
         }
     }
     
-    .csa-widget {
+    .tools {
+        background-color: #f1f1f1;
+    }
+    
+    .function-group {
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid #ccc;
     } 
-    
-    .tools-widget {
-        .tool {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 1px solid #999;
-            margin-right: 3px;
-            text-align: center;
-            border-radius: 2px;
-            background-color: #eee;          
+
+    .csadraw-button {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border: 1px solid #999;
+        margin-right: 3px;
+        text-align: center;
+        border-radius: 2px;
+        background-color: #eee;          
+
+        &.current {
+            border-color: #ccc;
+        }    
+    }
+
+    .info-bar {
+        background: #f1f1f1;
+        padding: 8px 15px;
+    }
+
+    .chat {
+        .messages {
+            height: 200px;
+        }
+        
+        .new-message {
         }
     }
     
-    .brush-size-widget {
-        .brush-size {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 1px solid #999;
-            margin-right: 3px;
-            text-align: center;
-            border-radius: 2px;
-            background-color: #eee;          
+    .players {
+        background: #f1f1f1;
+        
+        table {
+            margin-bottom: 0;    
         }
-    }
-    
-    .color-widget {
-        .colors {
-            > div {
-                width: 24px;
-                height: 24px;
-                display: inline-block;
-                border: 1px solid #333;
-                margin-right: 3px;
-    
-                &.current {
-                    border-color: #ccc;
-                }
-            }
+        
+        .current {
+            font-weight: 700;
         }
     }
     

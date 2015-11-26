@@ -1,3 +1,10 @@
+var _ = require('lodash');
+
+var playerTemplate = {
+    name: '',
+    score: 0,
+    current: true
+}
 var players = [];
 
 module.exports = {
@@ -34,7 +41,12 @@ module.exports = {
         }
 
         if (!playerExist) {
-            players.push(player);
+            
+            players.push(
+                _.merge({}, playerTemplate, player)
+                );
         }
+        
+        return players;
     }
 };

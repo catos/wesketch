@@ -22,8 +22,7 @@ module.exports = function (io) {
                             break;
                         }
                         case 'player-joined': {
-                            server.addPlayer(message.value);
-                            message.value = server.players;
+                            message.value = server.addPlayer(message.value);
                             break;
                         }
                         default: {

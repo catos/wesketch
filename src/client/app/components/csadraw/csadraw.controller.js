@@ -125,7 +125,7 @@
                 if (elements[i].current) {
                     return elements[i];
                 }
-            };
+            }
             return null;
         }
 
