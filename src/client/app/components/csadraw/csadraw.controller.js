@@ -50,7 +50,7 @@
         init();
 
         function init() {
-            sawkit.connect('chat');
+            sawkit.connect('weesketch');
             vm.canvas = document.getElementById('canvas');
 
             if (vm.canvas !== undefined) {
@@ -59,10 +59,48 @@
                 vm.canvas.onmousemove = onMouseMove;
                 vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
-            }
-
-            clientMessage('player-joined', { name: tokenIdentity.currentUser.name });
+            }            
         }
+
+        /**
+         * Socket listener
+         */
+        sawkit.on('message', function (message) {
+            switch (message.type) {
+                case 'update-settings': {
+                    angular.extend(vm.settings, message.value);
+                    break;
+                }
+                case 'clear': {
+                    vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+                    break;
+                }
+                case 'brush': {
+                    brush(message.coords);
+                    break;
+                }
+                case 'client-connected': {
+                    console.log('message.value: ' + message.value);
+                    clientMessage('player-joined', {
+                        id: message.value, 
+                        name: tokenIdentity.currentUser.name 
+                    });
+                    break;
+                }
+                case 'player-joined': {
+                    vm.players = message.value;
+                    break;
+                }
+                case 'error': {
+                    alert.show('warning', 'Error', message.value);
+                    break;
+                }
+                default: {
+                    alert.show('warning', 'Error', 'No handler found for type: ' + message.type);
+                    return;
+                }
+            }
+        });
 
         /**
          * Events
@@ -116,19 +154,6 @@
             vm.ctx.stroke();
         }
 
-        function floodFill(coords) {
-            console.log('floodfill!');
-        }
-
-        function getCurrent(elements) {
-            for (var i = 0; i < elements.length; i++) {
-                if (elements[i].current) {
-                    return elements[i];
-                }
-            }
-            return null;
-        }
-
         function getCoords(event) {
             var coords = {
                 x: 0,
@@ -146,40 +171,6 @@
 
             return coords;
         }
-
-        sawkit.on('message', function (message) {
-            // if (message.type !== 'brush') {
-            //     console.log('handleMessage: type = ' + message.type + ', value = ' + message.value);
-            // }
-
-            switch (message.type) {
-                case 'update-settings': {
-                    angular.extend(vm.settings, message.value);
-                    break;
-                }
-                case 'clear': {
-                    vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
-                    break;
-                }
-                case 'brush': {
-                    brush(message.coords);
-                    break;
-                }
-                case 'player-joined': {
-                    vm.players = message.value;
-                    break;
-                }
-                case 'error': {
-                    alert.show('warning', 'Error', message.value);
-                    break;
-                }
-                default: {
-                    alert.show('warning', 'Error', 'No handler found for type: ' + message.type);
-                    return;
-                }
-            }
-        });
-
-
+        
     }
 })();

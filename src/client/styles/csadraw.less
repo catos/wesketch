@@ -12,14 +12,23 @@
         }
     }
     
-    .tools {
+    .functions-row {
         background-color: #f1f1f1;
+        padding: 15px;
     }
     
     .function-group {
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid #ccc;
+        
+        h1 {
+            margin: 0;
+        }
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
     } 
 
     .csadraw-button {
@@ -30,14 +39,22 @@
         margin-right: 3px;
         text-align: center;
         border-radius: 2px;
-        background-color: #eee;          
+        background-color: #fefefe;          
 
         &.current {
-            border-color: #ccc;
+            border-color: #000;
+            border-style: dashed;
         }    
+    }
+    
+    .word-to-draw,
+    .timer {
+        text-align: center;
     }
 
     .info-bar {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
         background: #f1f1f1;
         padding: 8px 15px;
     }
@@ -45,9 +62,6 @@
     .chat {
         .messages {
             height: 200px;
-        }
-        
-        .new-message {
         }
     }
     

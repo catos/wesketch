@@ -7,7 +7,7 @@
             </canvas>
 
         </div>
-        <div class="col-xs-3 tools">
+        <div class="col-xs-3 functions-row">
 
             <div class="function-group">
                 <div class="csadraw-button" ng-click="vm.clientMessage('clear')"><i class="fa fa-times"></i></div>
@@ -19,6 +19,7 @@
             <div class="function-group tool-sizes">
                 <div class="csadraw-button"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('update-settings', { lineWidth: vm.settings.lineWidth - 2 })"></i></div>
                 <div class="csadraw-button"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('update-settings', { lineWidth: vm.settings.lineWidth + 2 })"></i></div>
+                <strong>Size: {{vm.settings.lineWidth}}</strong>
             </div>
 
             <div class="function-group palette">
@@ -27,12 +28,17 @@
                 </div>
             </div>
 
-            <div>
-                <hr>
-                <h4>Debug</h4> Coords: {{vm.coords.to.x}}, {{vm.coords.to.y}}
-                <br /> Tool: {{vm.settings.currentTool}}, size: {{vm.settings.lineWidth}}, color: {{vm.settings.strokeStyle}}
+            <div class="function-group word-to-draw">
+                <h1>House</h1>
+                <small>Hints remaining: 3</small>
+                <button class="btn btn-sm btn-primary disabled">Give hint</button>
             </div>
 
+            <div class="function-group timer">
+                <h1>33</h1>
+                <small>Seconds remaining</small>
+                <button class="btn btn-sm btn-primary disabled">Request pause</button>
+            </div>
         </div>
     </div>
 
@@ -55,7 +61,7 @@
         <div class="col-xs-3 players">
             <table class="table">
                 <tr ng-repeat="player in vm.players" ng-class="{ 'current' : player.current }">
-                    <td>{{player.name}}</td>
+                    <td>{{player.name}} ({{player.id}})</td>
                     <td>{{player.score}}</td>
                 </tr>
             </table>

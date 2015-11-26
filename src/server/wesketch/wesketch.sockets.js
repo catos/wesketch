@@ -1,16 +1,38 @@
+var uid = require('uid');
 var server = require('./wesketch.server.js');
 
 module.exports = function (io) {
 
-    var chat = io
-        .of('/chat')
-        .on('connection', function (socket) {
+    var weesketch = io
+        .of('/weesketch')
+        .on('connection', function (client) {
+            
+            /**
+             * Player joined
+             */
+            client.id = uid(10);
+            weesketch.emit('message', {
+                type: 'client-connected',
+                value: client.id
+            });
+            console.log('client connected, id = ' + client.id);
+            
+            /**
+             * Player left
+             */
+            client.on('disconnect', function () {
+                console.log('client disconnected, id = ' + client.id);
+            });
 
-            socket.on('message', function (message) {
+            /**
+             * Game messages
+             */
+            client.on('message', function (message) {
+                // TODO: move this to the server
                 server.validateClientMessage(message, function (err, message) {
                     
                     if (err) {
-                        chat.emit('message', {
+                        weesketch.emit('message', {
                             type: 'error',
                             value: err.message
                         });
@@ -30,12 +52,11 @@ module.exports = function (io) {
                         }
                     }
 
-                    chat.emit('message', message);
+                    weesketch.emit('message', message);
                 });
 
             });
+           
         });
-
-
 
 };
