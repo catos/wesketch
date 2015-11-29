@@ -59,7 +59,7 @@
                 vm.canvas.onmousemove = onMouseMove;
                 vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
-            }            
+            }
         }
 
         /**
@@ -80,23 +80,33 @@
                     break;
                 }
                 case 'client-connected': {
-                    console.log('message.value: ' + message.value);
-                    clientMessage('player-joined', {
-                        id: message.value, 
-                        name: tokenIdentity.currentUser.name 
+                    console.log('client-connected: socket.id: ' + message.value + ', name: ' + tokenIdentity.currentUser.name);
+                    clientMessage('add-player', {
+                        id: message.value,
+                        name: tokenIdentity.currentUser.name
                     });
                     break;
                 }
-                case 'player-joined': {
+                case 'client-disconnected': {
+                    console.log('client-connected: socket.id: ' + message.value + ', name: ' + tokenIdentity.currentUser.name);
+                    clientMessage('remove-player', {
+                        id: message.value,
+                        name: tokenIdentity.currentUser.name
+                    });
+                    break;
+                }
+                case 'update-players': {
                     vm.players = message.value;
                     break;
                 }
                 case 'error': {
                     alert.show('warning', 'Error', message.value);
+                    console.log('Error: ', message.type);
                     break;
                 }
                 default: {
                     alert.show('warning', 'Error', 'No handler found for type: ' + message.type);
+                    console.log('No handler found for type: ' + message.type);
                     return;
                 }
             }
@@ -171,6 +181,6 @@
 
             return coords;
         }
-        
+
     }
 })();
