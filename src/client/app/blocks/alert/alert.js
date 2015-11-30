@@ -31,7 +31,6 @@
             alertTimeout = $timeout(function () {
                 $rootScope.alert.show = false;
             }, timeout || 5000);
-			
 		}
 	}
 })();

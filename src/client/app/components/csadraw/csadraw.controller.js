@@ -101,7 +101,7 @@
                     vm.players = message.value;
                     break;
                 }
-                case 'error': {
+                case 'server-message': {
                     alert.show('warning', 'Error', message.value);
                     console.log('Error: ', message.type);
                     break;

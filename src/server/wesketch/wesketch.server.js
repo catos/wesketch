@@ -11,13 +11,15 @@ var gameServer = module.exports = {
     players: []
 };
 
+// TODO: lag metode sendMessage, some igjen inneholder message-type...
 // TODO: wtb bedre navn enn weesketch som parameter her...
 gameServer.onMessage = function (weesketch, message) {
 
     validateClientMessage(message, function (err, message) {
         if (err) {
+            // TODO: bruk ny metode gameServer.sendMessage
             weesketch.emit('message', {
-                type: 'error',
+                type: 'server-error',
                 value: err.message
             });
             return;
@@ -43,54 +45,28 @@ gameServer.onMessage = function (weesketch, message) {
 };
 
 gameServer.addPlayer = function (player) {
-    // console.log(gameServer.players);
-    // var playerExist = false;
-    // for (var i = 0; i < gameServer.players.length; i++) {
-    //     if (gameServer.players[i].name === player.name) {
-    //         playerExist = true;
-
-    //         // TODO: this is not working as nintendo                
-    //         // Update id
-    //         gameServer.players[i].id = player.id;
-    //     }
-    // }
-    console.log('\n\n*** wesketch.server.js -> addPlayer *******');
-    console.log('[gameServer.addPlayer] name = ' + player.name + ', id = ' + player.id);
     var existingPlayer = _.find(gameServer.players, { 'name': player.name });
     if (!existingPlayer) {
-        console.log('player does NOT already exist');
         gameServer.players.push(
             _.merge({}, playerTemplate, player)
             );
     } else {
-        console.log(
-            '[gameServer.addPlayer] player ' + player.name + 
-            ' already exist, old id = ' + existingPlayer.id + 
-            ', newid = ' + player.id);
         existingPlayer.id = player.id;
     }
-    
-    console.log(gameServer.players);
-    
+
     return gameServer.players;
 };
 
 // TODO: wtb bedre navn enn weesketch som parameter her...
-gameServer.diconnectClient = function (weesketch, clientId) {
-    console.log('\n\n*** wesketch.server.js -> diconnectClient *******');
-    console.log('[gameServer.removePlayer] socket.id = ' + clientId);
-    var player = _.find(gameServer.players, { id: clientId });
-    if (player) {
-        gameServer.players.pop(player);    
-        console.log('Player removed: ', player);
-    } else {
-        console.log('Player not found...');
-    }
+gameServer.diconnectClient = function (weesketch, socketId) {
+    // TODO: Send melding til andre klienter om at player har left...
+    // TODO: bruk ny metode gameServer.sendMessage
+    _.remove(gameServer.players, { id: socketId });
+
     weesketch.emit('message', {
         type: 'update-players',
         value: gameServer.players
     });
-    console.log(gameServer.players);
 };
 
 function validateClientMessage(message, cb) {
