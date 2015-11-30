@@ -11,11 +11,12 @@ var gameServer = module.exports = {
     players: []
 };
 
-gameServer.onMessage = function (client, message) {
+// TODO: wtb bedre navn enn weesketch som parameter her...
+gameServer.onMessage = function (weesketch, message) {
 
     validateClientMessage(message, function (err, message) {
         if (err) {
-            client.emit('message', {
+            weesketch.emit('message', {
                 type: 'error',
                 value: err.message
             });
@@ -31,17 +32,12 @@ gameServer.onMessage = function (client, message) {
                 message.value = gameServer.addPlayer(message.value);
                 break;
             }
-            case 'remove-player': {
-                message.type = 'update-players';
-                message.value = gameServer.removePlayer(message.value);
-                break;
-            }
             default: {
                 console.log(message);
             }
         }
 
-        client.emit('message', message);
+        weesketch.emit('message', message);
     });
 
 };
@@ -74,14 +70,27 @@ gameServer.addPlayer = function (player) {
         existingPlayer.id = player.id;
     }
     
+    console.log(gameServer.players);
+    
     return gameServer.players;
 };
 
-gameServer.removePlayer = function (player) {
-    console.log('\n\n*** wesketch.server.js -> removePlayer *******');
-    console.log('gameServer.removePlayer: ', player);
-    gameServer.players.pop(player);
-    console.log('Player removed: ', player);
+// TODO: wtb bedre navn enn weesketch som parameter her...
+gameServer.diconnectClient = function (weesketch, clientId) {
+    console.log('\n\n*** wesketch.server.js -> diconnectClient *******');
+    console.log('[gameServer.removePlayer] socket.id = ' + clientId);
+    var player = _.find(gameServer.players, { id: clientId });
+    if (player) {
+        gameServer.players.pop(player);    
+        console.log('Player removed: ', player);
+    } else {
+        console.log('Player not found...');
+    }
+    weesketch.emit('message', {
+        type: 'update-players',
+        value: gameServer.players
+    });
+    console.log(gameServer.players);
 };
 
 function validateClientMessage(message, cb) {
