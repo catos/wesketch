@@ -10,23 +10,23 @@ module.exports = function (io) {
             /**
              * Player joined
              */
-            socket.clientId = uuid.v4();
-            console.log('client connected, clientId = ' + socket.clientId);
-            weesketch.emit('message', {
+            console.log('\n\n*** wesketch.sockets.js -> connect -> socket.id = ' + socket.id);
+            socket.emit('message', {
                 type: 'client-connected',
-                value: socket.clientId
+                value: socket.id
             });
+            
             
             /**
              * Player left
              */
-            // socket.on('disconnect', function () {
-            //     console.log('client disconnected, id = ' + socket.clientId);
-            //     weesketch.emit('message', {
-            //         type: 'client-disconnect',
-            //         value: socket.clientId
-            //     });
-            // });
+            socket.on('disconnect', function () {
+                console.log('\n\n*** wesketch.sockets.js -> disconnect -> socket.id = ' + socket.id);
+                socket.emit('message', {
+                    type: 'client-disconnected',
+                    value: socket.id
+                });
+            });
 
             /**
              * Game messages

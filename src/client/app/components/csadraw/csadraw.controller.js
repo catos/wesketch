@@ -80,7 +80,8 @@
                     break;
                 }
                 case 'client-connected': {
-                    console.log('client-connected: socket.id: ' + message.value + ', name: ' + tokenIdentity.currentUser.name);
+                    console.log('client-connected: socket.id: ' + 
+                        message.value + ', name: ' + tokenIdentity.currentUser.name);
                     clientMessage('add-player', {
                         id: message.value,
                         name: tokenIdentity.currentUser.name
@@ -88,7 +89,8 @@
                     break;
                 }
                 case 'client-disconnected': {
-                    console.log('client-connected: socket.id: ' + message.value + ', name: ' + tokenIdentity.currentUser.name);
+                    console.log('client-connected: socket.id: ' + 
+                        message.value + ', name: ' + tokenIdentity.currentUser.name);
                     clientMessage('remove-player', {
                         id: message.value,
                         name: tokenIdentity.currentUser.name

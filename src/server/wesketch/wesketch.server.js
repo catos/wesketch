@@ -26,16 +26,16 @@ gameServer.onMessage = function (client, message) {
             case 'brush': {
                 break;
             }
-            // case 'add-player': {
-            //     message.type = 'update-players';
-            //     message.value = gameServer.addPlayer(message.value);
-            //     break;
-            // }
-            // case 'remove-player': {
-            //     message.type = 'update-players';
-            //     message.value = gameServer.removePlayer(message.value);
-            //     break;
-            // }
+            case 'add-player': {
+                message.type = 'update-players';
+                message.value = gameServer.addPlayer(message.value);
+                break;
+            }
+            case 'remove-player': {
+                message.type = 'update-players';
+                message.value = gameServer.removePlayer(message.value);
+                break;
+            }
             default: {
                 console.log(message);
             }
@@ -58,7 +58,8 @@ gameServer.addPlayer = function (player) {
     //         gameServer.players[i].id = player.id;
     //     }
     // }
-
+    console.log('\n\n*** wesketch.server.js -> addPlayer *******');
+    console.log('[gameServer.addPlayer] name = ' + player.name + ', id = ' + player.id);
     var existingPlayer = _.find(gameServer.players, { 'name': player.name });
     if (!existingPlayer) {
         console.log('player does NOT already exist');
@@ -67,7 +68,7 @@ gameServer.addPlayer = function (player) {
             );
     } else {
         console.log(
-            'player ' + player.name + 
+            '[gameServer.addPlayer] player ' + player.name + 
             ' already exist, old id = ' + existingPlayer.id + 
             ', newid = ' + player.id);
         existingPlayer.id = player.id;
@@ -77,6 +78,8 @@ gameServer.addPlayer = function (player) {
 };
 
 gameServer.removePlayer = function (player) {
+    console.log('\n\n*** wesketch.server.js -> removePlayer *******');
+    console.log('gameServer.removePlayer: ', player);
     gameServer.players.pop(player);
     console.log('Player removed: ', player);
 };

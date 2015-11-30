@@ -12,6 +12,7 @@
         vm.email = '';
         vm.password = '';
         vm.submit = submit;
+        vm.quickSignIn = quickSignIn;
 
         function submit() {
             $auth
@@ -27,6 +28,13 @@
                 .catch(function (err) {
                     alert.show('warning', 'Something went wrong :(', err.message);
                 });
+        }
+        
+        function quickSignIn(email, password) {
+            vm.email = email;
+            vm.password = password;
+            
+            vm.submit();
         }
     }
 })();
