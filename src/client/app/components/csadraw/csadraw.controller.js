@@ -32,6 +32,7 @@
             }
         };
         vm.players = [];
+        vm.chatMessages = [];
         vm.settings = {
             lineWidth: 2,
             lineJoin: 'round', // 'butt', 'round', 'square'
@@ -76,7 +77,8 @@
                     break;
                 }
                 case 'brush': {
-                    brush(message.coords);
+                    var coords = message.value;
+                    brush(coords);
                     break;
                 }
                 case 'client-connected': {
@@ -101,7 +103,11 @@
                     vm.players = message.value;
                     break;
                 }
-                case 'server-message': {
+                case 'chat-event': {
+                    vm.chatMessages.push(message.value);
+                    break;
+                }
+                case 'chat-error': {
                     alert.show('warning', 'Error', message.value);
                     console.log('Error: ', message.type);
                     break;
@@ -131,7 +137,7 @@
                 vm.coords.to = getCoords(event);
                 sawkit.emit('message', {
                     type: vm.settings.currentTool,
-                    coords: vm.coords
+                    value: vm.coords
                 });
 
                 vm.coords.from = vm.coords.to;

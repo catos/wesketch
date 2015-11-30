@@ -49,7 +49,9 @@
     <div class="row chat">
         <div class="col-xs-9">
             <div class="messages">
-                Messages...
+                <div class="message" ng-repeat="message in vm.chatMessages track by $index">
+                    {{message}}
+                </div>
             </div>
             <div class="new-message input-group">
                 <input type="text" class="form-control" placeholder="Start with '!' to chat">
@@ -61,7 +63,7 @@
         <div class="col-xs-3 players">
             <table class="table">
                 <tr ng-repeat="player in vm.players" ng-class="{ 'current' : player.current }">
-                    <td>{{player.name}} ({{player.id}})</td>
+                    <td data-player-id="{{player.id}}">{{player.name}}</td>
                     <td>{{player.score}}</td>
                 </tr>
             </table>

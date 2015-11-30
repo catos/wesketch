@@ -1,55 +1,47 @@
 var _ = require('lodash');
 
-var playerTemplate = {
-    id: -1,
-    name: '',
-    score: 0,
-    current: true
-};
-
 var gameServer = module.exports = {
     players: []
 };
 
-// TODO: lag metode sendMessage, some igjen inneholder message-type...
-// TODO: wtb bedre navn enn weesketch som parameter her...
+// TODO: WTS weesketch from all these methods, maybe init() is the answer afterall ?
 gameServer.onMessage = function (weesketch, message) {
 
     validateClientMessage(message, function (err, message) {
         if (err) {
-            // TODO: bruk ny metode gameServer.sendMessage
-            weesketch.emit('message', {
-                type: 'server-error',
-                value: err.message
-            });
+            sendMessage(weesketch, 'server-error', err.message);
             return;
         }
 
         switch (message.type) {
-            case 'brush': {
-                break;
-            }
             case 'add-player': {
                 message.type = 'update-players';
-                message.value = gameServer.addPlayer(message.value);
+                message.value = gameServer.addPlayer(weesketch, message.value);
                 break;
             }
             default: {
-                console.log(message);
+                break;
             }
         }
 
-        weesketch.emit('message', message);
+        sendMessage(weesketch, message.type, message.value);
     });
 
 };
 
-gameServer.addPlayer = function (player) {
+gameServer.addPlayer = function (weesketch, player) {
+    var playerTemplate = {
+        id: -1,
+        name: '',
+        score: 0,
+        current: true
+    };
     var existingPlayer = _.find(gameServer.players, { 'name': player.name });
+
     if (!existingPlayer) {
-        gameServer.players.push(
-            _.merge({}, playerTemplate, player)
-            );
+        var newPlayer = _.merge({}, playerTemplate, player);            
+        gameServer.players.push(newPlayer);
+        sendMessage(weesketch, 'chat-event', newPlayer.name + ' joined the game...');
     } else {
         existingPlayer.id = player.id;
     }
@@ -57,17 +49,35 @@ gameServer.addPlayer = function (player) {
     return gameServer.players;
 };
 
-// TODO: wtb bedre navn enn weesketch som parameter her...
 gameServer.diconnectClient = function (weesketch, socketId) {
-    // TODO: Send melding til andre klienter om at player har left...
-    // TODO: bruk ny metode gameServer.sendMessage
-    _.remove(gameServer.players, { id: socketId });
-
-    weesketch.emit('message', {
-        type: 'update-players',
-        value: gameServer.players
-    });
+    var players = _.remove(gameServer.players, { id: socketId });
+    if (players.length) {
+        sendMessage(weesketch, 'chat-event', players[0].name + ' left the game...');
+        sendMessage(weesketch, 'update-players', gameServer.players);
+    } else {
+        var msg = 
+            'Client (socketId = ' + socketId + ') left the game, ' +
+            'but the server was unable to remove player from game.';
+            
+        sendMessage(weesketch, 'chat-error', msg);
+            
+    }
 };
+
+/**
+ * Private functions
+ */
+
+function sendMessage(weesketch, type, value) {
+    weesketch.emit('message', {
+        type: type,
+        value: value
+    });
+
+    if (type !== 'brush') {
+        console.log('sendMessage: type = ' + type + ', value = ', value);
+    }
+}
 
 function validateClientMessage(message, cb) {
     var validTypes = [
