@@ -33,6 +33,7 @@
         };
         vm.players = [];
         vm.chatMessages = [];
+        vm.newMessage = '';
         vm.settings = {
             lineWidth: 2,
             lineJoin: 'round', // 'butt', 'round', 'square'
@@ -46,15 +47,18 @@
         };
 
         vm.clientMessage = clientMessage;
+        vm.chatMessage = chatMessage;
         vm.init = init;
 
         init();
 
         function init() {
             sawkit.connect('weesketch');
-            vm.canvas = document.getElementById('canvas');
 
+            vm.canvas = document.getElementById('canvas');
             if (vm.canvas !== undefined) {
+                vm.canvas.onresize = onResize;
+
                 vm.canvas.onmousedown = onMouseDown;
                 vm.canvas.onmouseup = onMouseUp;
                 vm.canvas.onmousemove = onMouseMove;
@@ -82,8 +86,6 @@
                     break;
                 }
                 case 'client-connected': {
-                    console.log('client-connected: socket.id: ' + 
-                        message.value + ', name: ' + tokenIdentity.currentUser.name);
                     clientMessage('add-player', {
                         id: message.value,
                         name: tokenIdentity.currentUser.name
@@ -91,8 +93,6 @@
                     break;
                 }
                 case 'client-disconnected': {
-                    console.log('client-connected: socket.id: ' + 
-                        message.value + ', name: ' + tokenIdentity.currentUser.name);
                     clientMessage('remove-player', {
                         id: message.value,
                         name: tokenIdentity.currentUser.name
@@ -103,13 +103,18 @@
                     vm.players = message.value;
                     break;
                 }
-                case 'chat-event': {
+                case 'chat-message': {
                     vm.chatMessages.push(message.value);
                     break;
                 }
-                case 'chat-error': {
-                    alert.show('warning', 'Error', message.value);
-                    console.log('Error: ', message.type);
+                case 'server-error': {
+                    vm.chatMessages.push({
+                        timestamp: new Date(),
+                        type: 'danger',
+                        message: message.value
+                    });
+                    alert.show('warning', message.type, message.value);
+                    console.log('server-error: ', message.value);
                     break;
                 }
                 default: {
@@ -148,10 +153,28 @@
             vm.drawing = false;
         }
 
+        function onResize(event) {
+            console.log('onResize: ', event);
+        }
+
         function clientMessage(type, value) {
             sawkit.emit('message', {
                 type: type,
                 value: value
+            });
+        }
+
+        function chatMessage(message) {
+            vm.newMessage = '';
+            var chatMessage = {
+                timestamp: new Date(),
+                type: 'chat',
+                from: tokenIdentity.currentUser.name,
+                message: message
+            };
+            sawkit.emit('message', {
+                type: 'chat-message',
+                value: chatMessage
             });
         }
 

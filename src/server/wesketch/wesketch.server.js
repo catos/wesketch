@@ -1,22 +1,27 @@
 var _ = require('lodash');
 
 var gameServer = module.exports = {
+    weesketch: {},
     players: []
 };
 
-// TODO: WTS weesketch from all these methods, maybe init() is the answer afterall ?
-gameServer.onMessage = function (weesketch, message) {
 
+gameServer.init = function (weesketch, next) {
+    gameServer.weesketch = weesketch;
+    next();
+}
+
+gameServer.onMessage = function (message) {
     validateClientMessage(message, function (err, message) {
         if (err) {
-            sendMessage(weesketch, 'server-error', err.message);
+            sendMessage('server-error', err.message);
             return;
         }
 
         switch (message.type) {
             case 'add-player': {
                 message.type = 'update-players';
-                message.value = gameServer.addPlayer(weesketch, message.value);
+                message.value = gameServer.addPlayer(message.value);
                 break;
             }
             default: {
@@ -24,24 +29,29 @@ gameServer.onMessage = function (weesketch, message) {
             }
         }
 
-        sendMessage(weesketch, message.type, message.value);
+        sendMessage(message.type, message.value);
     });
-
 };
 
-gameServer.addPlayer = function (weesketch, player) {
+gameServer.addPlayer = function (player) {
     var playerTemplate = {
         id: -1,
         name: '',
         score: 0,
         current: true
     };
-    var existingPlayer = _.find(gameServer.players, { 'name': player.name });
+    var existingPlayer = _.find(gameServer.players, { name: player.name });
 
     if (!existingPlayer) {
-        var newPlayer = _.merge({}, playerTemplate, player);            
+        var newPlayer = _.merge({}, playerTemplate, player);
         gameServer.players.push(newPlayer);
-        sendMessage(weesketch, 'chat-event', newPlayer.name + ' joined the game...');
+
+        sendMessage('chat-message', {
+            timestamp: new Date(),
+            type: 'warning',
+            message: newPlayer.name + ' joined the game...'
+        });
+
     } else {
         existingPlayer.id = player.id;
     }
@@ -49,33 +59,36 @@ gameServer.addPlayer = function (weesketch, player) {
     return gameServer.players;
 };
 
-gameServer.diconnectClient = function (weesketch, socketId) {
+gameServer.diconnectClient = function (socketId) {
     var players = _.remove(gameServer.players, { id: socketId });
     if (players.length) {
-        sendMessage(weesketch, 'chat-event', players[0].name + ' left the game...');
-        sendMessage(weesketch, 'update-players', gameServer.players);
+        sendMessage('chat-message', {
+            timestamp: new Date(),
+            type: 'warning',
+            message: players[0].name + ' left the game...'
+        });
+        sendMessage('update-players', gameServer.players);
     } else {
-        var msg = 
+        sendMessage('server-error',
             'Client (socketId = ' + socketId + ') left the game, ' +
-            'but the server was unable to remove player from game.';
-            
-        sendMessage(weesketch, 'chat-error', msg);
-            
+            'but the server was unable to remove player from game.');
+
     }
 };
+
 
 /**
  * Private functions
  */
 
-function sendMessage(weesketch, type, value) {
-    weesketch.emit('message', {
+function sendMessage(type, value) {
+    gameServer.weesketch.emit('message', {
         type: type,
         value: value
     });
 
     if (type !== 'brush') {
-        console.log('sendMessage: type = ' + type + ', value = ', value);
+        console.log('\n*** sendMessage: type = ' + type + ', value = ' + value);
     }
 }
 
@@ -86,7 +99,8 @@ function validateClientMessage(message, cb) {
         'add-player',
         'remove-player',
         'change-tool',
-        'brush'
+        'brush',
+        'chat-message'
     ];
 
     if (!message.type) {

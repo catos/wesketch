@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -21,11 +21,11 @@
 
         function linkFunc(scope, el, attr, ctrl) {
             // ctrl.init();
-
-            el.bind('mousedown', ctrl.onMouseDown);
-            el.bind('mouseup', ctrl.onMouseUp);
-            el.bind('mousemove', ctrl.onMouseMove);
-            el.bind('mouseleave', ctrl.onMouseLeave);
+            // el.bind('resize', ctrl.onResize);
+            // el.bind('mousedown', ctrl.onMouseDown);
+            // el.bind('mouseup', ctrl.onMouseUp);
+            // el.bind('mousemove', ctrl.onMouseMove);
+            // el.bind('mouseleave', ctrl.onMouseLeave);
         }
     }
 })();

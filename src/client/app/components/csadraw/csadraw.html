@@ -3,7 +3,9 @@
     <div class="row">
         <div class="col-xs-9">
 
-            <canvas width="500" height="500" id="canvas">
+            <!--<canvas width="500" height="500" id="canvas">
+            </canvas>-->
+            <canvas id="canvas">
             </canvas>
 
         </div>
@@ -39,24 +41,30 @@
                 <small>Seconds remaining</small>
                 <button class="btn btn-sm btn-primary disabled">Request pause</button>
             </div>
+            
+            <div class="function-group debug">
+                <button class="btn btn-sm btn-primary" ng-click="vm.clientMessage('non-existing-event', 'some value...')">Unknown handler</button>
+            </div>                        
         </div>
     </div>
 
-    <div class="row info-bar">        
+    <div class="row info-bar">
         Turn #2 - Current player is: Cato Skogholt
     </div>
 
     <div class="row chat">
         <div class="col-xs-9">
             <div class="messages">
-                <div class="message" ng-repeat="message in vm.chatMessages track by $index">
-                    {{message}}
+                <div ng-repeat="message in vm.chatMessages track by $index" class="message text-{{message.type}}">
+                    <small class="text-muted">{{message.timestamp | date:'HH:mm:ss'}}</small>
+                    <strong ng-show="message.from">{{message.from}}: </strong> {{message.message}}
                 </div>
             </div>
             <div class="new-message input-group">
-                <input type="text" class="form-control" placeholder="Start with '!' to chat">
+                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.chatMessage(vm.newMessage) : null">
+
                 <span class="input-group-btn">
-                    <button class="btn btn-primary">Send</button>
+                    <button class="btn btn-primary" type="button" ng-click="vm.chatMessage(vm.newMessage)">Send</button>
                 </span>
             </div>
         </div>
