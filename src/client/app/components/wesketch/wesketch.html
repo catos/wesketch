@@ -1,32 +1,30 @@
-<div class="csadraw">
+<div class="wesketch">
 
-    <div class="row">
+    <div id="canvas-height" class="row">
         <div class="col-xs-9">
 
-            <!--<canvas width="500" height="500" id="canvas">
-            </canvas>-->
-            <canvas id="canvas">
+            <canvas width="500" height="500" id="canvas">
             </canvas>
-
+            
         </div>
         <div class="col-xs-3 functions-row">
 
             <div class="function-group">
-                <div class="csadraw-button" ng-click="vm.clientMessage('clear')"><i class="fa fa-times"></i></div>
-                <div class="csadraw-button" ng-click="vm.clientMessage('change-tool', 'brush')"><i class="fa fa-paint-brush"></i></div>
-                <!--<div ng-click="vm.clientMessage('change-tool', 'eraser')"><i class="fa fa-eraser"></i></div>
-                        <div ng-click="vm.clientMessage('change-tool', 'fill')"><i class="fa fa-magic"></i></div>-->
+                <div class="wesketch-button" ng-click="vm.clientMessage('clear')"><i class="fa fa-times"></i></div>
+                <div class="wesketch-button" ng-click="vm.clientMessage('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
+                <!--<div ng-click="vm.clientMessage('changeTool', 'eraser')"><i class="fa fa-eraser"></i></div>
+                        <div ng-click="vm.clientMessage('changeTool', 'fill')"><i class="fa fa-magic"></i></div>-->
             </div>
 
             <div class="function-group tool-sizes">
-                <div class="csadraw-button"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('update-settings', { lineWidth: vm.settings.lineWidth - 2 })"></i></div>
-                <div class="csadraw-button"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('update-settings', { lineWidth: vm.settings.lineWidth + 2 })"></i></div>
+                <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.clientMessage('updateSettings', { lineWidth: vm.settings.lineWidth - 2 })"></i></div>
+                <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.clientMessage('updateSettings', { lineWidth: vm.settings.lineWidth + 2 })"></i></div>
                 <strong>Size: {{vm.settings.lineWidth}}</strong>
             </div>
 
             <div class="function-group palette">
                 <div ng-repeat="color in vm.settings.colors" style="background-color: {{color}}" ng-class="color === vm.settings.strokeStyle ? 'current' : ''"
-                ng-click="vm.clientMessage('update-settings', { strokeStyle: color })" class="csadraw-button">
+                ng-click="vm.clientMessage('updateSettings', { strokeStyle: color })" class="wesketch-button">
                 </div>
             </div>
 
@@ -43,7 +41,7 @@
             </div>
             
             <div class="function-group debug">
-                <button class="btn btn-sm btn-primary" ng-click="vm.clientMessage('non-existing-event', 'some value...')">Unknown handler</button>
+                <button class="btn btn-sm btn-primary" ng-click="vm.clientMessage('nonExistingEvent', 'with some value...')">Unknown handler</button>
             </div>                        
         </div>
     </div>
@@ -54,7 +52,7 @@
 
     <div class="row chat">
         <div class="col-xs-9">
-            <div class="messages">
+            <div id="messages" class="messages">
                 <div ng-repeat="message in vm.chatMessages track by $index" class="message text-{{message.type}}">
                     <small class="text-muted">{{message.timestamp | date:'HH:mm:ss'}}</small>
                     <strong ng-show="message.from">{{message.from}}: </strong> {{message.message}}
@@ -70,6 +68,9 @@
         </div>
         <div class="col-xs-3 players">
             <table class="table">
+                <tr>
+                    <td>{{vm.player}}</td>
+                </tr>
                 <tr ng-repeat="player in vm.players" ng-class="{ 'current' : player.current }">
                     <td data-player-id="{{player.id}}">{{player.name}}</td>
                     <td>{{player.score}}</td>

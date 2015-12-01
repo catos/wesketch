@@ -17,6 +17,7 @@
 	- http://www.jacklmoore.com/notes/mouse-position/
 	- http://codepen.io/goker/pen/kbEdn
 	- Game-loop = http://buildnewgames.com/real-time-multiplayer/
+	- http://encosia.com/first-class-functions-as-an-alternative-to-javascripts-switch-statement/
 
 ## Chat
 - http://briantford.com/blog/angular-socket-io

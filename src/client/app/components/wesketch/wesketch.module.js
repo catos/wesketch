@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('components.csadraw', []);
+        .module('components.wesketch', []);
 })();

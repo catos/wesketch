@@ -11,7 +11,7 @@
             'blocks.sawkit',
             'blocks.tokenIdentity',
 
-            'components.csadraw',
+            'components.wesketch',
 
             'ui.router',
             'ui.bootstrap',

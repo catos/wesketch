@@ -9,18 +9,18 @@ var gameServer = module.exports = {
 gameServer.init = function (weesketch, next) {
     gameServer.weesketch = weesketch;
     next();
-}
+};
 
 gameServer.onMessage = function (message) {
     validateClientMessage(message, function (err, message) {
         if (err) {
-            sendMessage('server-error', err.message);
+            sendMessage('serverError', err.message);
             return;
         }
 
         switch (message.type) {
-            case 'add-player': {
-                message.type = 'update-players';
+            case 'addPlayer': {
+                message.type = 'updatePlayers';
                 message.value = gameServer.addPlayer(message.value);
                 break;
             }
@@ -46,7 +46,7 @@ gameServer.addPlayer = function (player) {
         var newPlayer = _.merge({}, playerTemplate, player);
         gameServer.players.push(newPlayer);
 
-        sendMessage('chat-message', {
+        sendMessage('chatMessage', {
             timestamp: new Date(),
             type: 'warning',
             message: newPlayer.name + ' joined the game...'
@@ -62,14 +62,14 @@ gameServer.addPlayer = function (player) {
 gameServer.diconnectClient = function (socketId) {
     var players = _.remove(gameServer.players, { id: socketId });
     if (players.length) {
-        sendMessage('chat-message', {
+        sendMessage('chatMessage', {
             timestamp: new Date(),
             type: 'warning',
             message: players[0].name + ' left the game...'
         });
-        sendMessage('update-players', gameServer.players);
+        sendMessage('updatePlayers', gameServer.players);
     } else {
-        sendMessage('server-error',
+        sendMessage('serverError',
             'Client (socketId = ' + socketId + ') left the game, ' +
             'but the server was unable to remove player from game.');
 
@@ -94,13 +94,13 @@ function sendMessage(type, value) {
 
 function validateClientMessage(message, cb) {
     var validTypes = [
-        'update-settings',
+        'updateSettings',
         'clear',
-        'add-player',
-        'remove-player',
-        'change-tool',
+        'addPlayer',
+        'removePlayer',
+        'changeTool',
         'brush',
-        'chat-message'
+        'chatMessage'
     ];
 
     if (!message.type) {
