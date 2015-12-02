@@ -5,9 +5,9 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['$window', 'alert', 'sawkit', 'tokenIdentity'];
+    WesketchController.$inject = ['alert', 'sawkit', 'tokenIdentity'];
 
-    function WesketchController($window, alert, sawkit, tokenIdentity) {
+    function WesketchController(alert, sawkit, tokenIdentity) {
         /**
          * Private variables
          */
@@ -46,27 +46,27 @@
             strokeStyle: colors[0],
             colors: colors,
         };
-        
+
         // TODO: remove later...
         vm.messagesElement = {};
 
-        vm.clientMessage = clientMessage;
-        vm.chatMessage = chatMessage;
+        vm.sendClientMessage = sendClientMessage;
+        vm.addChatMessage = addChatMessage;
         vm.init = init;
 
         init();
-        
+
         function init() {
-            vm.player.name = tokenIdentity.currentUser.name; 
+            vm.player.name = tokenIdentity.currentUser.name;
 
             sawkit.connect('weesketch');
 
-            // TODO: dette er vel ikke helt spa, hva med å sende med som 
+            // TODO: dette er vel ikke helt spa, hva med å sende med som
             // parameter fra directive, eller bruke angular.element ?
             vm.canvas = document.getElementById('canvas');
-            vm.messagesElement = document.getElementById('messages');            
+            vm.messagesElement = document.getElementById('messages');
             if (vm.canvas !== undefined) {
-                
+
                 // TODO: resize canvas
                 // vm.canvas.onresize = onResize;
                 // var w = angular.element($window);
@@ -120,14 +120,14 @@
             };
 
             serverMessage.clientConnected = function (message) {
-                clientMessage('addPlayer', {
+                sendClientMessage('addPlayer', {
                     id: message.value,
                     name: vm.player.name
                 });
             };
 
             serverMessage.clientDisconnected = function (message) {
-                clientMessage('removePlayer', {
+                sendClientMessage('removePlayer', {
                     id: message.value,
                     name: vm.player.name
                 });
@@ -137,14 +137,14 @@
                 vm.players = message.value;
             };
 
-            serverMessage.chatMessage = function (message) {
+            serverMessage.addChatMessage = function (message) {
                 vm.chatMessages.push(message.value);
-                
+
                 // TODO: fix better plz
                 // http://stackoverflow.com/questions/26343832/scroll-to-bottom-in-chat-box-in-angularjs
-                
+
                 vm.messagesElement.scrollTop = vm.messagesElement.scrollHeight;
-                
+
                 console.log('vm.messagesElement.scrollTop: ' + vm.messagesElement.scrollTop);
                 console.log('vm.messagesElement.scrollHeight: ' + vm.messagesElement.scrollHeight);
             };
@@ -208,7 +208,7 @@
          * Events called from the UI-elements
          */
 
-        function clientMessage(type, value) {
+        function sendClientMessage(type, value) {
             sawkit.emit('message', {
                 type: type,
                 value: value
@@ -216,7 +216,7 @@
         }
 
         // TODO: rename message til event || data || clientEvent || gameEvent
-        function chatMessage(message) {
+        function addChatMessage(message) {
             vm.newMessage = '';
             var chatMessage = {
                 timestamp: new Date(),
@@ -225,7 +225,7 @@
                 message: message
             };
             sawkit.emit('message', {
-                type: 'chatMessage',
+                type: 'addChatMessage',
                 value: chatMessage
             });
         }

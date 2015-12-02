@@ -46,7 +46,7 @@ gameServer.addPlayer = function (player) {
         var newPlayer = _.merge({}, playerTemplate, player);
         gameServer.players.push(newPlayer);
 
-        sendMessage('chatMessage', {
+        sendMessage('addChatMessage', {
             timestamp: new Date(),
             type: 'warning',
             message: newPlayer.name + ' joined the game...'
@@ -62,7 +62,7 @@ gameServer.addPlayer = function (player) {
 gameServer.diconnectClient = function (socketId) {
     var players = _.remove(gameServer.players, { id: socketId });
     if (players.length) {
-        sendMessage('chatMessage', {
+        sendMessage('addChatMessage', {
             timestamp: new Date(),
             type: 'warning',
             message: players[0].name + ' left the game...'
@@ -100,7 +100,7 @@ function validateClientMessage(message, cb) {
         'removePlayer',
         'changeTool',
         'brush',
-        'chatMessage'
+        'addChatMessage'
     ];
 
     if (!message.type) {
