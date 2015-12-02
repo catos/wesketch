@@ -50,7 +50,7 @@
         // TODO: remove later...
         vm.messagesElement = {};
 
-        vm.sendClientMessage = sendClientMessage;
+        vm.sendClientEvent = sendClientEvent;
         vm.addChatMessage = addChatMessage;
         vm.init = init;
 
@@ -90,89 +90,7 @@
         }
 
         /**
-         * Messages from the server
-         */
-        sawkit.on('message', function (message) {
-
-            var serverMessage = serverMessage || {};
-
-            serverMessage.updateSettings = function (message) {
-                angular.extend(vm.settings, message.value);
-            };
-
-            serverMessage.brush = function (message) {
-                var coords = message.value;
-
-                vm.ctx.beginPath();
-
-                vm.ctx.strokeStyle = vm.settings.strokeStyle;
-                vm.ctx.lineWidth = vm.settings.lineWidth;
-                vm.ctx.lineJoin = vm.settings.lineJoin;
-                vm.ctx.lineCap = vm.settings.lineCap;
-
-                vm.ctx.moveTo(coords.from.x, coords.from.y);
-                vm.ctx.lineTo(coords.to.x, coords.to.y);
-                vm.ctx.stroke();
-            };
-
-            serverMessage.clear = function (message) {
-                vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
-            };
-
-            serverMessage.clientConnected = function (message) {
-                sendClientMessage('addPlayer', {
-                    id: message.value,
-                    name: vm.player.name
-                });
-            };
-
-            serverMessage.clientDisconnected = function (message) {
-                sendClientMessage('removePlayer', {
-                    id: message.value,
-                    name: vm.player.name
-                });
-            };
-
-            serverMessage.updatePlayers = function (message) {
-                vm.players = message.value;
-            };
-
-            serverMessage.addChatMessage = function (message) {
-                vm.chatMessages.push(message.value);
-
-                // TODO: fix better plz
-                // http://stackoverflow.com/questions/26343832/scroll-to-bottom-in-chat-box-in-angularjs
-
-                vm.messagesElement.scrollTop = vm.messagesElement.scrollHeight;
-
-                console.log('vm.messagesElement.scrollTop: ' + vm.messagesElement.scrollTop);
-                console.log('vm.messagesElement.scrollHeight: ' + vm.messagesElement.scrollHeight);
-            };
-
-            serverMessage.serverError = function (message) {
-                vm.chatMessages.push({
-                    timestamp: new Date(),
-                    type: 'danger',
-                    message: message.value
-                });
-                alert.show('warning', message.type, message.value);
-                console.log('server-error: ', message.value);
-            };
-
-            serverMessage.default = function (message) {
-                alert.show('warning', 'Error', 'No handler found for type: ' + message.type);
-                console.log('No handler found for type: ' + message.type);
-            };
-
-            if (serverMessage[message.type]) {
-                return serverMessage[message.type](message);
-            } else {
-                return serverMessage.default(message);
-            }
-        });
-
-        /**
-         * Mouse & Resize events
+         * Client events
          */
         function onMouseDown(event) {
             vm.coords.from = getCoords(event);
@@ -186,7 +104,7 @@
         function onMouseMove(event) {
             if (vm.drawing) {
                 vm.coords.to = getCoords(event);
-                sawkit.emit('message', {
+                sawkit.emit('clientEvent', {
                     type: vm.settings.currentTool,
                     value: vm.coords
                 });
@@ -203,32 +121,108 @@
             console.log('onResize: ', event);
         }
 
-
-        /**
-         * Events called from the UI-elements
-         */
-
-        function sendClientMessage(type, value) {
-            sawkit.emit('message', {
+        function sendClientEvent(type, value) {
+            sawkit.emit('clientEvent', {
                 type: type,
                 value: value
             });
         }
 
-        // TODO: rename message til event || data || clientEvent || gameEvent
         function addChatMessage(message) {
             vm.newMessage = '';
             var chatMessage = {
                 timestamp: new Date(),
                 type: 'chat',
-                from: tokenIdentity.currentUser.name,
+                from: vm.player.name,
                 message: message
             };
-            sawkit.emit('message', {
+            sawkit.emit('clientEvent', {
                 type: 'addChatMessage',
                 value: chatMessage
             });
         }
+
+        /**
+         * Server events
+         */
+        sawkit.on('serverEvent', function (serverEvent) {
+
+            var gameEvent = gameEvent || {};
+
+            gameEvent.updateSettings = function (serverEvent) {
+                angular.extend(vm.settings, serverEvent.value);
+            };
+
+            gameEvent.brush = function (serverEvent) {
+                var coords = serverEvent.value;
+
+                vm.ctx.beginPath();
+
+                vm.ctx.strokeStyle = vm.settings.strokeStyle;
+                vm.ctx.lineWidth = vm.settings.lineWidth;
+                vm.ctx.lineJoin = vm.settings.lineJoin;
+                vm.ctx.lineCap = vm.settings.lineCap;
+
+                vm.ctx.moveTo(coords.from.x, coords.from.y);
+                vm.ctx.lineTo(coords.to.x, coords.to.y);
+                vm.ctx.stroke();
+            };
+
+            gameEvent.clear = function (serverEvent) {
+                vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+            };
+
+            gameEvent.clientConnected = function (serverEvent) {
+                sendClientEvent('addPlayer', {
+                    id: serverEvent.value,
+                    name: vm.player.name
+                });
+            };
+
+            gameEvent.clientDisconnected = function (serverEvent) {
+                sendClientEvent('removePlayer', {
+                    id: serverEvent.value,
+                    name: vm.player.name
+                });
+            };
+
+            gameEvent.updatePlayers = function (serverEvent) {
+                vm.players = serverEvent.value;
+            };
+
+            gameEvent.addChatMessage = function (serverEvent) {
+                vm.chatMessages.push(serverEvent.value);
+
+                // TODO: fix better plz
+                // http://stackoverflow.com/questions/26343832/scroll-to-bottom-in-chat-box-in-angularjs
+
+                vm.messagesElement.scrollTop = vm.messagesElement.scrollHeight;
+
+                console.log('vm.messagesElement.scrollTop: ' + vm.messagesElement.scrollTop);
+                console.log('vm.messagesElement.scrollHeight: ' + vm.messagesElement.scrollHeight);
+            };
+
+            gameEvent.serverError = function (serverEvent) {
+                vm.chatMessages.push({
+                    timestamp: new Date(),
+                    type: 'danger',
+                    message: serverEvent.value
+                });
+                alert.show('warning', serverEvent.type, serverEvent.value);
+                console.log('server-error: ', serverEvent.value);
+            };
+
+            gameEvent.default = function (serverEvent) {
+                alert.show('warning', 'Error', 'No handler found for type: ' + serverEvent.type);
+                console.log('No handler found for type: ' + serverEvent.type);
+            };
+
+            if (gameEvent[serverEvent.type]) {
+                return gameEvent[serverEvent.type](serverEvent);
+            } else {
+                return gameEvent.default(serverEvent);
+            }
+        });
 
         /**
          * Private functions

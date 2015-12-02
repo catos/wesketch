@@ -10,21 +10,21 @@
         <div class="col-xs-3 functions-row">
 
             <div class="function-group">
-                <div class="wesketch-button" ng-click="vm.sendClientMessage('clear')"><i class="fa fa-times"></i></div>
-                <div class="wesketch-button" ng-click="vm.sendClientMessage('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
-                <!--<div ng-click="vm.sendClientMessage('changeTool', 'eraser')"><i class="fa fa-eraser"></i></div>
-                        <div ng-click="vm.sendClientMessage('changeTool', 'fill')"><i class="fa fa-magic"></i></div>-->
+                <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div>
+                <div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
+                <!--<div ng-click="vm.sendClientEvent('changeTool', 'eraser')"><i class="fa fa-eraser"></i></div>
+                        <div ng-click="vm.sendClientEvent('changeTool', 'fill')"><i class="fa fa-magic"></i></div>-->
             </div>
 
             <div class="function-group tool-sizes">
-                <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientMessage('updateSettings', { lineWidth: vm.settings.lineWidth - 2 })"></i></div>
-                <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientMessage('updateSettings', { lineWidth: vm.settings.lineWidth + 2 })"></i></div>
+                <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateSettings', { lineWidth: vm.settings.lineWidth - 2 })"></i></div>
+                <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateSettings', { lineWidth: vm.settings.lineWidth + 2 })"></i></div>
                 <strong>Size: {{vm.settings.lineWidth}}</strong>
             </div>
 
             <div class="function-group palette">
                 <div ng-repeat="color in vm.settings.colors" style="background-color: {{color}}" ng-class="color === vm.settings.strokeStyle ? 'current' : ''"
-                ng-click="vm.sendClientMessage('updateSettings', { strokeStyle: color })" class="wesketch-button">
+                ng-click="vm.sendClientEvent('updateSettings', { strokeStyle: color })" class="wesketch-button">
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
             </div>
 
             <div class="function-group debug">
-                <button class="btn btn-sm btn-primary" ng-click="vm.sendClientMessage('nonExistingEvent', 'with some value...')">Unknown handler</button>
+                <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
             </div>
         </div>
     </div>

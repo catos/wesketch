@@ -11,17 +11,17 @@ gameServer.init = function (weesketch, next) {
     next();
 };
 
-gameServer.onMessage = function (message) {
-    validateClientMessage(message, function (err, message) {
+gameServer.onClientEvent = function (clientEvent) {
+    validateClientEvent(clientEvent, function (err, clientEvent) {
         if (err) {
-            sendMessage('serverError', err.message);
+            sendServerEvent('serverError', err.message);
             return;
         }
 
-        switch (message.type) {
+        switch (clientEvent.type) {
             case 'addPlayer': {
-                message.type = 'updatePlayers';
-                message.value = gameServer.addPlayer(message.value);
+                clientEvent.type = 'updatePlayers';
+                clientEvent.value = gameServer.addPlayer(clientEvent.value);
                 break;
             }
             default: {
@@ -29,7 +29,7 @@ gameServer.onMessage = function (message) {
             }
         }
 
-        sendMessage(message.type, message.value);
+        sendServerEvent(clientEvent.type, clientEvent.value);
     });
 };
 
@@ -46,7 +46,7 @@ gameServer.addPlayer = function (player) {
         var newPlayer = _.merge({}, playerTemplate, player);
         gameServer.players.push(newPlayer);
 
-        sendMessage('addChatMessage', {
+        sendServerEvent('addChatMessage', {
             timestamp: new Date(),
             type: 'warning',
             message: newPlayer.name + ' joined the game...'
@@ -62,14 +62,14 @@ gameServer.addPlayer = function (player) {
 gameServer.diconnectClient = function (socketId) {
     var players = _.remove(gameServer.players, { id: socketId });
     if (players.length) {
-        sendMessage('addChatMessage', {
+        sendServerEvent('addChatMessage', {
             timestamp: new Date(),
             type: 'warning',
             message: players[0].name + ' left the game...'
         });
-        sendMessage('updatePlayers', gameServer.players);
+        sendServerEvent('updatePlayers', gameServer.players);
     } else {
-        sendMessage('serverError',
+        sendServerEvent('serverError',
             'Client (socketId = ' + socketId + ') left the game, ' +
             'but the server was unable to remove player from game.');
 
@@ -81,18 +81,18 @@ gameServer.diconnectClient = function (socketId) {
  * Private functions
  */
 
-function sendMessage(type, value) {
-    gameServer.weesketch.emit('message', {
+function sendServerEvent(type, value) {
+    gameServer.weesketch.emit('serverEvent', {
         type: type,
         value: value
     });
 
     if (type !== 'brush') {
-        console.log('\n*** sendMessage: type = ' + type + ', value = ' + value);
+        console.log('\n*** sendServerEvent: type = ' + type + ', value = ' + value);
     }
 }
 
-function validateClientMessage(message, cb) {
+function validateClientEvent(clientEvent, cb) {
     var validTypes = [
         'updateSettings',
         'clear',
@@ -103,15 +103,15 @@ function validateClientMessage(message, cb) {
         'addChatMessage'
     ];
 
-    if (!message.type) {
+    if (!clientEvent.type) {
         cb(new Error('Invalid client message: type is undefined'));
         return;
     }
 
-    if (validTypes.indexOf(message.type) === -1) {
-        cb(new Error('Invalid client message: "' + message.type + '" is not a valid message type.'));
+    if (validTypes.indexOf(clientEvent.type) === -1) {
+        cb(new Error('Invalid client message: "' + clientEvent.type + '" is not a valid message type.'));
         return;
     }
 
-    cb(null, message);
+    cb(null, clientEvent);
 }
