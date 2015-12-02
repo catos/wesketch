@@ -12,7 +12,7 @@ module.exports = function (io) {
                  * Client connected
                  */
                 // console.log('\n\n*** wesketch.sockets.js -> connect -> socket.id = ' + client.id);
-                client.emit('clientEvent', {
+                client.emit('serverEvent', {
                     type: 'clientConnected',
                     value: client.id
                 });

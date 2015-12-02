@@ -147,13 +147,13 @@
          */
         sawkit.on('serverEvent', function (serverEvent) {
 
-            var gameEvent = gameEvent || {};
+            var serverEvents = serverEvents || {};
 
-            gameEvent.updateSettings = function (serverEvent) {
+            serverEvents.updateSettings = function (serverEvent) {
                 angular.extend(vm.settings, serverEvent.value);
             };
 
-            gameEvent.brush = function (serverEvent) {
+            serverEvents.brush = function (serverEvent) {
                 var coords = serverEvent.value;
 
                 vm.ctx.beginPath();
@@ -168,29 +168,29 @@
                 vm.ctx.stroke();
             };
 
-            gameEvent.clear = function (serverEvent) {
+            serverEvents.clear = function (serverEvent) {
                 vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
             };
 
-            gameEvent.clientConnected = function (serverEvent) {
+            serverEvents.clientConnected = function (serverEvent) {
                 sendClientEvent('addPlayer', {
                     id: serverEvent.value,
                     name: vm.player.name
                 });
             };
 
-            gameEvent.clientDisconnected = function (serverEvent) {
+            serverEvents.clientDisconnected = function (serverEvent) {
                 sendClientEvent('removePlayer', {
                     id: serverEvent.value,
                     name: vm.player.name
                 });
             };
 
-            gameEvent.updatePlayers = function (serverEvent) {
+            serverEvents.updatePlayers = function (serverEvent) {
                 vm.players = serverEvent.value;
             };
 
-            gameEvent.addChatMessage = function (serverEvent) {
+            serverEvents.addChatMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
 
                 // TODO: fix better plz
@@ -202,7 +202,7 @@
                 console.log('vm.messagesElement.scrollHeight: ' + vm.messagesElement.scrollHeight);
             };
 
-            gameEvent.serverError = function (serverEvent) {
+            serverEvents.serverError = function (serverEvent) {
                 vm.chatMessages.push({
                     timestamp: new Date(),
                     type: 'danger',
@@ -212,15 +212,15 @@
                 console.log('server-error: ', serverEvent.value);
             };
 
-            gameEvent.default = function (serverEvent) {
+            serverEvents.default = function (serverEvent) {
                 alert.show('warning', 'Error', 'No handler found for type: ' + serverEvent.type);
                 console.log('No handler found for type: ' + serverEvent.type);
             };
 
-            if (gameEvent[serverEvent.type]) {
-                return gameEvent[serverEvent.type](serverEvent);
+            if (serverEvents[serverEvent.type]) {
+                return serverEvents[serverEvent.type](serverEvent);
             } else {
-                return gameEvent.default(serverEvent);
+                return serverEvents.default(serverEvent);
             }
         });
 
