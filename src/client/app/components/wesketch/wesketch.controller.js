@@ -31,8 +31,11 @@
                 y: 0
             }
         };
+        
         vm.player = {};
         vm.players = [];
+        
+        vm.gameState = {};
         vm.chatMessages = [];
         vm.newMessage = '';
         vm.settings = {
@@ -51,7 +54,7 @@
         vm.messagesElement = {};
 
         vm.sendClientEvent = sendClientEvent;
-        vm.addChatMessage = addChatMessage;
+        vm.addMessage = addMessage;
         vm.init = init;
 
         init();
@@ -87,6 +90,8 @@
                 vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
             }
+            
+            sawkit.emit('clientEvent', { type: 'updateGameState' });
         }
 
         /**
@@ -128,7 +133,7 @@
             });
         }
 
-        function addChatMessage(message) {
+        function addMessage(message) {
             vm.newMessage = '';
             var chatMessage = {
                 timestamp: new Date(),
@@ -137,7 +142,7 @@
                 message: message
             };
             sawkit.emit('clientEvent', {
-                type: 'addChatMessage',
+                type: 'addMessage',
                 value: chatMessage
             });
         }
@@ -148,6 +153,10 @@
         sawkit.on('serverEvent', function (serverEvent) {
 
             var serverEvents = serverEvents || {};
+
+            serverEvents.updateGameState = function (serverEvent) {
+                angular.extend(vm.gameState, serverEvent.value);
+            };
 
             serverEvents.updateSettings = function (serverEvent) {
                 angular.extend(vm.settings, serverEvent.value);
@@ -173,14 +182,15 @@
             };
 
             serverEvents.clientConnected = function (serverEvent) {
-                sendClientEvent('addPlayer', {
+                vm.player.id = serverEvent.value;
+                vm.sendClientEvent('addPlayer', {
                     id: serverEvent.value,
                     name: vm.player.name
                 });
             };
 
             serverEvents.clientDisconnected = function (serverEvent) {
-                sendClientEvent('removePlayer', {
+                vm.sendClientEvent('removePlayer', {
                     id: serverEvent.value,
                     name: vm.player.name
                 });
@@ -190,7 +200,7 @@
                 vm.players = serverEvent.value;
             };
 
-            serverEvents.addChatMessage = function (serverEvent) {
+            serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
 
                 // TODO: fix better plz
@@ -209,12 +219,12 @@
                     message: serverEvent.value
                 });
                 alert.show('warning', serverEvent.type, serverEvent.value);
-                console.log('server-error: ', serverEvent.value);
+                console.log('Server Error: ', serverEvent.value);
             };
 
             serverEvents.default = function (serverEvent) {
-                alert.show('warning', 'Error', 'No handler found for type: ' + serverEvent.type);
-                console.log('No handler found for type: ' + serverEvent.type);
+                alert.show('warning', 'Client Error', 'No handler found for type: ' + serverEvent.type);
+                console.log('Client Error - No handler found for type: ' + serverEvent.type);
             };
 
             if (serverEvents[serverEvent.type]) {

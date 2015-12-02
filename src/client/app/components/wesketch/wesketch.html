@@ -1,11 +1,16 @@
 <div class="wesketch">
 
     <div id="canvas-height" class="row">
-        <div class="col-xs-9">
+        <div class="col-xs-6">
 
             <canvas width="500" height="500" id="canvas">
             </canvas>
 
+        </div>
+        <div class="col-xs-3">
+            {{vm.players}}
+            <hr>
+            {{vm.gameState}}
         </div>
         <div class="col-xs-3 functions-row">
 
@@ -28,6 +33,10 @@
                 </div>
             </div>
 
+            <div class="function-group">
+                <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('togglePlayerReady', vm.player)">Ready</button>
+            </div>
+
             <div class="function-group word-to-draw">
                 <h1>House</h1>
                 <small>Hints remaining: 3</small>
@@ -35,7 +44,7 @@
             </div>
 
             <div class="function-group timer">
-                <h1>33</h1>
+                <h1>{{vm.gameState.timer}}</h1>
                 <small>Seconds remaining</small>
                 <button class="btn btn-sm btn-primary disabled">Request pause</button>
             </div>
@@ -47,7 +56,9 @@
     </div>
 
     <div class="row info-bar">
-        Turn #2 - Current player is: Cato Skogholt
+        State: {{vm.gameState.state}} -
+        Round: {{vm.gameState.round}} - 
+        Drawing: {{vm.gameState.drawingPlayer.name}}
     </div>
 
     <div class="row chat">
@@ -59,20 +70,20 @@
                 </div>
             </div>
             <div class="new-message input-group">
-                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addChatMessage(vm.newMessage) : null">
+                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addMessage(vm.newMessage) : null">
 
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="vm.addChatMessage(vm.newMessage)">Send</button>
+                    <button class="btn btn-primary" type="button" ng-click="vm.addMessage(vm.newMessage)">Send</button>
                 </span>
             </div>
         </div>
         <div class="col-xs-3 players">
             <table class="table">
-                <tr>
-                    <td>{{vm.player}}</td>
-                </tr>
-                <tr ng-repeat="player in vm.players" ng-class="{ 'current' : player.current }">
-                    <td data-player-id="{{player.id}}">{{player.name}}</td>
+                <tr ng-repeat="player in vm.players">
+                    <td data-player-id="{{player.id}}" ng-class="{ 'ready' : player.ready }">
+                        <i ng-show="player.ready" class="fa fa-check"></i>
+                        {{player.name}}
+                    </td>
                     <td>{{player.score}}</td>
                 </tr>
             </table>
