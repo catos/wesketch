@@ -31,9 +31,9 @@
                 </div>
             </div>
 
-            <div ng-show="vm.player.id === vm.gameState.drawingPlayer.id" class="function-group function-group-drawing-player">
+            <div ng-show="vm.player.id === vm.state.drawingPlayer.id" class="function-group function-group-drawing-player">
                 <div class="title">Current word</div>
-                <div class="text-uppercase current-word">{{vm.gameState.currentWord}}</div>
+                <div class="text-uppercase current-word">{{vm.state.currentWord}}</div>
                 <!--<small>Hints remaining: 3</small>
                 <div>
                     <button class="btn btn-sm btn-primary disabled">Give hint</button>
@@ -42,11 +42,11 @@
 
             <div class="function-group function-group-timer">
                 <div class="title">Timer</div>
-                <div class="timer">{{vm.gameState.timer}}</div>
+                <div class="timer">{{vm.state.timer}}</div>
                 <small>Seconds remaining</small>
-                <div class="checkbox" ng-show="vm.gameState.state === vm.gameStateTypes.preGame">
+                <div class="checkbox" ng-show="vm.state.phase === vm.state.phaseTypes.preGame">
                     <label>
-                        <input type="checkbox" ng-click="vm.sendClientEvent('togglePlayerReady', vm.player)"> I am ready
+                        <input type="checkbox" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
                     </label>
                 </div>
                 <!--<div>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="row info-bar">
-        State: {{vm.gameState.state}} - Round: {{vm.gameState.round}} - Drawing: {{vm.gameState.drawingPlayer.name}}
+        Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}
     </div>
 
     <div class="row chat">
@@ -103,8 +103,8 @@
                 {{vm.players}}
             </div>
             <div>
-                <div><strong>vm.gameState:</strong></div>
-                {{vm.gameState}}
+                <div><strong>vm.state:</strong></div>
+                {{vm.state}}
             </div>
 
             <hr>

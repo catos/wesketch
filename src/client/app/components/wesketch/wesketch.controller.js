@@ -5,9 +5,9 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['alert', 'sawkit', 'tokenIdentity'];
+    WesketchController.$inject = ['lodash', 'alert', 'sawkit', 'tokenIdentity'];
 
-    function WesketchController(alert, sawkit, tokenIdentity) {
+    function WesketchController(lodash, alert, sawkit, tokenIdentity) {
         /**
          * Private variables
          */
@@ -33,16 +33,9 @@
         };
 
         vm.player = {};
-        vm.players = [];
+        // vm.players = [];
 
-        // TODO: on init, sync denne med servern
-        vm.gameStateTypes = {
-            preGame: 0,
-            drawing: 1,
-            roundEnd: 2,
-            endGame: 3
-        };
-        vm.gameState = {};
+        vm.state = {};
         vm.chatMessages = [];
         vm.newMessage = '';
         vm.settings = {
@@ -62,13 +55,10 @@
 
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
-        vm.init = init;
 
         init();
 
         function init() {
-            vm.player.name = tokenIdentity.currentUser.name;
-
             sawkit.connect('weesketch');
 
             // TODO: dette er vel ikke helt spa, hva med å sende med som
@@ -98,7 +88,7 @@
                 vm.ctx = vm.canvas.getContext('2d');
             }
 
-            sawkit.emit('clientEvent', { type: 'updateGameState' });
+            sendClientEvent('updateState')
         }
 
         /**
@@ -116,10 +106,7 @@
         function onMouseMove(event) {
             if (vm.drawing) {
                 vm.coords.to = getCoords(event);
-                sawkit.emit('clientEvent', {
-                    type: vm.settings.currentTool,
-                    value: vm.coords
-                });
+                sendClientEvent(vm.settings.currentTool, vm.coords);
 
                 vm.coords.from = vm.coords.to;
             }
@@ -133,9 +120,9 @@
             console.log('onResize: ', event);
         }
 
-        // TODO: Hmm, tror jeg vil ha timestamp og from i tillegg til type og value her...
         function sendClientEvent(type, value) {
             sawkit.emit('clientEvent', {
+                client: vm.player,
                 type: type,
                 value: value
             });
@@ -144,29 +131,27 @@
         function addMessage() {
 
             // Drawing player cannot use chat
-            if (vm.player.id == vm.gameState.drawingPlayer.id) {
+            if (vm.player.id === vm.state.drawingPlayer.id) {
                 alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
                 vm.newMessage = '';
                 return;
             }
 
-            var clientEvent = {
-                type: 'guessWord',
-                value: {
-                    timestamp: new Date(),
-                    type: 'guess-word',
-                    from: vm.player.name,
-                    message: vm.newMessage
-                }
-            }
+            var eventType = 'guessWord';
+            var eventValue = {
+                timestamp: new Date(),
+                type: 'guess-word',
+                from: vm.player.name,
+                message: vm.newMessage
+            };
 
             if (vm.newMessage.charAt(0) === '!') {
-                clientEvent.type = 'addMessage';
-                clientEvent.value.type = 'chat';
-                clientEvent.value.message = vm.newMessage.substr(1);
+                eventType = 'addMessage';
+                eventValue.type = 'chat';
+                eventValue.message = vm.newMessage.substr(1);
             }
 
-            sawkit.emit('clientEvent', clientEvent);
+            sendClientEvent(eventType, eventValue);
 
             vm.newMessage = '';
         }
@@ -178,8 +163,24 @@
 
             var serverEvents = serverEvents || {};
 
-            serverEvents.updateGameState = function (serverEvent) {
-                angular.extend(vm.gameState, serverEvent.value);
+            serverEvents.clientConnected = function (serverEvent) {
+                vm.player = {
+                    id: serverEvent.value,
+                    name: tokenIdentity.currentUser.name
+                };
+                vm.sendClientEvent('addPlayer');
+            };
+
+            serverEvents.clientDisconnected = function (serverEvent) {
+                vm.sendClientEvent('removePlayer', {
+                    id: serverEvent.value,
+                    name: vm.player.name
+                });
+            };
+
+            serverEvents.updateState = function (serverEvent) {
+                angular.extend(vm.state, serverEvent.value);
+                vm.player = lodash.find(vm.state.players, { id: vm.player.id });
             };
 
             serverEvents.updateSettings = function (serverEvent) {
@@ -203,21 +204,6 @@
 
             serverEvents.clear = function (serverEvent) {
                 vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
-            };
-
-            serverEvents.clientConnected = function (serverEvent) {
-                vm.player.id = serverEvent.value;
-                vm.sendClientEvent('addPlayer', {
-                    id: serverEvent.value,
-                    name: vm.player.name
-                });
-            };
-
-            serverEvents.clientDisconnected = function (serverEvent) {
-                vm.sendClientEvent('removePlayer', {
-                    id: serverEvent.value,
-                    name: vm.player.name
-                });
             };
 
             serverEvents.updatePlayers = function (serverEvent) {
