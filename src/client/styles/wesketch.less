@@ -2,7 +2,7 @@
     * {
         user-select: none;
     }
-    
+
     canvas {
         border: 2px solid #ccc;
         display: block;
@@ -11,25 +11,56 @@
             cursor: crosshair;
         }
     }
-    
+
     .functions-row {
         background-color: #f1f1f1;
         padding: 15px;
     }
-    
+
     .function-group {
+        position: relative;
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid #ccc;
-        
+        margin-bottom: 20px;
+
         h1 {
             margin: 0;
         }
-        
+
         &:last-child {
             margin-bottom: 0;
         }
-    } 
+
+        .title {
+            position: absolute;
+            top: -9px;
+            left: 5px;
+            color: #999;
+            padding: 0 5px;
+            background-color: #f1f1f1;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+    }
+
+    .function-group-drawing-player {
+        .current-word {
+            font-size: 2em;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+    }
+
+    .function-group-timer {
+        text-align: center;
+
+        .timer {
+            font-size: 1.5em;
+        }
+    }
 
     .wesketch-button {
         display: inline-block;
@@ -39,17 +70,12 @@
         margin-right: 3px;
         text-align: center;
         border-radius: 2px;
-        background-color: #fefefe;          
+        background-color: #fefefe;
 
         &.current {
             border-color: #000;
             border-style: dashed;
-        }    
-    }
-    
-    .word-to-draw,
-    .timer {
-        text-align: center;
+        }
     }
 
     .info-bar {
@@ -65,17 +91,17 @@
             overflow-y: scroll;
         }
     }
-    
+
     .players {
         background: #f1f1f1;
-        
+
         table {
-            margin-bottom: 0;    
+            margin-bottom: 0;
         }
-        
+
         .ready {
             color: forestgreen;
         }
     }
-    
+
 }
