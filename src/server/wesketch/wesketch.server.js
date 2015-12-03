@@ -58,9 +58,10 @@ var gameServer = module.exports = {
     gameState: {
         state: 0,
         round: 0,
-        timer: 10,  // TODO: sett riktig timer when rdy
+        timer: 60,
         drawingPlayer: {},
-        currentWord: ''
+        currentWord: '',
+        isRoundFinished: false
     }
 };
 
@@ -87,7 +88,7 @@ gameServer.onClientEvent = function (clientEvent) {
 
         var clientEvents = clientEvents || {};
 
-        clientEvents.updateGameState = function (clientEvent) {
+        clientEvents.updateGameState = function () {
             gameServer.sendServerEvent('updateGameState', gameServer.gameState);
         };
 
@@ -127,6 +128,42 @@ gameServer.onClientEvent = function (clientEvent) {
             }
 
             gameServer.sendServerEvent('updatePlayers', gameServer.players);
+        };
+
+        clientEvents.guessWord = function (clientEvent) {
+            var player = clientEvent.value.from;
+            var currentWord = gameServer.gameState.currentWord.toLowerCase();
+            var guess = clientEvent.value.message.toLowerCase();
+
+            if (currentWord === guess) {
+                gameServer.sendServerMessage('guess-word', player + ' guessed the correct word "' + guess + '"!');
+                return;
+            }
+
+            // TODO: guess.length >= currentWord.length - 2
+            console.log(Math.abs(currentWord.length - guess.length));
+            if (Math.abs(currentWord.length - guess.length) === 2 && currentWord.indexOf(guess) > -1) {
+                gameServer.sendServerMessage('guess-word', player + ' is close...');
+                return;
+            }
+
+            gameServer.sendServerMessage('guess-word', player + ' guessed "' + guess + '"');
+            return;
+        };
+
+        // TODO: update this method at the end of implementation to reset all values...
+        clientEvents.resetGame = function (clientEvent) {
+            gameServer.gameState.state = 0;
+            gameServer.gameState.round = 0;
+            gameServer.gameState.timer = 60;
+            gameServer.gameState.drawingPlayer = {};
+            gameServer.gameState.currentWord = '';
+            gameServer.gameState.isRoundFinished = true;
+
+            // TODO: update with who did this ?...
+            gameServer.sendServerMessage('info', 'Game was reset');
+
+            clientEvents.updateGameState();
         };
 
         clientEvents.default = function (clientEvent) {
@@ -175,8 +212,8 @@ gameServer.startRound = function () {
     // Update game state
     gameServer.gameState.state = gameServer.gameStateTypes.drawing;
 
-    // TODO set timer to 60 when ready
-    gameServer.gameState.timer = 10;
+    // Reset timer
+    gameServer.gameState.timer = 60;
 
     // Increment round-counter
     gameServer.gameState.round++;
@@ -206,12 +243,14 @@ gameServer.startTimer = function (duration) {
     var intervalId = setInterval(updateTimer, 1000);
 
     function updateTimer() {
-        if (gameServer.gameState.timer <= 0) {
+        if (gameServer.gameState.timer <= 0 || gameServer.gameState.isRoundFinished) {
             clearInterval(intervalId);
             return;
         }
 
         gameServer.gameState.timer--;
+
+        // TODO: exclude currentword for all players except drawingplayer
         gameServer.sendServerEvent('updateGameState', gameServer.gameState);
     }
 }
@@ -263,6 +302,8 @@ gameServer.sendServerEvent = function (type, value) {
 
 gameServer.validateClientEvent = function (clientEvent, cb) {
     var validTypes = [
+        'resetGame',
+        'guessWord',
         'updateGameState',
         'updateSettings',
         'clear',

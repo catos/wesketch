@@ -44,7 +44,7 @@
                 <div class="title">Timer</div>
                 <div class="timer">{{vm.gameState.timer}}</div>
                 <small>Seconds remaining</small>
-                <div class="checkbox">
+                <div class="checkbox" ng-show="vm.gameState.state === vm.gameStateTypes.preGame">
                     <label>
                         <input type="checkbox" ng-click="vm.sendClientEvent('togglePlayerReady', vm.player)"> I am ready
                     </label>
@@ -73,7 +73,7 @@
                 <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addMessage(vm.newMessage) : null">
 
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="vm.addMessage(vm.newMessage)">Send</button>
+                    <button class="btn btn-primary" type="button" ng-click="vm.addMessage()">Send</button>
                 </span>
             </div>
         </div>
@@ -95,6 +95,10 @@
             <hr>
 
             <div>
+                <div><strong>vm.player:</strong></div>
+                {{vm.player}}
+            </div>
+            <div>
                 <div><strong>vm.players:</strong></div>
                 {{vm.players}}
             </div>
@@ -106,6 +110,7 @@
             <hr>
 
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
 
             <hr>
 

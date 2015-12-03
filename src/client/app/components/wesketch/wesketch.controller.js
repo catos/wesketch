@@ -31,10 +31,17 @@
                 y: 0
             }
         };
-        
+
         vm.player = {};
         vm.players = [];
-        
+
+        // TODO: on init, sync denne med servern
+        vm.gameStateTypes = {
+            preGame: 0,
+            drawing: 1,
+            roundEnd: 2,
+            endGame: 3
+        };
         vm.gameState = {};
         vm.chatMessages = [];
         vm.newMessage = '';
@@ -90,7 +97,7 @@
                 vm.canvas.onmouseleave = onMouseLeave;
                 vm.ctx = vm.canvas.getContext('2d');
             }
-            
+
             sawkit.emit('clientEvent', { type: 'updateGameState' });
         }
 
@@ -126,6 +133,7 @@
             console.log('onResize: ', event);
         }
 
+        // TODO: Hmm, tror jeg vil ha timestamp og from i tillegg til type og value her...
         function sendClientEvent(type, value) {
             sawkit.emit('clientEvent', {
                 type: type,
@@ -133,18 +141,34 @@
             });
         }
 
-        function addMessage(message) {
+        function addMessage() {
+
+            // Drawing player cannot use chat
+            if (vm.player.id == vm.gameState.drawingPlayer.id) {
+                alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
+                vm.newMessage = '';
+                return;
+            }
+
+            var clientEvent = {
+                type: 'guessWord',
+                value: {
+                    timestamp: new Date(),
+                    type: 'guess-word',
+                    from: vm.player.name,
+                    message: vm.newMessage
+                }
+            }
+
+            if (vm.newMessage.charAt(0) === '!') {
+                clientEvent.type = 'addMessage';
+                clientEvent.value.type = 'chat';
+                clientEvent.value.message = vm.newMessage.substr(1);
+            }
+
+            sawkit.emit('clientEvent', clientEvent);
+
             vm.newMessage = '';
-            var chatMessage = {
-                timestamp: new Date(),
-                type: 'chat',
-                from: vm.player.name,
-                message: message
-            };
-            sawkit.emit('clientEvent', {
-                type: 'addMessage',
-                value: chatMessage
-            });
         }
 
         /**
