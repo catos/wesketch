@@ -63,17 +63,20 @@
 
     <div class="row chat">
         <div class="col-xs-9">
-            <div id="messages" class="messages">
+            <div id="messages" class="messages" ws-scroll-down="vm.chatMessages">
                 <div ng-repeat="message in vm.chatMessages track by $index" class="message text-{{message.type}}">
                     <small class="text-muted">{{message.timestamp | date:'HH:mm:ss'}}</small>
                     <strong ng-show="message.from">{{message.from}}: </strong> {{message.message}}
                 </div>
             </div>
             <div class="new-message input-group">
-                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addMessage(vm.newMessage) : null">
-
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="vm.addMessage()">Send</button>
+                    <button class="btn btn-primary" ng-click="vm.sendClientEvent('chatMode', 'guess')" type="button"><i title="Guess the word mode" class="fa fa-exclamation-circle"></i></button>
+                    <button class="btn btn-default" ng-click="vm.sendClientEvent('chatMode', 'chat')" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
+                </span>
+                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addMessage(vm.newMessage) : null">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" ng-click="vm.addMessage()" type="button">Send</button>
                 </span>
             </div>
         </div>

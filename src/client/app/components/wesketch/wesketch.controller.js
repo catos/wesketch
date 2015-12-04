@@ -215,14 +215,6 @@
 
             serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
-
-                // TODO: fix better plz
-                // http://stackoverflow.com/questions/26343832/scroll-to-bottom-in-chat-box-in-angularjs
-
-                vm.messagesElement.scrollTop = vm.messagesElement.scrollHeight;
-
-                console.log('vm.messagesElement.scrollTop: ' + vm.messagesElement.scrollTop);
-                console.log('vm.messagesElement.scrollHeight: ' + vm.messagesElement.scrollHeight);
             };
 
             serverEvents.serverError = function (serverEvent) {
