@@ -6,7 +6,6 @@
         .module('app', [
             'ngResource',
             'satellizer',
-            'ngLodash',
 
             'blocks.alert',
             'blocks.sawkit',

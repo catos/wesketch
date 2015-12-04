@@ -5,9 +5,9 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['lodash', 'alert', 'sawkit', 'tokenIdentity'];
+    WesketchController.$inject = ['alert', 'sawkit', 'tokenIdentity'];
 
-    function WesketchController(lodash, alert, sawkit, tokenIdentity) {
+    function WesketchController(alert, sawkit, tokenIdentity) {
         /**
          * Private variables
          */
@@ -32,8 +32,10 @@
             }
         };
 
-        vm.player = {};
-        // vm.players = [];
+        vm.player = {
+            id: -1,
+            email: ''
+        };
 
         vm.state = {};
         vm.chatMessages = [];
@@ -88,7 +90,10 @@
                 vm.ctx = vm.canvas.getContext('2d');
             }
 
-            sendClientEvent('updateState')
+            // Add player to the game
+            vm.player.id = -1;
+            vm.player.email = tokenIdentity.currentUser.email;
+            vm.sendClientEvent('addPlayer', vm.player);
         }
 
         /**
@@ -120,14 +125,6 @@
             console.log('onResize: ', event);
         }
 
-        function sendClientEvent(type, value) {
-            sawkit.emit('clientEvent', {
-                client: vm.player,
-                type: type,
-                value: value
-            });
-        }
-
         function addMessage() {
 
             // Drawing player cannot use chat
@@ -141,7 +138,7 @@
             var eventValue = {
                 timestamp: new Date(),
                 type: 'guess-word',
-                from: vm.player.name,
+                from: vm.player.email,
                 message: vm.newMessage
             };
 
@@ -156,6 +153,22 @@
             vm.newMessage = '';
         }
 
+        function sendClientEvent(type, value) {
+            sawkit.emit('clientEvent', {
+                player: vm.player,
+                type: type,
+                value: value
+            });
+
+            if (type !== 'brush') {
+                console.log(
+                    '\n*** sendClientEvent:' +
+                    ' player = ' + vm.player.email + '(' + vm.player.id + ')' +
+                    ', type = ' + type +
+                    ', value = ' + value);
+            }
+        }
+
         /**
          * Server events
          */
@@ -163,30 +176,24 @@
 
             var serverEvents = serverEvents || {};
 
-            serverEvents.clientConnected = function (serverEvent) {
-                vm.player = {
-                    id: serverEvent.value,
-                    name: tokenIdentity.currentUser.name
-                };
-                vm.sendClientEvent('addPlayer');
-            };
-
-            serverEvents.clientDisconnected = function (serverEvent) {
-                vm.sendClientEvent('removePlayer', {
-                    id: serverEvent.value,
-                    name: vm.player.name
-                });
-            };
-
             serverEvents.updateState = function (serverEvent) {
                 angular.extend(vm.state, serverEvent.value);
-                vm.player = lodash.find(vm.state.players, { id: vm.player.id });
+
+                var updatedPlayer;
+                for (var i = 0; i < vm.state.players.length; i++) {
+                    if (vm.state.players[i].email === vm.player.email) {
+                        updatedPlayer = vm.state.players[i];
+                    }
+                }
+
+                angular.extend(vm.player, updatedPlayer);
             };
 
             serverEvents.updateSettings = function (serverEvent) {
                 angular.extend(vm.settings, serverEvent.value);
             };
 
+            // TODO: sjekk hva som overføres av data her...vil ha minst mulig
             serverEvents.brush = function (serverEvent) {
                 var coords = serverEvent.value;
 
@@ -204,10 +211,6 @@
 
             serverEvents.clear = function (serverEvent) {
                 vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
-            };
-
-            serverEvents.updatePlayers = function (serverEvent) {
-                vm.players = serverEvent.value;
             };
 
             serverEvents.addMessage = function (serverEvent) {

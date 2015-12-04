@@ -8,26 +8,21 @@ module.exports = function (io) {
         .on('connection', function (client) {
 
             server.init(weesketch, function () {
-                /**
-                 * Client connected
-                 */
-                // console.log('\n\n*** wesketch.sockets.js -> connect -> socket.id = ' + client.id);
-                server.connectClient(client.id);
 
                 /**
                  * Client disconnected
                  */
                 client.on('disconnect', function () {
-                    // console.log('\n\n*** wesketch.sockets.js -> disconnect -> socket.id = ' + client.id);
-                    server.diconnectClient(client.id);
+                    server.onClientDisconnected(client.id);
                 });
 
                 /**
                  * Client events
                  */
                 client.on('clientEvent', function (clientEvent) {
-                    server.onClientEvent(clientEvent);
+                    server.onClientEvent(client, clientEvent);
                 });
+
             });
 
         });

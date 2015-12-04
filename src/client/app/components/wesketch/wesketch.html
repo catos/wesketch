@@ -79,9 +79,9 @@
         </div>
         <div class="col-xs-3 players">
             <table class="table">
-                <tr ng-repeat="player in vm.players">
+                <tr ng-repeat="player in vm.state.players">
                     <td data-player-id="{{player.id}}" ng-class="{ 'ready' : player.ready }">
-                        <i ng-show="player.ready" class="fa fa-check"></i> {{player.name}}
+                        <i ng-show="player.ready" class="fa fa-check"></i> {{player.email}}
                     </td>
                     <td>{{player.score}}</td>
                 </tr>
@@ -93,26 +93,20 @@
         <div class="col-xs-12">
 
             <hr>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">updateState</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateSettings')">updateSettings</button>
+
 
             <div>
                 <div><strong>vm.player:</strong></div>
                 {{vm.player}}
             </div>
             <div>
-                <div><strong>vm.players:</strong></div>
-                {{vm.players}}
-            </div>
-            <div>
                 <div><strong>vm.state:</strong></div>
                 {{vm.state}}
             </div>
-
-            <hr>
-
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
-
-            <hr>
 
         </div>
     </div>

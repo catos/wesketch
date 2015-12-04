@@ -31,11 +31,11 @@
  *      announce the winner!
  *      GOTO pre game
  */
-
-
 var _ = require('lodash');
+
 var playerSchema = {
     id: -1,
+    email: '',
     name: '',
     ready: false,
     isDrawing: false,
@@ -80,14 +80,14 @@ server.init = function (weesketch, next) {
 
 /**
  * onClientEvent
- * 
- * Validates and handles all incoming events from the client
- * 
+ *
+ * Validates and handles all incoming events from the client.
+ *
  * client   object              { id: "", name: "" }
  * type:    string              type of event
  * value:   string | object     results may vary
  */
-server.onClientEvent = function (clientEvent) {
+server.onClientEvent = function (client, clientEvent) {
     server.validateClientEvent(clientEvent, function (err, clientEvent) {
 
         if (err) {
@@ -102,32 +102,29 @@ server.onClientEvent = function (clientEvent) {
         };
 
         clientEvents.addPlayer = function (clientEvent) {
-            var existingPlayer = _.find(server.state.players, { name: clientEvent.client.name });
-
-            if (!existingPlayer) {
-                var newPlayer = _.merge({}, playerSchema, clientEvent.client);
-
-                // First player starts drawing 
-                if (server.state.players.length === 0) {
-                    newPlayer.isDrawing = true;
-                }
-
-                server.state.players.push(newPlayer);
-                server.sendServerMessage('info', newPlayer.name + ' joined the game...');
+            var player = _.find(server.state.players, { email: clientEvent.player.email });
+            if (player) {
+                // Create new player
+                player.id = client.id;
+                server.sendServerMessage('info', player.email + ' rejoined the game...');
             } else {
-                existingPlayer.id = clientEvent.client.id;
+                // Update existing player with new id
+                clientEvent.player.id = client.id;
+                player = _.merge({}, playerSchema, clientEvent.player);
+                server.state.players.push(player);
+                server.sendServerMessage('info', player.email + ' joined the game...');
             }
 
-            server.sendServerEvent('updatePlayers', server.state.players);
+            server.sendServerEvent('updateState', server.state);
         };
 
         clientEvents.togglePlayerReady = function (clientEvent) {
-            var player = _.find(server.state.players, { id: clientEvent.client.id });
+            var player = _.find(server.state.players, { id: clientEvent.player.id });
             player.ready = !player.ready;
 
             var message = (player.ready) ?
-                player.name + ' is ready' :
-                player.name + ' is not ready';
+                player.email + ' is ready' :
+                player.email + ' is not ready';
             server.sendServerMessage('info', message);
 
             if (_.every(server.state.players, { ready: true }) && server.state.players.length > 1) {
@@ -135,7 +132,7 @@ server.onClientEvent = function (clientEvent) {
                 server.startRound();
             }
 
-            server.sendServerEvent('updatePlayers', server.state.players);
+            server.sendServerEvent('updateState', server.state);
         };
 
         clientEvents.guessWord = function (clientEvent) {
@@ -143,20 +140,21 @@ server.onClientEvent = function (clientEvent) {
             var guess = clientEvent.value.message.toLowerCase();
 
             if (currentWord === guess) {
-                server.sendServerMessage('guess-word', clientEvent.client.name + ' guessed the correct word!');
-                var player = _.find(server.state.players, { id: clientEvent.client.id });
+                server.sendServerMessage('guess-word', clientEvent.player.email + ' guessed the correct word!');
+                var player = _.find(server.state.players, { id: clientEvent.player.id });
                 player.hasGuessedWord = true;
                 return;
             }
 
-            // TODO: guess.length >= currentWord.length - 2
-            // console.log(Math.abs(currentWord.length - guess.length));
-            if (Math.abs(currentWord.length - guess.length) === 2 && currentWord.indexOf(guess) > -1) {
-                server.sendServerMessage('guess-word', clientEvent.client.name + ' is close...');
+            // TODO: sjekk at dette er korrekt, og impl.
+            // var isclosebelow = guess.length >= (currentWord.length - 2) && currentWord.indexOf(guess) > -1;
+            // var iscloseabove = guess.length <= (currentWord.length + 2) && guess.indexOf(currentWord) > -1
+            if (guess.length >= (currentWord.length - 2) && currentWord.indexOf(guess) > -1) {
+                server.sendServerMessage('guess-word', clientEvent.player.email + ' is close...');
                 return;
             }
 
-            server.sendServerMessage('guess-word', clientEvent.client.name + ' guessed "' + guess + '"');
+            server.sendServerMessage('guess-word', clientEvent.player.email + ' guessed "' + guess + '"');
         };
 
         // TODO: update this method at the end of implementation to reset all values...
@@ -187,25 +185,12 @@ server.onClientEvent = function (clientEvent) {
 };
 
 /**
- * Connect Client 
- */
-server.connectClient = function (clientId) {
-    server.sendServerEvent('clientConnected', clientId);
-}
-
-/**
  * Disconnect Client
  */
-server.diconnectClient = function (clientId) {
-    var players = _.remove(server.state.players, { id: clientId });
-    if (players.length) {
-        server.sendServerMessage('warning', players[0].name + ' left the game...');
-        server.sendServerEvent('updatePlayers', server.state.players);
-    } else {
-        server.sendServerEvent('serverError',
-            'Client (socketId = ' + clientId + ') left the game, ' +
-            'but the server was unable to remove player from game.');
-    }
+server.onClientDisconnected = function (clientId) {
+    console.log('\n*** onClientDisconnected: clientId = ' + clientId);
+    _.remove(server.state.players, { id: clientId });
+    server.sendServerEvent('updateState', server.state);
 };
 
 /**
@@ -241,7 +226,7 @@ server.startRound = function () {
 
     // Send message to players
     var msg = 'Starting round #' + server.state.round +
-        ', ' + server.state.drawingPlayer.name + ' is drawing';
+        ', ' + server.state.drawingPlayer.email + ' is drawing';
     server.sendServerMessage('info', msg);
 
     // Start timer
@@ -252,19 +237,19 @@ server.startRound = function () {
  * End round
  */
 server.endRound = function (reason) {
-    
+
     // Announce round winner
     // server.sendServerMessage(
-    //     'guess-word', 
+    //     'guess-word',
     //     player + ' guessed the correct word "' + server.state.currentWord + '"!');
-        
+
     // Stop the timer
     server.state.stopTimer = true;
 };
 
 /**
  * Drawing Loop
- * 
+ *
  * End phase conditions:
  * 1. Time runs out
  * 2. Drawing player concedes
@@ -316,7 +301,7 @@ server.sendServerMessage = function (type, message) {
 };
 
 /**
- * Send Server Event
+ * Send Server Event.
  */
 server.sendServerEvent = function (type, value) {
     server.weesketch.emit('serverEvent', {
