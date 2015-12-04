@@ -93,6 +93,7 @@
             // Add player to the game
             vm.player.id = -1;
             vm.player.email = tokenIdentity.currentUser.email;
+            vm.player.name = tokenIdentity.currentUser.name;
             vm.sendClientEvent('addPlayer', vm.player);
         }
 

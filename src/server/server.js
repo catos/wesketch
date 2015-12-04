@@ -4,6 +4,8 @@
     var express = require('express');
     var env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
     var app = express();
+    var server = require('http').createServer(app);    
+    var io = require('socket.io').listen(server);
 
     /**
      * Config
@@ -12,13 +14,13 @@
 
     require('./config/express')(app);
 
-    require('./config/mongoose')(settings);
+    require('./config/mongoose')(settings );
 
     require('./config/passport')();
 
     require('./config/routes')(app, settings);
 
-    require('./config/socket-io')(app, settings);
+    require('./config/sockets')(io);
 
     require('./config/errors')(app);
 
@@ -30,7 +32,8 @@
     /**
      * Start server
      */
-    app.listen(settings.port);
+    // app.listen(settings.port);
+    server.listen(settings.port);
 
     console.log('Listening on port ' + settings.port);
     console.log(

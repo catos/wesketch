@@ -5,8 +5,7 @@
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
         ApiUrl: 'http://localhost:7203/',
-
-        SocketUrl: 'http://localhost:7204/'
+        SocketUrl: 'http://localhost:7203/'
     };
 
     angular

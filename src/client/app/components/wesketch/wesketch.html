@@ -34,6 +34,7 @@
             <div ng-show="vm.player.id === vm.state.drawingPlayer.id" class="function-group function-group-drawing-player">
                 <div class="title">Current word</div>
                 <div class="text-uppercase current-word">{{vm.state.currentWord}}</div>
+                <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
                 <!--<small>Hints remaining: 3</small>
                 <div>
                     <button class="btn btn-sm btn-primary disabled">Give hint</button>
@@ -84,7 +85,7 @@
             <table class="table">
                 <tr ng-repeat="player in vm.state.players">
                     <td data-player-id="{{player.id}}" ng-class="{ 'ready' : player.ready }">
-                        <i ng-show="player.ready" class="fa fa-check"></i> {{player.email}}
+                        <i ng-show="player.ready" class="fa fa-check"></i> {{player.name}}
                     </td>
                     <td>{{player.score}}</td>
                 </tr>
@@ -98,8 +99,9 @@
             <hr>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">updateState</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateSettings')">updateSettings</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">Update State</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateSettings')">Update Settings</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('testCode')">Test code</button>
 
 
             <div>

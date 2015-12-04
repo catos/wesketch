@@ -1,6 +1,6 @@
 /* global io */
 (function () {
-	'use strict';
+        'use strict';
 
 	angular
 		.module('blocks.sawkit')

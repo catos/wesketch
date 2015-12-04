@@ -2343,7 +2343,7 @@ var wordlist = module.exports = [
     'HIBERNATE',
     'HICCUP',
     'HICKEY',
-    'HICKORY�',
+    'HICKORY',
     'HIDING',
     'HIGHCHAIR',
     'HIGHDIVE',
