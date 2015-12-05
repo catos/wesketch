@@ -13,8 +13,6 @@
                 <div class="title">Tools</div>
                 <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div>
                 <div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
-                <!--<div ng-click="vm.sendClientEvent('changeTool', 'eraser')"><i class="fa fa-eraser"></i></div>
-                        <div ng-click="vm.sendClientEvent('changeTool', 'fill')"><i class="fa fa-magic"></i></div>-->
             </div>
 
             <div class="function-group function-group-tool-sizes">
@@ -35,24 +33,18 @@
                 <div class="title">Current word</div>
                 <div class="text-uppercase current-word">{{vm.state.currentWord}}</div>
                 <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
-                <!--<small>Hints remaining: 3</small>
-                <div>
-                    <button class="btn btn-sm btn-primary disabled">Give hint</button>
-                </div>-->
             </div>
 
             <div class="function-group function-group-timer">
                 <div class="title">Timer</div>
                 <div class="timer">{{vm.state.timer}}</div>
                 <small>Seconds remaining</small>
+
                 <div class="checkbox" ng-show="vm.state.phase === vm.state.phaseTypes.preGame">
                     <label>
                         <input type="checkbox" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
                     </label>
                 </div>
-                <!--<div>
-                    <button class="btn btn-sm btn-primary disabled">Request pause</button>
-                </div>-->
             </div>
 
         </div>
@@ -107,6 +99,10 @@
             <div>
                 <div><strong>vm.player:</strong></div>
                 {{vm.player}}
+            </div>
+            <div>
+                <div><strong>vm.state.players:</strong></div>
+                {{vm.state.players}}
             </div>
             <div>
                 <div><strong>vm.state:</strong></div>

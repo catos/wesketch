@@ -39,7 +39,7 @@ var playerSchema = {
     name: '',
     ready: false,
     isDrawing: false,
-    hasGuessedWord: false,
+    guessedWordAt: -1,
     drawCount: 0,
     score: 0
 };
@@ -62,8 +62,8 @@ var server = module.exports = {
 
         round: 0,
         timer: 60,
+        stopTimer: false,
         currentWord: '',
-        stopTimer: false
     }
 };
 
@@ -141,19 +141,25 @@ server.onClientEvent = function (client, clientEvent) {
         };
 
         clientEvents.guessWord = function (clientEvent) {
+            
+            // Guessing is only allowed in drawing phase
+            if (server.state.phase !== server.state.phaseTypes.drawing) {
+                return;
+            }
+
             var currentWord = server.state.currentWord.toLowerCase();
             var guess = clientEvent.value.message.toLowerCase();
 
             if (currentWord === guess) {
                 server.sendServerMessage('guess-word', clientEvent.player.name + ' guessed the correct word!');
                 var player = _.find(server.state.players, { id: clientEvent.player.id });
-                player.hasGuessedWord = true;
+                player.guessedWordAt = server.state.timer;
     
-                // TODO: Alle gjetta riktig
+                // Check if all non-drawing players guess the word
                 var playersRemaining = _.some(server.state.players, function (player) {
-                    return player.hasGuessedWord = false;
+                    return player.guessedWordAt === -1 && player.isDrawing === false;
                 });
-                
+
                 if (!playersRemaining) {
                     server.endRound('All players guessed the word!');
                 }
@@ -174,17 +180,17 @@ server.onClientEvent = function (client, clientEvent) {
 
         // TODO: update this method at the end of implementation to reset all values...
         clientEvents.resetGame = function (clientEvent) {
-            // server.state.phase = 0;
-            // server.state.round = 0;
-            // server.state.timer = 60;
-            // server.state.drawingPlayer = {};
-            // server.state.currentWord = '';
-            // server.state.stopTimer = true;
+            server.state.phase = 0;
+            server.state.drawingPlayer = {};
+            server.state.round = 0;
+            server.state.timer = 60;
+            server.state.currentWord = '';
 
-            // // TODO: update with who did this ?...
-            // server.sendServerMessage('info', 'Game was reset');
+            server.sendServerEvent('clear');
 
-            // clientEvents.updateState();
+            server.sendServerEvent('updateState', server.state);
+
+            server.sendServerMessage('info', 'Game was reset by ' + clientEvent.player.name);
         };
 
         clientEvents.testCode = function (clientEvent) {
@@ -222,16 +228,13 @@ server.onClientDisconnected = function (clientId) {
  */
 server.startRound = function () {
 
+    // Update game state
+    server.state.phase = server.state.phaseTypes.drawing;
+
     // Clear ready on all players
     _.forEach(server.state.players, function (player) {
         player.ready = false;
     });
-
-    // Update game state
-    server.state.phase = server.state.phaseTypes.drawing;
-
-    // Reset timer
-    server.state.timer = 60;
 
     // Increment round-counter
     server.state.round++;
@@ -239,7 +242,6 @@ server.startRound = function () {
     // Choose drawing player
     // TODO: test and finish this step properly
     var playersSorted = _.sortBy(server.state.players, 'drawCount');
-    console.log('playersSorted:', playersSorted);
     playersSorted[0].drawCount++;
     playersSorted[0].isDrawing = true;
 
@@ -254,7 +256,7 @@ server.startRound = function () {
     server.sendServerMessage('info', msg);
 
     // Start timer
-    server.startTimer();
+    server.startTimer(server.endRound);
 };
 
 /**
@@ -265,18 +267,12 @@ server.startRound = function () {
  * 2. Drawing player gives up
  * 3. All players (except drawing player) guess the word
  */
-server.startTimer = function (duration) {
-    var intervalId = setInterval(drawingLoop, 1000);
+server.startTimer = function (next) {
+    var intervalId = setInterval(loop, 1000);
 
-    function drawingLoop() {
+    function loop() {
 
-        if (server.state.timer <= 0) {
-            server.endRound('Time ran out...');
-            return;
-        }
-
-        console.log('server.state.stopTimer: ' + server.state.stopTimer);
-        if (server.state.stopTimer) {
+        if (server.state.stopTimer || server.state.timer <= 0) {
             clearInterval(intervalId);
             return;
         }
@@ -284,7 +280,7 @@ server.startTimer = function (duration) {
         server.state.timer--;
 
         // TODO: exclude currentword for all players except drawingplayer
-        server.sendServerEvent('updateState', server.state);
+        server.sendServerEvent('updateTimer', server.state.timer);
     }
 };
 
@@ -292,14 +288,15 @@ server.startTimer = function (duration) {
  * End round.
  */
 server.endRound = function (reason) {
+
+    if (reason.length === 0 && server.state.timer === 0) {
+        reason = 'Time ran out';
+    }
     
-    // Stop the timer
-    server.state.stopTimer = true;    
-
-    // Send message to players
-    server.sendServerMessage('info', 'Welcome to server.endRound, reason: ' + reason);
-
-    // End game yet ?
+    // Stop timer
+    server.state.stopTimer = true;
+    
+    // Check if End game yet ...
     var endGame = _.all(server.state.players, function (player) {
         return player.drawCount === 3;
     });
@@ -309,16 +306,38 @@ server.endRound = function (reason) {
         return;
     }
     
-    // Announce round winner
-    // server.sendServerMessage(
-    //     'guess-word',
-    //     player + ' guessed the correct word "' + server.state.currentWord + '"!');
+    // Update game state
+    server.state.phase = server.state.phaseTypes.roundEnd;
+
+    // Send message to players
+    server.sendServerMessage('info', '*** Round ended, because: ' + reason);
+
+    // Present the word
+    server.sendServerMessage('info', 'The word was: ' + server.state.currentWord);
+
+    // Announce round winners & distribute points
+    var winners = _.filter(server.state.players, function (player) {
+        return player.guessedWordAt > -1;
+    });
+    
+    if (winners.length) {
+        server.sendServerMessage('info', 'Following players guessed the word: ');
+
+        _.forEach(winners, function (player) {
+            server.sendServerMessage('info',
+                player.name + ' guessed the word after ' + player.guessedWordAt + ' seconds remaining.');
+
+        });
+    }
 };
 
 /**
  * End game
  */
 server.endGame = function () {
+
+    // Update game state
+    server.state.phase = server.state.phaseTypes.preGame;
 
     // Send message to players
     server.sendServerMessage('info', 'Welcome to server.endGame');

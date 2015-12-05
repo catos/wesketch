@@ -2,16 +2,18 @@
 
 ## iSketch
 - Liste med spillere og deres poeng
-- Chat
 - Turn-change, who is drawing now
 - Timer, 60 sec
-- Dictionary
 - Points
 - End game after x turns, show score
 - Reset (emit settings to all clients)
 	- Message-history table on server, updates latecomers
 - Undo / Redo
 - Width 100% og scale for different client viewports!
+- Eraser tool
+- Fill tool
+- Give hint
+- Request pause
 - Reading material
 	- http://stackoverflow.com/a/27025090
 	- http://www.jacklmoore.com/notes/mouse-position/

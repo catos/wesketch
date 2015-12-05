@@ -110,7 +110,7 @@
         }
 
         function onMouseMove(event) {
-            if (vm.drawing) {
+            if (vm.drawing && vm.state.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
                 sendClientEvent(vm.settings.currentTool, vm.coords);
 
@@ -192,6 +192,10 @@
 
             serverEvents.updateSettings = function (serverEvent) {
                 angular.extend(vm.settings, serverEvent.value);
+            };
+            
+            serverEvents.updateTimer = function (serverEvent) {
+                vm.state.timer = serverEvent.value;
             };
 
             // TODO: sjekk hva som overføres av data her...vil ha minst mulig
