@@ -29,12 +29,6 @@
                 </div>
             </div>
 
-            <div ng-show="vm.player.id === vm.state.drawingPlayer.id" class="function-group function-group-drawing-player">
-                <div class="title">Current word</div>
-                <div class="text-uppercase current-word">{{vm.state.currentWord}}</div>
-                <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
-            </div>
-
             <div class="function-group function-group-timer">
                 <div class="title">Timer</div>
                 <div class="timer">{{vm.state.timer}}</div>
@@ -45,6 +39,18 @@
                         <input type="checkbox" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
                     </label>
                 </div>
+            </div>
+
+            <div ng-show="{vm.hintCount > -1}" class="function-group function-group-hint">
+                <div class="title">Hint</div>
+                <div class="timer">{{vm.state.hint}}</div>
+            </div>
+
+            <div ng-show="vm.player.id === vm.state.drawingPlayer.id" class="function-group function-group-drawing-player">
+                <div class="title">Current word</div>
+                <div class="text-uppercase current-word">{{vm.state.currentWord}}</div>
+                <button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>
+                <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
             </div>
 
         </div>

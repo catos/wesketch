@@ -2,8 +2,6 @@
 
 ## iSketch
 - Liste med spillere og deres poeng
-- Turn-change, who is drawing now
-- Timer, 60 sec
 - Points
 - End game after x turns, show score
 - Reset (emit settings to all clients)

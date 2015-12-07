@@ -139,7 +139,7 @@
             var eventValue = {
                 timestamp: new Date(),
                 type: 'guess-word',
-                from: vm.player.email,
+                from: vm.player.name,
                 message: vm.newMessage
             };
 
@@ -221,7 +221,7 @@
             serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
             };
-
+            
             serverEvents.serverError = function (serverEvent) {
                 vm.chatMessages.push({
                     timestamp: new Date(),
