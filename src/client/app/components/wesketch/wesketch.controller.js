@@ -103,6 +103,9 @@
         function onMouseDown(event) {
             vm.coords.from = getCoords(event);
             vm.drawing = true;
+
+            vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
+            sendClientEvent(vm.settings.currentTool, vm.coords);
         }
 
         function onMouseUp(event) {
@@ -193,7 +196,7 @@
             serverEvents.updateSettings = function (serverEvent) {
                 angular.extend(vm.settings, serverEvent.value);
             };
-            
+
             serverEvents.updateTimer = function (serverEvent) {
                 vm.state.timer = serverEvent.value;
             };
@@ -221,7 +224,7 @@
             serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
             };
-            
+
             serverEvents.serverError = function (serverEvent) {
                 vm.chatMessages.push({
                     timestamp: new Date(),
