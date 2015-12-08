@@ -10,7 +10,9 @@
 //     });
 // };
 
+var ws = require('../wesketch/wesketch.sockets.js');
 
-module.exports = function(io) {
-    require('../wesketch/wesketch.sockets.js')(io);
+module.exports = function (io) {
+    console.log('sockets.js');
+    ws(io);
 };

@@ -2,7 +2,7 @@ var uuid = require('uuid');
 var server = require('./wesketch.server.js');
 
 module.exports = function (io) {
-
+    console.log('weesketch.sockets.js');
     var weesketch = io
         .of('/weesketch')
         .on('connection', function (client) {
