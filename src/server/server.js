@@ -14,7 +14,7 @@
 
     require('./config/express')(app);
 
-    require('./config/mongoose')(settings );
+    require('./config/mongoose')(settings);
 
     require('./config/passport')();
 

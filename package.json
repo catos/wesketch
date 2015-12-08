@@ -2,8 +2,13 @@
   "name": "CSA",
   "version": "1.0.0",
   "description": "Just another CSA Application",
+  "main": "src/server/server.js",
   "scripts": {
     "start": "node src/server/server.js"
+  },
+  "engines": {
+    "node": "4.2.1",
+    "npm": "3.3.12"
   },
   "repository": {
     "type": "git",
