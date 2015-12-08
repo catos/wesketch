@@ -1,6 +1,10 @@
 # TODO
 
 ## iSketch
+- Flere farger
+- Pixel uten drag
+- Pil up = forrige input repeat plx
+- Mouseover icon på tools osv bør være en sånn håndbasert greie.
 - Liste med spillere og deres poeng
 - Points
 - End game after x turns, show score
@@ -85,9 +89,9 @@ src/
 				users.module.js
 			recipes/
 				recipes.module.js
-			feature3/			
+			feature3/
 
-			app.module.js			
+			app.module.js
 		css/
 		images/
 		favicon.ico
@@ -118,7 +122,7 @@ Recipe
 	Category				Dinner, Dessert, Salad, Cake, Drink
 	[Tags]
 		Name				Vegetarian, Healthy, Chinese
-	Servings				Number of servings on with displayed ingredients				
+	Servings				Number of servings on with displayed ingredients
 	[Ingredients]
 		Name
 		Amount
@@ -130,5 +134,5 @@ Recipe
 		CreatedBy
 	Rating					1-5 stars: Really bad, Bad, Ok, Good, Very Good
 	CreatedBy
-	Credit					
+	Credit
 ```
