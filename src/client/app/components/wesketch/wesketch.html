@@ -73,7 +73,10 @@
                     <button class="btn btn-primary" ng-click="vm.sendClientEvent('chatMode', 'guess')" type="button"><i title="Guess the word mode" class="fa fa-exclamation-circle"></i></button>
                     <button class="btn btn-default" ng-click="vm.sendClientEvent('chatMode', 'chat')" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
                 </span>
-                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addMessage(vm.newMessage) : null">
+
+                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="vm.onKeyUp($event)">
+                <!--<input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addMessage(vm.newMessage) : null">-->
+
                 <span class="input-group-btn">
                     <button class="btn btn-primary" ng-click="vm.addMessage()" type="button">Send</button>
                 </span>

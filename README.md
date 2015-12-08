@@ -1,12 +1,6 @@
 # TODO
 
 ## iSketch
-- Flere farger
-- Pixel uten drag
-- Pil up = forrige input repeat plx
-- Mouseover icon på tools osv bør være en sånn håndbasert greie.
-- Liste med spillere og deres poeng
-- Points
 - End game after x turns, show score
 - Reset (emit settings to all clients)
 	- Message-history table on server, updates latecomers

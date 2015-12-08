@@ -12,7 +12,14 @@
          * Private variables
          */
         var tools = ['brush', 'eraser', 'fill'];
-        var colors = ['#000', '#fff', '#ccc', '#ace'];
+        var colors = [
+            '#000', '#fff', '#c0c0c0',
+            '#808080', '#f00', '#0f0',
+            '#00f', '#ff0', '#0ff',
+            '#f0f', '#800', '#808000',
+            '#008000', '#800080', '#008080',
+            '#000080'
+        ];
 
         /**
          * Viewmodel
@@ -38,6 +45,7 @@
         };
 
         vm.state = {};
+        vm.myMessages = [];
         vm.chatMessages = [];
         vm.newMessage = '';
         vm.settings = {
@@ -57,6 +65,7 @@
 
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
+        vm.onKeyUp = onKeyUp;
 
         init();
 
@@ -104,8 +113,10 @@
             vm.coords.from = getCoords(event);
             vm.drawing = true;
 
-            vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
-            sendClientEvent(vm.settings.currentTool, vm.coords);
+            if (vm.state.drawingPlayer.id === vm.player.id) {
+                vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
+                sendClientEvent(vm.settings.currentTool, vm.coords);
+            }
         }
 
         function onMouseUp(event) {
@@ -129,7 +140,25 @@
             console.log('onResize: ', event);
         }
 
+        function onKeyUp(event) {
+
+            switch (event.keyCode) {
+                // Enter key
+                case 13: {
+                    addMessage();
+                    break;
+                }
+                // Arrow up
+                case 38: {
+                    vm.newMessage = vm.myMessages[vm.myMessages.length - 1];
+                    break;
+                }
+            }
+        }
+
         function addMessage() {
+
+            vm.myMessages.push(vm.newMessage);
 
             // Drawing player cannot use chat
             if (vm.player.id === vm.state.drawingPlayer.id) {
