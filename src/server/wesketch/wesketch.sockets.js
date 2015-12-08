@@ -14,7 +14,7 @@ module.exports = function (io) {
                  */
                 client.on('disconnect', function () {
                     server.onClientDisconnected(client.id);
-                });
+                }); 
 
                 /**
                  * Client events
