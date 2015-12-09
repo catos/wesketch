@@ -33,6 +33,8 @@
  */
 var _ = require('lodash');
 
+var interval;
+
 var playerSchema = {
     id: -1,
     email: '',
@@ -65,9 +67,18 @@ var server = module.exports = {
         hintCount: 0,
         hint: '',
 
+        // TODO: gjør om timern til et object ala
+        /**
+         * timer = {
+         *      duration: 60,
+         *      isStopped: false,
+         *      stopReason: '',
+         *      interval: {}
+         */
         timer: 60,
         stopTimer: true,
         stopReason: '',
+        interval: interval,
 
         currentWord: '',
     }
@@ -166,7 +177,6 @@ server.onClientEvent = function (client, clientEvent) {
         };
 
         clientEvents.guessWord = function (clientEvent) {
-            
             // Guessing is only allowed in drawing phase
             if (server.state.phase !== server.state.phaseTypes.drawing) {
                 server.sendServerMessage('info', 'Guessing is only allowed in drawing phase');
@@ -180,7 +190,7 @@ server.onClientEvent = function (client, clientEvent) {
                 server.sendServerMessage('guess-word', clientEvent.player.name + ' guessed the correct word!');
                 var player = _.find(server.state.players, { id: clientEvent.player.id });
                 player.guessedWordAt = server.state.timer;
-    
+
                 // Check if all non-drawing players guess the word
                 var playersRemaining = _.some(server.state.players, function (player) {
                     return player.guessedWordAt === -1 && player.isDrawing === false;
@@ -207,15 +217,8 @@ server.onClientEvent = function (client, clientEvent) {
 
         // TODO: update this method at the end of implementation to reset all values...
         clientEvents.resetGame = function (clientEvent) {
-            server.state.phase = server.state.phaseTypes.preGame;
-            server.state.drawingPlayer = {};
-            server.state.round = 0;
-            server.state.timer = 60;
-            server.state.stopTimer = true;
-            server.state.stopReason = '';
-            server.state.currentWord = '';
-            server.state.hintCount = 0;
-            server.state.hint = '';
+
+            server.resetGame('Game was reset by ' + clientEvent.player.name);
 
             server.sendServerEvent('clear');
             server.sendServerEvent('updateState', server.state);
@@ -247,9 +250,29 @@ server.onClientEvent = function (client, clientEvent) {
  * Disconnect Client
  */
 server.onClientDisconnected = function (clientId) {
+
     console.log('[onClientDisconnected] clientId: ' + clientId);
+
     _.remove(server.state.players, { id: clientId });
+
+    if (server.state.players.length <= 0) {
+        console.log('All clients left, reset the game');
+        server.resetGame('All clients left, reset the game');
+        return;
+    }
+
     server.sendServerEvent('updateState', server.state);
+};
+
+/**
+ * Pre game
+ */
+server.preGame = function () {
+
+    // Update game phase
+    server.state.phase = server.state.phaseTypes.drawing;
+
+    // TODO Reset game...
 };
 
 /**
@@ -284,7 +307,7 @@ server.startRound = function () {
         ', ' + server.state.drawingPlayer.email + ' is drawing';
     server.sendServerMessage('info', msg);
 
-    // Update clients with altered state  
+    // Update clients with altered state
     server.sendServerEvent('updateState', server.state);
 
     // Start timer
@@ -304,7 +327,7 @@ server.startTimer = function (duration, next) {
     server.state.stopTimer = false;
     server.state.stopReason = '';
 
-    var intervalId = setInterval(loop, 1000);
+    server.state.interval = setInterval(loop, 1000);
 
     function loop() {
         if (server.state.timer <= 0) {
@@ -313,8 +336,8 @@ server.startTimer = function (duration, next) {
         }
 
         if (server.state.stopTimer) {
-            clearInterval(intervalId);
-            next();
+            clearInterval(server.state.interval);
+            return next();
         } else {
             server.state.timer--;
         }
@@ -336,8 +359,8 @@ server.endRound = function () {
     if (endGame) {
         server.endGame('All players have drawn 3 times.');
         return;
-    }    
-    
+    }
+
     // Update game state
     server.state.phase = server.state.phaseTypes.roundEnd;
 
@@ -366,11 +389,11 @@ server.endRound = function () {
 
     // Clear the drawing area
     server.sendServerEvent('clear');
-    
+
     // Reset drawing player to disable drawing player features while waiting for next turn
     server.state.drawingPlayer = {};
 
-    // Update clients with altered state  
+    // Update clients with altered state
     server.sendServerEvent('updateState', server.state);
 
 };
@@ -378,7 +401,7 @@ server.endRound = function () {
 /**
  * End game
  */
-server.endGame = function () {
+server.endGame = function (reason) {
 
     // Update game state
     server.state.phase = server.state.phaseTypes.endGame;
@@ -386,6 +409,32 @@ server.endGame = function () {
     // Send message to players
     server.sendServerMessage('info', 'Welcome to server.endGame');
 
+    // TODO: Set timer to 30 seconds and begin next round
+    server.startTimer(10, server.preGame);
+    server.sendServerMessage('info', 'Game ends in 10 seconds...');
+
+};
+
+/**
+ * Reset game
+ */
+server.resetGame = function (reason) {
+    server.state.phase = server.state.phaseTypes.preGame;
+    server.state.drawingPlayer = {};
+    server.state.round = 0;
+
+    server.state.timer = 60;
+    server.state.stopTimer = true;
+    server.state.stopReason = reason;
+
+    server.state.hintCount = 0;
+    server.state.hint = '';
+
+    server.state.currentWord = '';
+
+    // server.startTimer(1, function () {
+    //     console.log('hmm?');
+    // });
 };
 
 /**
@@ -403,9 +452,6 @@ server.sendServerMessage = function (type, message) {
  * Send Server Event.
  */
 server.sendServerEvent = function (type, value) {
-    
-    // TODO: 'updateState' exclude currentword for all players except drawingplayer
-    
     server.weesketch.emit('serverEvent', {
         type: type,
         value: value

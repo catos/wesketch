@@ -1,6 +1,10 @@
 # TODO
 
 ## weSketch
+- Reset game og startTimer er fucked atm...må finne en måte å stoppe timer på
+- Reset game when all clients leave
+- 'updateState' exclude currentword for all players except drawingplayer
+- Replace console.log with a custom logger (that can support heroku-logging?)
 - End game after x turns, show score
 - Reset (emit settings to all clients)
 	- Message-history table on server, updates latecomers
