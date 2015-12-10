@@ -4,9 +4,13 @@
     var appSettings = {
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
-        ApiUrl: 'http://localhost:7203/',
-        SocketUrl: 'http://localhost:7203/'
-    };
+        
+        ApiUrl: 'https://fast-caverns-6652.herokuapp.com/',
+        SocketUrl: 'https://fast-caverns-6652.herokuapp.com/',
+        
+        // ApiUrl: 'http://localhost:7203/',
+        // SocketUrl: 'http://localhost:7203/'
+    };    
 
     angular
         .module('app')

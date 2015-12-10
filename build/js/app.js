@@ -57,17 +57,17 @@
 		'blocks.tokenIdentity'
 	]);
 })();
-(function() {
-    'use strict';
-
-	angular.module('app.draw', []);
-})();
 (function () {
 	'use strict';
 
 	angular
 		.module('app.home', []);
 		
+})();
+(function() {
+    'use strict';
+
+	angular.module('app.draw', []);
 })();
 (function () {
 	'use strict';
@@ -81,13 +81,6 @@
 
 	angular.module('app.users', []);
 })();
-(function() {
-    'use strict';
-
-    angular
-        .module('components.wesketch', []);
-})();
-
 (function() {
 	'use strict';
 
@@ -108,12 +101,23 @@
 (function() {
     'use strict';
 
+    angular
+        .module('components.wesketch', []);
+})();
+
+(function() {
+    'use strict';
+
     var appSettings = {
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
-        ApiUrl: 'http://localhost:7203/',
-        SocketUrl: 'http://localhost:7203/'
-    };
+        
+        ApiUrl: 'https://fast-caverns-6652.herokuapp.com/',
+        SocketUrl: 'https://fast-caverns-6652.herokuapp.com/',
+        
+        // ApiUrl: 'http://localhost:7203/',
+        // SocketUrl: 'http://localhost:7203/'
+    };    
 
     angular
         .module('app')
@@ -599,40 +603,6 @@
 	}
 } ());
 
-(function() {
-    'use strict';
-
-    angular
-        .module('app.draw')
-        .controller('DrawController', DrawController);
-
-    function DrawController() {
-        var vm = this;
-    }
-})();
-(function () {
-	'use strict';
-
-	angular
-		.module('app.draw')
-		.config(configureRoutes);
-
-	configureRoutes.$inject = ['$stateProvider'];
-
-	function configureRoutes($stateProvider) {
-		$stateProvider
-			.state('layout.draw', {
-                url: '/draw',
-				templateUrl: 'app/draw/draw.html',
-				controller: 'DrawController',
-				controllerAs: 'vm',
-                restricted: {
-					requiresLogin: true
-				}
-			});
-	}
-} ());
-
 (function () {
 	'use strict';
 
@@ -673,6 +643,40 @@
 
 	}
 } ());
+(function() {
+    'use strict';
+
+    angular
+        .module('app.draw')
+        .controller('DrawController', DrawController);
+
+    function DrawController() {
+        var vm = this;
+    }
+})();
+(function () {
+	'use strict';
+
+	angular
+		.module('app.draw')
+		.config(configureRoutes);
+
+	configureRoutes.$inject = ['$stateProvider'];
+
+	function configureRoutes($stateProvider) {
+		$stateProvider
+			.state('layout.draw', {
+                url: '/draw',
+				templateUrl: 'app/draw/draw.html',
+				controller: 'DrawController',
+				controllerAs: 'vm',
+                restricted: {
+					requiresLogin: true
+				}
+			});
+	}
+} ());
+
 (function () {
 	'use strict';
 
@@ -955,6 +959,181 @@
     }
 
 } ());
+(function () {
+	'use strict';
+
+	angular
+		.module('blocks.alert')
+		.factory('alert', alert);
+
+	alert.$inject = ['$rootScope', '$timeout'];
+	function alert($rootScope, $timeout) {
+		var alertTimeout;
+
+		var service = {
+			show: show
+		};
+
+		return service;
+
+		////////////////
+
+		function show(type, title, message, timeout) {
+			$rootScope.alert = {
+                hasBeenShow: true,
+                show: true,
+                type: type,
+                message: message,
+                title: title
+            };
+
+            $timeout.cancel(alertTimeout);
+
+            alertTimeout = $timeout(function () {
+                $rootScope.alert.show = false;
+            }, timeout || 5000);
+		}
+	}
+})();
+/* global io */
+(function () {
+        'use strict';
+
+	angular
+		.module('blocks.sawkit')
+		.factory('sawkit', sawkit);
+
+	sawkit.$inject = ['$rootScope', 'appSettings'];
+	function sawkit($rootScope, appSettings) {
+
+		var socket;
+
+		var service = {
+            connect: connect,
+			on: on,
+			emit: emit
+		};
+
+        return service;
+
+        function connect(room) {
+             socket = io.connect(appSettings.SocketUrl + room);
+             console.log('sawkit is connecting to room: ' + room);
+        }
+
+        function on(eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        }
+
+        function emit(eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            });
+        }
+
+	}
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('blocks.tokenIdentity')
+        .factory('tokenIdentity', tokenIdentity);
+
+    tokenIdentity.$inject = ['$auth', '$window'];
+
+    function tokenIdentity($auth, $window) {
+
+        var currentUser;
+
+        if ($auth.isAuthenticated()) {
+            currentUser = getTokenUser();
+        }
+
+        var service = {
+            currentUser: currentUser,
+            login: function(user) {
+                this.currentUser = user;
+            },
+            logout: function() {
+                this.currentUser = undefined;
+                $auth.logout();
+            },
+            isAuthenticated: function() {
+                return !!this.currentUser;
+            },
+            isAdmin: function() {
+                return !!this.currentUser && this.currentUser.isAdmin;
+            }
+        };
+
+        return service;
+
+        // ------------------------------------
+
+        function getTokenUser() {
+            var token = $auth.getToken();
+
+            if (!token) {
+                throw new Error('Cannot find token');
+            }
+
+            var parts = token.split('.');
+
+            if (parts.length !== 3) {
+                throw new Error('JWT must have 3 parts');
+            }
+
+            var decoded = urlBase64Decode(parts[1]);
+            if (!decoded) {
+                throw new Error('Cannot decode the token');
+            }
+
+            var tokenDecoded = angular.fromJson(decoded);
+            if (!tokenDecoded.user) {
+                throw new Error('Cannot find user on token');
+            }
+
+            return tokenDecoded.user;
+        }
+
+        function urlBase64Decode(str) {
+            var output = str.replace(/-/g, '+').replace(/_/g, '/');
+            switch (output.length % 4) {
+                case 0: {
+                    break;
+                }
+                case 2: {
+                    output += '==';
+                    break;
+                }
+                case 3: {
+                    output += '=';
+                    break;
+                }
+                default: {
+                    throw 'Illegal base64url string!';
+                }
+            }
+
+            // polyfill https://github.com/davidchambers/Base64.js
+            return $window.decodeURIComponent(escape($window.atob(output)));
+        }
+
+    }
+})();
+
 (function () {
 	'use strict';
 
@@ -1308,181 +1487,6 @@
     }
 })();
 
-(function () {
-	'use strict';
-
-	angular
-		.module('blocks.alert')
-		.factory('alert', alert);
-
-	alert.$inject = ['$rootScope', '$timeout'];
-	function alert($rootScope, $timeout) {
-		var alertTimeout;
-
-		var service = {
-			show: show
-		};
-
-		return service;
-
-		////////////////
-
-		function show(type, title, message, timeout) {
-			$rootScope.alert = {
-                hasBeenShow: true,
-                show: true,
-                type: type,
-                message: message,
-                title: title
-            };
-
-            $timeout.cancel(alertTimeout);
-
-            alertTimeout = $timeout(function () {
-                $rootScope.alert.show = false;
-            }, timeout || 5000);
-		}
-	}
-})();
-/* global io */
-(function () {
-        'use strict';
-
-	angular
-		.module('blocks.sawkit')
-		.factory('sawkit', sawkit);
-
-	sawkit.$inject = ['$rootScope', 'appSettings'];
-	function sawkit($rootScope, appSettings) {
-
-		var socket;
-
-		var service = {
-            connect: connect,
-			on: on,
-			emit: emit
-		};
-
-        return service;
-
-        function connect(room) {
-             socket = io.connect(appSettings.SocketUrl + room);
-             console.log('sawkit is connecting to room: ' + room);
-        }
-
-        function on(eventName, callback) {
-            socket.on(eventName, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                    callback.apply(socket, args);
-                });
-            });
-        }
-
-        function emit(eventName, data, callback) {
-            socket.emit(eventName, data, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                    if (callback) {
-                        callback.apply(socket, args);
-                    }
-                });
-            });
-        }
-
-	}
-})();
-
-(function() {
-    'use strict';
-
-    angular
-        .module('blocks.tokenIdentity')
-        .factory('tokenIdentity', tokenIdentity);
-
-    tokenIdentity.$inject = ['$auth', '$window'];
-
-    function tokenIdentity($auth, $window) {
-
-        var currentUser;
-
-        if ($auth.isAuthenticated()) {
-            currentUser = getTokenUser();
-        }
-
-        var service = {
-            currentUser: currentUser,
-            login: function(user) {
-                this.currentUser = user;
-            },
-            logout: function() {
-                this.currentUser = undefined;
-                $auth.logout();
-            },
-            isAuthenticated: function() {
-                return !!this.currentUser;
-            },
-            isAdmin: function() {
-                return !!this.currentUser && this.currentUser.isAdmin;
-            }
-        };
-
-        return service;
-
-        // ------------------------------------
-
-        function getTokenUser() {
-            var token = $auth.getToken();
-
-            if (!token) {
-                throw new Error('Cannot find token');
-            }
-
-            var parts = token.split('.');
-
-            if (parts.length !== 3) {
-                throw new Error('JWT must have 3 parts');
-            }
-
-            var decoded = urlBase64Decode(parts[1]);
-            if (!decoded) {
-                throw new Error('Cannot decode the token');
-            }
-
-            var tokenDecoded = angular.fromJson(decoded);
-            if (!tokenDecoded.user) {
-                throw new Error('Cannot find user on token');
-            }
-
-            return tokenDecoded.user;
-        }
-
-        function urlBase64Decode(str) {
-            var output = str.replace(/-/g, '+').replace(/_/g, '/');
-            switch (output.length % 4) {
-                case 0: {
-                    break;
-                }
-                case 2: {
-                    output += '==';
-                    break;
-                }
-                case 3: {
-                    output += '=';
-                    break;
-                }
-                default: {
-                    throw 'Illegal base64url string!';
-                }
-            }
-
-            // polyfill https://github.com/davidchambers/Base64.js
-            return $window.decodeURIComponent(escape($window.atob(output)));
-        }
-
-    }
-})();
-
 angular.module("app.core").run(["$templateCache", function($templateCache) {$templateCache.put("app/account/account.html","<h1>Account</h1><hr><div ui-view></div>");
 $templateCache.put("app/account/login.html","<form ng-submit=vm.submit()><div class=form-group><label for=doesNotExist>Quick logins</label> <button class=\"btn btn-default\" ng-click=\"vm.quickSignIn(\'asdf@asdf.com\', \'asdf\')\">Kåre</button> <button class=\"btn btn-default\" ng-click=\"vm.quickSignIn(\'kim.robert.blix@gmail.com\', \'stortiss\')\">Kim</button> <button class=\"btn btn-default\" ng-click=\"vm.quickSignIn(\'espen.breivik@gmail.com\', \'stortiss\')\">Espen</button></div><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password></div><div class=form-group><button type=submit class=\"btn btn-primary\">Login</button> <a ui-sref=layout.account.register class=\"text-muted pull-right\">Register</a> <a ui-sref=layout.account.forgotPassword>Forgot password ?</a></div><div class=form-group><div class=\"alert alert-info\" ng-show=vm.message.length>{{vm.message}}</div></div></form>");
 $templateCache.put("app/account/register.html","<form name=register ng-submit=vm.submit()><div class=form-group><label for=inputName>Name</label> <input type=text class=form-control id=inputName placeholder=Name ng-model=vm.name required></div><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email required></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password required></div><div class=form-group><label for=inputPasswordConfirm>Confirm password</label> <input type=password class=form-control id=inputPasswordConfirm placeholder=\"Confirm password\" ng-model=vm.password_confirm required></div><div class=form-group><button type=submit class=\"btn btn-primary\">Register</button></div></form>");
@@ -1490,8 +1494,8 @@ $templateCache.put("app/batteries/batteries-list.html","<h3>Batteries <small>Cou
 $templateCache.put("app/batteries/batteries.html","<section><small>{{vm.message}}</small><ul class=\"nav nav-pills\"><li ui-sref-active=active><a ui-sref=layout.batteries.list>List</a></li><li ui-sref-active=active><a ui-sref=\"layout.batteries.details({ id: 0 })\">New battery</a></li></ul><div ui-view></div></section>");
 $templateCache.put("app/batteries/battery-details.html","<section><div class=row><div class=col-md-6><h3>{{vm.title}} <small><a ui-sref=layout.batteries.list>Back to index</a></small> <a class=\"btn btn-danger btn-sm\" href=# data-ng-click=vm.del()>Delete battery</a> <small ng-show=vm.message.length>{{vm.message}}</small></h3><form><div class=form-group><label for=inputId>_id</label> <input type=text class=form-control id=inputId data-ng-model=vm.battery._id disabled></div><div class=form-group><label for=inputNumber>Number</label> <input type=number class=form-control id=inputNumber placeholder=Number data-ng-model=vm.battery.number></div><div class=form-group><label for=inputName>Name</label> <input type=text class=form-control id=inputName placeholder=\"Example: ONBO 3S 1350mah 20C\" data-ng-model=vm.battery.name></div><div class=form-group><label for=inputCreated>Created</label> <input type=datetime class=form-control id=inputCreated placeholder=Created data-ng-model=vm.battery.created disabled></div><div class=form-group><button type=submit class=\"btn btn-default\" data-ng-click=vm.submit()>Submit</button></div></form></div><div class=col-md-6><form class=form-inline><div class=form-group><h3>Cycles: {{vm.battery.cycles.length}}</h3><table class=\"table table-striped table-bordered\" ng-show=vm.battery.cycles.length><tr><th>Created</th><th>Comment</th><th></th></tr><tr ng-repeat=\"cycle in vm.battery.cycles\"><td>{{cycle.created | date:\'yyyy-MM-dd\'}}</td><td>{{cycle.comment}}</td><td><a class=\"btn btn-primary\" ng-click=vm.deleteCycle($index)><i class=\"fa fa-trash-o\"></i></a></td></tr></table><div class=input-group><input type=datetime class=form-control placeholder=\"Date and time of charge\" is-open=vm.datepickerIsOpened ng-click=vm.toggleDatepicker() datepicker-popup=yyyy-MM-dd ng-model=vm.newCycle.created> <span class=input-group-btn><button type=button class=\"btn btn-default\" ng-click=vm.toggleDatepicker()><i class=\"glyphicon glyphicon-calendar\"></i></button></span></div><input type=text class=form-control placeholder=Comment ng-model=vm.newCycle.comment value=\"Just a sample comment...\"> <button class=\"btn btn-primary\" ng-click=vm.addCycle()>Add Cycle</button></div></form></div></div></section>");
 $templateCache.put("app/chat/chat.html","<h3>Chat</h3><hr><div class=chat><div class=row><div class=\"col-xs-9 messages\"><div ng-repeat=\"msg in vm.messages\"><small ng-show=msg.received>{{msg.received | date:\'HH:mm:ss\'}} ({{msg.latency}}ms)</small> <strong ng-show=msg.user>{{msg.user.name}}:</strong> {{msg.message}}</div></div><div class=col-xs-3><ul class=list-unstyled ng-repeat=\"user in vm.users\"><li>{{user.name}}</li></ul></div></div><div class=row><div class=col-md-12><div class=input-group><input class=form-control type=text ng-model=vm.newMessage ng-keyup=\"$event.keyCode == 13 ? vm.sendMessage(vm.newMessage) : null\"> <span class=input-group-btn><button class=\"btn btn-primary\" type=button ng-click=vm.sendMessage(vm.newMessage)>Send</button></span></div></div></div></div>");
-$templateCache.put("app/draw/draw.html","<wesketch></wesketch>");
 $templateCache.put("app/home/home.html","<section><h1>Home</h1><p>{{vm.message}}</p></section>");
+$templateCache.put("app/draw/draw.html","<wesketch></wesketch>");
 $templateCache.put("app/layout/footer.html","<div class=container><p class=text-muted>Føkkings footer assa.</p></div>");
 $templateCache.put("app/layout/header.html","<nav class=\"navbar navbar-default\"><div class=navbar-header><a class=\"btn navbar-btn navbar-toggle\" ng-init=\"navCollapsed = true\" ng-click=\"navCollapsed = !navCollapsed\" data-toggle=collapse data-target=.navbar-collapse><span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></a></div><div class=\"navbar-collapse collapse\" ng-class=\"{\'in\': !navCollapsed}\"><ul class=\"nav navbar-nav navbar-right\"><li><a ui-sref=layout.home>{{vm.message}}</a></li><li ng-show=vm.tokenIdentity.isAuthenticated()><a ui-sref=layout.account>Welcome \'{{vm.tokenIdentity.currentUser.name}}\'</a></li><li ng-show=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.logout>Logout</a></li><li ng-hide=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.login>Login</a></li><li ng-show=vm.tokenIdentity.isAdmin() dropdown><a href=# dropdown-toggle><i class=\"fa fa-cog\"></i> <span class=caret></span></a><ul class=dropdown-menu role=menu aria-labelledby=single-button><li><a href=/server>Server</a></li><li class=divider></li><li><a href=http://passportjs.org/docs/username-password>Passportjs</a></li><li><a href=https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs>Authentication in Single Page Applications</a></li><li class=divider></li><li><a href=\"https://mongolab.com/\"><i class=\"fa fa-database\"></i> Mongolab.com</a></li><li><a href=\"http://getbootstrap.com/css/\">Bootstrap</a></li><li><a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">Font Awesome</a></li><li><a href=https://github.com/johnpapa/angular-styleguide><i class=\"fa fa-github\"></i> <strong>Angular Styleguide</strong></a></li><li><a href=https://github.com/catos/Multivision><i class=\"fa fa-github\"></i> Multivision</a></li><li class=divider></li><li><a href=http://www.angularjs.org><i class=\"fa fa-html5\"></i> Angularjs</a></li><li><a href=http://mongoosejs.com/docs/guide.html>MongooseJs</a></li><li><a href=\"https://angular-ui.github.io/\">Angular UI</a></li><li><a href=\"http://momentjs.com/\">Moment.js</a></li><li class=divider></li><li><a href=\"http://webapplayers.com/inspinia_admin-v2.3/\">Inspiration</a></li><li class=divider></li><li><a href=https://devcenter.heroku.com/articles/troubleshooting-node-deploys>Troubleshooting Node.js Deploys</a></li></ul></li></ul></div></nav>");
 $templateCache.put("app/layout/layout.html","<div id=fw-wrapper class=container-fluid><div id=fw-sidebar ui-view=sidebar></div><div id=fw-page-wrapper><header id=fw-header ui-view=header></header><div id=fw-main-content ui-view=container></div><footer id=fw-footer ui-view=footer></footer></div></div><div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong>{{alert.title}}:</strong> {{alert.message}}</div>");
@@ -1500,5 +1504,5 @@ $templateCache.put("app/users/user-create.html","<section><div class=row><div cl
 $templateCache.put("app/users/user-edit.html","<section><div class=row><div class=col-md-12><h3>Edit \'{{vm.user.name}}\' <small>#{{vm.user._id}}</small></h3><hr><a class=\"btn btn-danger btn-sm\" href=# data-ng-click=vm.del()>Delete user</a> <a class=\"btn btn-info btn-sm\" href=# data-ng-click=vm.resetPassword()>Reset password</a><hr><form><div class=form-group><label for=inputName>Name</label> <input type=name class=form-control id=inputName placeholder=Name data-ng-model=vm.user.name required></div><div class=form-group><label for=inputEmail>Email</label> <input type=text class=form-control id=inputEmail placeholder=foo@bar.com data-ng-model=vm.user.email required></div><div class=form-group><div class=checkbox><label><input type=checkbox value ng-model=vm.user.isAdmin> Administrator</label></div></div><div class=form-group><button type=submit class=\"btn btn-default pull-right\" data-ng-click=vm.submit()>Submit</button></div></form></div></div></section>");
 $templateCache.put("app/users/users-list.html","<h3>Users <small>Count: {{vm.users.length}}</small></h3><table class=\"table table-striped table-bordered table-hover\"><tr><th>_id</th><th class=table-main-column>Name</th><th>Username</th></tr><tr data-ng-repeat=\"user in vm.users\"><td>{{user._id}}</td><td><a ui-sref=\"layout.users.edit({ id: user._id})\">{{user.name}}</a> <span ng-show=user.isAdmin class=\"label label-info\">Admin</span></td><td>{{user.email}}</td></tr></table>");
 $templateCache.put("app/users/users.html","<section><ul class=\"nav nav-pills\"><li ui-sref-active=active><a ui-sref=layout.users.list>List</a></li><li ui-sref-active=active><a ui-sref=layout.users.create>New user</a></li></ul><div ui-view></div></section>");
-$templateCache.put("app/components/wesketch/wesketch.html","<div class=wesketch><div id=canvas-height class=row><div class=col-xs-9><canvas width=500 height=500 id=canvas></canvas></div><div class=\"col-xs-3 functions-row\"><div class=\"function-group function-group-tools\"><div class=title>Tools</div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'clear\')\"><i class=\"fa fa-times\"></i></div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'changeTool\', \'brush\')\"><i class=\"fa fa-paint-brush\"></i></div></div><div class=\"function-group function-group-tool-sizes\"><div class=title>Sizes</div><div class=wesketch-button><i class=\"fa fa-minus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth - 2 })\"></i></div><div class=wesketch-button><i class=\"fa fa-plus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth + 2 })\"></i></div><strong>Size: {{vm.drawSettings.lineWidth}}</strong></div><div class=\"function-group function-group-palette\"><div class=title>Palette</div><div ng-repeat=\"color in vm.drawSettings.colors\" style=\"background-color: {{color}}\" ng-class=\"color === vm.drawSettings.strokeStyle ? \'current\' : \'\'\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { strokeStyle: color })\" class=wesketch-button></div></div><div class=\"function-group function-group-timer\"><div class=title>Timer</div><div class=timer>{{vm.state.timer.remaining}}</div><small>Seconds remaining</small><div class=checkbox ng-show=\"vm.state.phase === vm.state.phaseTypes.preGame\"><label><input type=checkbox ng-checked=vm.player.ready ng-click=\"vm.sendClientEvent(\'togglePlayerReady\')\"> I am ready</label></div></div><div ng-show=vm.hintCount class=\"function-group function-group-hint\"><div class=title>Hint</div><div class=timer>{{vm.state.hint}}</div></div><div ng-show=\"vm.player.id === vm.state.drawingPlayer.id\" class=\"function-group function-group-drawing-player\"><div class=title>Current word</div><div class=\"text-uppercase current-word\">{{vm.state.currentWord}}</div><button class=\"btn btn-sm btn-success\" ng-click=\"vm.sendClientEvent(\'giveHint\')\">Give hint</button> <button class=\"btn btn-sm btn-danger\" ng-click=\"vm.sendClientEvent(\'giveUp\')\">Give up</button></div></div></div><div class=\"row info-bar\">Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}</div><div class=\"row chat\"><div class=col-xs-9><div id=messages class=messages ws-scroll-down=vm.chatMessages><div ng-repeat=\"message in vm.chatMessages track by $index\" class=\"message text-{{message.type}}\"><small class=text-muted>{{message.timestamp | date:\'HH:mm:ss\'}}</small> <strong ng-show=message.from>{{message.from}}:</strong> {{message.message}}</div></div><div class=\"new-message input-group\"><span class=input-group-btn><button class=\"btn btn-primary\" ng-click=\"vm.sendClientEvent(\'chatMode\', \'guess\')\" type=button><i title=\"Guess the word mode\" class=\"fa fa-exclamation-circle\"></i></button> <button class=\"btn btn-default\" ng-click=\"vm.sendClientEvent(\'chatMode\', \'chat\')\" type=button><i title=\"Chat mode\" class=\"fa fa-comment\"></i></button></span> <input class=form-control type=text ng-model=vm.newMessage ng-keyup=vm.onKeyUp($event)><span class=input-group-btn><button class=\"btn btn-primary\" ng-click=vm.addMessage() type=button>Send</button></span></div></div><div class=\"col-xs-3 players\"><table class=table><tr ng-repeat=\"player in vm.state.players\"><td data-player-id={{player.id}} ng-class=\"{ \'ready\' : player.ready }\"><i ng-show=player.ready class=\"fa fa-check\"></i> {{player.name}}</td><td>{{player.score}}</td></tr></table></div></div><div class=row><div class=col-xs-12><hr><button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'nonExistingEvent\', \'with some value...\')\">Unknown handler</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'resetGame\')\">Reset game</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateState\')\">Update State</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\')\">Update Settings</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'testCode\')\">Test code</button><div><div><strong>vm.player:</strong></div>{{vm.player}}</div><div><div><strong>vm.state.players:</strong></div>{{vm.state.players}}</div><div><div><strong>vm.state:</strong></div>{{vm.state}}</div></div></div></div>");
-$templateCache.put("app/blocks/alert/alert.html","<div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong>{{alert.title}}:</strong> {{alert.message}}</div>");}]);
+$templateCache.put("app/blocks/alert/alert.html","<div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong>{{alert.title}}:</strong> {{alert.message}}</div>");
+$templateCache.put("app/components/wesketch/wesketch.html","<div class=wesketch><div id=canvas-height class=row><div class=col-xs-9><canvas width=500 height=500 id=canvas></canvas></div><div class=\"col-xs-3 functions-row\"><div class=\"function-group function-group-tools\"><div class=title>Tools</div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'clear\')\"><i class=\"fa fa-times\"></i></div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'changeTool\', \'brush\')\"><i class=\"fa fa-paint-brush\"></i></div></div><div class=\"function-group function-group-tool-sizes\"><div class=title>Sizes</div><div class=wesketch-button><i class=\"fa fa-minus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth - 2 })\"></i></div><div class=wesketch-button><i class=\"fa fa-plus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth + 2 })\"></i></div><strong>Size: {{vm.drawSettings.lineWidth}}</strong></div><div class=\"function-group function-group-palette\"><div class=title>Palette</div><div ng-repeat=\"color in vm.drawSettings.colors\" style=\"background-color: {{color}}\" ng-class=\"color === vm.drawSettings.strokeStyle ? \'current\' : \'\'\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { strokeStyle: color })\" class=wesketch-button></div></div><div class=\"function-group function-group-timer\"><div class=title>Timer</div><div class=timer>{{vm.state.timer.remaining}}</div><small>Seconds remaining</small><div class=checkbox ng-show=\"vm.state.phase === vm.state.phaseTypes.preGame\"><label><input type=checkbox ng-checked=vm.player.ready ng-click=\"vm.sendClientEvent(\'togglePlayerReady\')\"> I am ready</label></div></div><div ng-show=vm.hintCount class=\"function-group function-group-hint\"><div class=title>Hint</div><div class=timer>{{vm.state.hint}}</div></div><div ng-show=\"vm.player.id === vm.state.drawingPlayer.id\" class=\"function-group function-group-drawing-player\"><div class=title>Current word</div><div class=\"text-uppercase current-word\">{{vm.state.currentWord}}</div><button class=\"btn btn-sm btn-success\" ng-click=\"vm.sendClientEvent(\'giveHint\')\">Give hint</button> <button class=\"btn btn-sm btn-danger\" ng-click=\"vm.sendClientEvent(\'giveUp\')\">Give up</button></div></div></div><div class=\"row info-bar\">Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}</div><div class=\"row chat\"><div class=col-xs-9><div id=messages class=messages ws-scroll-down=vm.chatMessages><div ng-repeat=\"message in vm.chatMessages track by $index\" class=\"message text-{{message.type}}\"><small class=text-muted>{{message.timestamp | date:\'HH:mm:ss\'}}</small> <strong ng-show=message.from>{{message.from}}:</strong> {{message.message}}</div></div><div class=\"new-message input-group\"><span class=input-group-btn><button class=\"btn btn-primary\" ng-click=\"vm.sendClientEvent(\'chatMode\', \'guess\')\" type=button><i title=\"Guess the word mode\" class=\"fa fa-exclamation-circle\"></i></button> <button class=\"btn btn-default\" ng-click=\"vm.sendClientEvent(\'chatMode\', \'chat\')\" type=button><i title=\"Chat mode\" class=\"fa fa-comment\"></i></button></span> <input class=form-control type=text ng-model=vm.newMessage ng-keyup=vm.onKeyUp($event)><span class=input-group-btn><button class=\"btn btn-primary\" ng-click=vm.addMessage() type=button>Send</button></span></div></div><div class=\"col-xs-3 players\"><table class=table><tr ng-repeat=\"player in vm.state.players\"><td data-player-id={{player.id}} ng-class=\"{ \'ready\' : player.ready }\"><i ng-show=player.ready class=\"fa fa-check\"></i> {{player.name}}</td><td>{{player.score}}</td></tr></table></div></div><div class=row><div class=col-xs-12><hr><button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'nonExistingEvent\', \'with some value...\')\">Unknown handler</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'resetGame\')\">Reset game</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateState\')\">Update State</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\')\">Update Settings</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'testCode\')\">Test code</button><div><div><strong>vm.player:</strong></div>{{vm.player}}</div><div><div><strong>vm.state.players:</strong></div>{{vm.state.players}}</div><div><div><strong>vm.state:</strong></div>{{vm.state}}</div></div></div></div>");}]);
