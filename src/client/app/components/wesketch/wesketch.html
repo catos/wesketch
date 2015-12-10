@@ -17,26 +17,26 @@
 
             <div class="function-group function-group-tool-sizes">
                 <div class="title">Sizes</div>
-                <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateSettings', { lineWidth: vm.settings.lineWidth - 2 })"></i></div>
-                <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateSettings', { lineWidth: vm.settings.lineWidth + 2 })"></i></div>
-                <strong>Size: {{vm.settings.lineWidth}}</strong>
+                <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth - 2 })"></i></div>
+                <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth + 2 })"></i></div>
+                <strong>Size: {{vm.drawSettings.lineWidth}}</strong>
             </div>
 
             <div class="function-group function-group-palette">
                 <div class="title">Palette</div>
-                <div ng-repeat="color in vm.settings.colors" style="background-color: {{color}}" ng-class="color === vm.settings.strokeStyle ? 'current' : ''"
-                ng-click="vm.sendClientEvent('updateSettings', { strokeStyle: color })" class="wesketch-button">
+                <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''"
+                ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button">
                 </div>
             </div>
 
             <div class="function-group function-group-timer">
                 <div class="title">Timer</div>
-                <div class="timer">{{vm.state.timer}}</div>
+                <div class="timer">{{vm.state.timer.remaining}}</div>
                 <small>Seconds remaining</small>
 
                 <div class="checkbox" ng-show="vm.state.phase === vm.state.phaseTypes.preGame">
                     <label>
-                        <input type="checkbox" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
+                        <input type="checkbox" ng-checked="vm.player.ready" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
                     </label>
                 </div>
             </div>
@@ -101,7 +101,7 @@
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">Update State</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateSettings')">Update Settings</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateDrawSettings')">Update Settings</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('testCode')">Test code</button>
 
 

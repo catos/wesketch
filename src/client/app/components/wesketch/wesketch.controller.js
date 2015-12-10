@@ -48,7 +48,7 @@
         vm.myMessages = [];
         vm.chatMessages = [];
         vm.newMessage = '';
-        vm.settings = {
+        vm.drawSettings = {
             lineWidth: 2,
             lineJoin: 'round', // 'butt', 'round', 'square'
             lineCap: 'round', // 'bevel', 'round', 'miter',
@@ -115,7 +115,7 @@
 
             if (vm.state.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
-                sendClientEvent(vm.settings.currentTool, vm.coords);
+                sendClientEvent(vm.drawSettings.currentTool, vm.coords);
             }
         }
 
@@ -126,7 +126,7 @@
         function onMouseMove(event) {
             if (vm.drawing && vm.state.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
-                sendClientEvent(vm.settings.currentTool, vm.coords);
+                sendClientEvent(vm.drawSettings.currentTool, vm.coords);
 
                 vm.coords.from = vm.coords.to;
             }
@@ -218,12 +218,11 @@
                         updatedPlayer = vm.state.players[i];
                     }
                 }
-
                 angular.extend(vm.player, updatedPlayer);
             };
 
-            serverEvents.updateSettings = function (serverEvent) {
-                angular.extend(vm.settings, serverEvent.value);
+            serverEvents.updateDrawSettings = function (serverEvent) {
+                angular.extend(vm.drawSettings, serverEvent.value);
             };
 
             serverEvents.updateTimer = function (serverEvent) {
@@ -236,10 +235,10 @@
 
                 vm.ctx.beginPath();
 
-                vm.ctx.strokeStyle = vm.settings.strokeStyle;
-                vm.ctx.lineWidth = vm.settings.lineWidth;
-                vm.ctx.lineJoin = vm.settings.lineJoin;
-                vm.ctx.lineCap = vm.settings.lineCap;
+                vm.ctx.strokeStyle = vm.drawSettings.strokeStyle;
+                vm.ctx.lineWidth = vm.drawSettings.lineWidth;
+                vm.ctx.lineJoin = vm.drawSettings.lineJoin;
+                vm.ctx.lineCap = vm.drawSettings.lineCap;
 
                 vm.ctx.moveTo(coords.from.x, coords.from.y);
                 vm.ctx.lineTo(coords.to.x, coords.to.y);

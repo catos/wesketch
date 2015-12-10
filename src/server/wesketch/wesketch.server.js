@@ -1,39 +1,4 @@
-/**
- * pre game:
- *      reset game
- *      before players have all clicked [ Ready ]
- *      if all players are ready
- *          GOTO start round
- *
- * start round:
- *      reset timer,
- *      choose drawing player,
- *      increment round
- *      start timer
- *      GOTO running
- *
- * running:
- *      IF timer runs out || all players have guessed the word || drawingPlayer gives up
- *      GOTO end round
- *
- *
- * end round:
- *      show the word,
- *      distribute points to players,
- *      vent x sekunder
- *      GOTO start round (hvis det er runder igjen)
- *      else
- *      GOTO end game
- *
- *
- * end game:
- *      display the scores!
- *      announce the winner!
- *      GOTO pre game
- */
 var _ = require('lodash');
-
-var interval;
 
 var playerSchema = {
     id: -1,
@@ -66,21 +31,13 @@ var server = module.exports = {
 
         hintCount: 0,
         hint: '',
-
-        // TODO: gjør om timern til et object ala
-        /**
-         * timer = {
-         *      duration: 60,
-         *      isStopped: false,
-         *      stopReason: '',
-         *      interval: {}
-         */
-        timer: 60,
-        stopTimer: true,
-        stopReason: '',
-        interval: interval,
-
         currentWord: '',
+
+        timer: {
+            remaining: 60,
+            stop: false,
+            stopAndReset: false
+        }
     }
 };
 
@@ -116,6 +73,13 @@ server.onClientEvent = function (client, clientEvent) {
 
         clientEvents.updateState = function () {
             server.sendServerEvent('updateState', server.state);
+        };
+
+        clientEvents.updateDrawSettings = function (clientEvent) {
+            // Only drawing player can change drawSettings
+            if (server.state.drawingPlayer.id === clientEvent.player.id) {
+                server.sendServerEvent(clientEvent.type, clientEvent.value);
+            }
         };
 
         clientEvents.addPlayer = function (clientEvent) {
@@ -172,8 +136,8 @@ server.onClientEvent = function (client, clientEvent) {
         };
 
         clientEvents.giveUp = function (clientEvent) {
-            server.state.stopTimer = true;
-            server.state.stopReason = clientEvent.player.name + ' gives up.';
+            server.state.timer.stop = true;
+            server.sendServerMessage('info', clientEvent.player.name + ' gives up.');
         };
 
         clientEvents.guessWord = function (clientEvent) {
@@ -189,7 +153,7 @@ server.onClientEvent = function (client, clientEvent) {
             if (currentWord === guess) {
                 server.sendServerMessage('guess-word', clientEvent.player.name + ' guessed the correct word!');
                 var player = _.find(server.state.players, { id: clientEvent.player.id });
-                player.guessedWordAt = server.state.timer;
+                player.guessedWordAt = server.state.timer.remaining;
 
                 // Check if all non-drawing players guess the word
                 var playersRemaining = _.some(server.state.players, function (player) {
@@ -197,8 +161,8 @@ server.onClientEvent = function (client, clientEvent) {
                 });
 
                 if (!playersRemaining) {
-                    server.state.stopTimer = true;
-                    server.state.stopReason = 'All players guessed the word!';
+                    server.state.timer.stop = true;
+                    server.sendServerMessage('info', 'All players guessed the word!');
                 }
 
                 return;
@@ -215,13 +179,9 @@ server.onClientEvent = function (client, clientEvent) {
             server.sendServerMessage('guess-word', clientEvent.player.name + ' guessed "' + guess + '"');
         };
 
-        // TODO: update this method at the end of implementation to reset all values...
         clientEvents.resetGame = function (clientEvent) {
-
-            server.resetGame('Game was reset by ' + clientEvent.player.name);
-
+            server.resetGame();
             server.sendServerEvent('clear');
-            server.sendServerEvent('updateState', server.state);
             server.sendServerMessage('info', 'Game was reset by ' + clientEvent.player.name);
         };
 
@@ -265,14 +225,31 @@ server.onClientDisconnected = function (clientId) {
 };
 
 /**
- * Pre game
+ * Reset game aka. Pre game
  */
-server.preGame = function () {
+server.resetGame = function () {
+    server.state.phase = server.state.phaseTypes.preGame;
+    server.state.drawingPlayer = {};
+    server.state.round = 0;
 
-    // Update game phase
-    server.state.phase = server.state.phaseTypes.drawing;
+    server.state.timer.remaining = 60;
+    server.state.timer.stop = true;
+    server.state.timer.stopAndReset = true;
 
-    // TODO Reset game...
+    server.state.hintCount = 0;
+    server.state.hint = '';
+
+    server.state.currentWord = '';
+
+    _.forEach(server.state.players, function (player) {
+        player.ready = false;
+        player.isDrawing = false;
+        player.guessedWordAt = -1;
+        player.drawCount = 0;
+        player.score = 0;
+    });
+
+    server.sendServerEvent('updateState', server.state);
 };
 
 /**
@@ -321,25 +298,28 @@ server.startRound = function () {
  * 1. Time runs out
  * 2. Drawing player gives up
  * 3. All players (except drawing player) guess the word
+ * 4. Reset game
  */
 server.startTimer = function (duration, next) {
-    server.state.timer = duration;
-    server.state.stopTimer = false;
-    server.state.stopReason = '';
+    server.state.timer.remaining = duration;
+    server.state.timer.stop = false;
+    server.state.timer.stopAndReset = false;
 
-    server.state.interval = setInterval(loop, 1000);
+    var intervalObj = setInterval(loop, 1000);
 
     function loop() {
-        if (server.state.timer <= 0) {
-            server.state.stopTimer = true;
-            server.state.stopReason = 'Times up!';
+        if (server.state.timer.remaining <= 0) {
+            server.state.timer.stop = true;
         }
 
-        if (server.state.stopTimer) {
-            clearInterval(server.state.interval);
-            return next();
+        if (server.state.timer.stop) {
+            clearInterval(intervalObj);
+
+            if (!server.state.timer.stopAndReset) {
+                return next();
+            }
         } else {
-            server.state.timer--;
+            server.state.timer.remaining--;
         }
 
         server.sendServerEvent('updateTimer', server.state.timer);
@@ -357,15 +337,13 @@ server.endRound = function () {
     });
 
     if (endGame) {
-        server.endGame('All players have drawn 3 times.');
+        server.sendServerMessage('info', 'All players have drawn 3 times.');
+        server.endGame();
         return;
     }
 
     // Update game state
     server.state.phase = server.state.phaseTypes.roundEnd;
-
-    // Send message to players
-    server.sendServerMessage('info', '*** Round ended, because: ' + server.state.stopReason);
 
     // Present the word
     server.sendServerMessage('info', 'The word was: ' + server.state.currentWord);
@@ -383,9 +361,8 @@ server.endRound = function () {
         player.isDrawing = false;
     });
 
-    // TODO: Set timer to 30 seconds and begin next round
-    server.startTimer(10, server.startRound);
-    server.sendServerMessage('info', 'Next round starts in 30 seconds...');
+    server.startTimer(20, server.startRound);
+    server.sendServerMessage('info', 'Next round starts in 20 seconds...');
 
     // Clear the drawing area
     server.sendServerEvent('clear');
@@ -401,40 +378,14 @@ server.endRound = function () {
 /**
  * End game
  */
-server.endGame = function (reason) {
+server.endGame = function () {
 
     // Update game state
     server.state.phase = server.state.phaseTypes.endGame;
 
-    // Send message to players
-    server.sendServerMessage('info', 'Welcome to server.endGame');
+    server.startTimer(30, server.resetGame);
+    server.sendServerMessage('info', 'Game ends in 30 seconds...');
 
-    // TODO: Set timer to 30 seconds and begin next round
-    server.startTimer(10, server.preGame);
-    server.sendServerMessage('info', 'Game ends in 10 seconds...');
-
-};
-
-/**
- * Reset game
- */
-server.resetGame = function (reason) {
-    server.state.phase = server.state.phaseTypes.preGame;
-    server.state.drawingPlayer = {};
-    server.state.round = 0;
-
-    server.state.timer = 60;
-    server.state.stopTimer = true;
-    server.state.stopReason = reason;
-
-    server.state.hintCount = 0;
-    server.state.hint = '';
-
-    server.state.currentWord = '';
-
-    // server.startTimer(1, function () {
-    //     console.log('hmm?');
-    // });
 };
 
 /**
@@ -479,7 +430,7 @@ server.validateClientEvent = function (clientEvent, cb) {
         'resetGame',
         'guessWord',
         'updateState',
-        'updateSettings',
+        'updateDrawSettings',
         'clear',
         'addPlayer',
         'removePlayer',
