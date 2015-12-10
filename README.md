@@ -7,6 +7,7 @@
 # TODO
 
 ## weSketch
+- Easier words
 - Impl. buttons to toggle chat | guess-mode
 - Impl. ctr + t to toggle chat | guess-mode
 - Only drawing player can clear the drawingboard
