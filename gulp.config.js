@@ -3,6 +3,7 @@ module.exports = function() {
     var clientApp = client + 'app/';
     var server = './src/server/';
     var temp = './.tmp/';
+    
     var config = {
 
         /**
@@ -21,14 +22,30 @@ module.exports = function() {
             '!' + clientApp + '**/*.spec.js'
         ],
         clientCss: client + 'styles/**/*.css',
-        fonts: './bower_components/fontawesome/fonts/**/*.*',
-        html: clientApp + '**/*.html',
+        fonts: [
+            './bower_components/fontawesome/fonts/**/*.*',
+            './bower_components/bootstrap/fonts/**/*.*'
+        ],
+        html: client + '**/*.html',
+        htmltemplates: clientApp + '**/*.html',
         images: client + 'images/**/*.*',
         less: client + 'styles/*.less',
         server: server,
         source: 'src/',
         temp: temp,
         tempCss: temp + '**/*.css',
+
+        /**
+        * templateCache
+        */
+        templateCache: {
+            file: 'templates.js',
+            options: {
+                module: 'app.core',
+                standAlone: false,
+                root: 'app/'
+            }  
+        },
 
         /**
         * Browser sync

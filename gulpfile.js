@@ -46,6 +46,15 @@ gulp.task('clean-styles', function () {
     return clean(config.temp + '**/*.css');
 });
 
+gulp.task('clean-code', function () {
+    var files = [].concat(
+        config.temp + '**/*.js',
+        config.build + '**/*.html',
+        config.build + 'js/**/*.js'
+        );
+    return clean(files);
+});
+
 /**
  * CSS, LESS, fonts and images
  **/
@@ -98,9 +107,20 @@ gulp.task('styles', ['css', 'clean-styles'], function () {
 //     gulp.watch([config.less], ['styles', 'css']);
 // });
 
-/**
- * Wiredep and Inject
- **/
+// , ['clean-code']
+gulp.task('templatecache', function () {
+    log('Creating AngularJS $templateCache');
+
+    return gulp
+        .src(config.htmltemplates)
+        .pipe($.minifyHtml({ empty: true }))
+        .pipe($.angularTemplatecache(
+            config.templateCache.file,
+            config.templateCache.options
+            ))
+        .pipe(gulp.dest(config.temp));
+});
+
 gulp.task('wiredep', function () {
     log('Wire up the bower css js and our app js into the html');
     var options = config.getWiredepDefaultOptions();
@@ -112,7 +132,7 @@ gulp.task('wiredep', function () {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('inject', ['wiredep'], function () {
+gulp.task('inject', ['wiredep', 'styles', 'fonts', 'images', 'templatecache'], function () {
     log('Wire up the app css into the html, and call wiredep');
 
     return gulp
@@ -124,9 +144,14 @@ gulp.task('inject', ['wiredep'], function () {
 gulp.task('optimize', ['inject'], function () {
     log('Optimizing the javascript, css, html');
 
+    var templateCache = config.temp + config.templateCache.file;
+
     return gulp
         .src(config.index)
         .pipe($.plumber())
+        .pipe($.inject(gulp.src(templateCache, { read: false }), {
+            starttag: '<!-- inject:templates:js -->'
+        }))
         .pipe(useref({ searchPath: './' }))
         .pipe(gulp.dest(config.build));
 });
@@ -139,6 +164,8 @@ gulp.task('serve-build', ['optimize'], function () {
 gulp.task('serve-dev', ['inject'], function () {
     serve(true /* isDev */);
 });
+
+// ------------------------------
 
 function serve(isDev) {
 
@@ -164,7 +191,7 @@ function serve(isDev) {
             log('*** Nodemon restarted');
             log('files changed on restart:\n' + ev);
         })
-        // TODO: her må jeg kjøre optimize (ikke inject) hvis det er prod
+    // TODO: her må jeg kjøre optimize (ikke inject) hvis det er prod
         .on('start', ['inject', 'lint'], function () {
             log('*** Nodemon started');
 
@@ -177,9 +204,7 @@ function serve(isDev) {
         .on('exit', function () {
             log('*** Nodemon exited cleanly.');
         });
-};
-
-// ------------------------------
+}
 
 function changeEvent(event) {
     var srcPattern = new RegExp('/.*(?=/' + config.source + ')/');

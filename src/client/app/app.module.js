@@ -4,18 +4,16 @@
 
     angular
         .module('app', [
-            'ngResource',
-            'satellizer',
 
-            'blocks.alert',
-            'blocks.sawkit',
-            'blocks.tokenIdentity',
-            
+        /* Shared modules */
+            'app.core',
+
             'components.wesketch',
 
             'ui.router',
             'ui.bootstrap',
 
+        /* Feature areas */
             'app.layout',
             'app.home',
             'app.account',
