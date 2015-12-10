@@ -70,8 +70,8 @@
             </div>
             <div class="new-message input-group">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" ng-click="vm.sendClientEvent('chatMode', 'guess')" type="button"><i title="Guess the word mode" class="fa fa-exclamation-circle"></i></button>
-                    <button class="btn btn-default" ng-click="vm.sendClientEvent('chatMode', 'chat')" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
+                    <button class="btn" ng-class="{ 'btn-primary' : vm.inputGuessMode }" ng-click="vm.setInputGuessMode(true)" type="button"><i title="Guess mode" class="fa fa-exclamation-circle"></i></button>
+                    <button class="btn" ng-class="{ 'btn-primary' : !vm.inputGuessMode }" ng-click="vm.setInputGuessMode(false)" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
                 </span>
 
                 <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="vm.onKeyUp($event)">
@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" ng-show="vm.player.name === 'Cato Skogholt'">
         <div class="col-xs-12">
 
             <hr>

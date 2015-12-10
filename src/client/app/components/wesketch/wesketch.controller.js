@@ -46,6 +46,7 @@
 
         vm.state = {};
         vm.myMessages = [];
+        vm.inputGuessMode = false;
         vm.chatMessages = [];
         vm.newMessage = '';
         vm.drawSettings = {
@@ -63,6 +64,7 @@
         // TODO: remove later...
         vm.messagesElement = {};
 
+        vm.setInputGuessMode = setInputGuessMode;
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
         vm.onKeyUp = onKeyUp;
@@ -153,6 +155,32 @@
                     vm.newMessage = vm.myMessages[vm.myMessages.length - 1];
                     break;
                 }
+                
+                // Toggle guess mode
+                case 220: {
+                    setInputGuessMode(!vm.inputGuessMode);
+                    vm.newMessage = vm.newMessage.substr(0, vm.newMessage.length - 1);
+                    break; 
+                }
+            }
+            
+            if (!vm.inputGuessMode && vm.newMessage.substr(0, 1) !== '!') {
+                vm.newMessage = '!' + vm.newMessage;
+            } else {
+                
+            }
+        }
+
+        function setInputGuessMode(value) {
+            vm.inputGuessMode = value;
+            
+            var firstChar = vm.newMessage.substr(0, 1);
+            if (vm.inputGuessMode && firstChar === '!') {
+                vm.newMessage = vm.newMessage.substr(1, vm.newMessage.length);
+            }
+            
+            if (!vm.inputGuessMode && firstChar !== '!') {
+                vm.newMessage = '!' + vm.newMessage;
             }
         }
 

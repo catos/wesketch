@@ -7,6 +7,7 @@
 # TODO
 
 ## weSketch
+- Fix domain ca7o.com: google apps -> cato@ca7o.com
 - Easier words
 - Impl. buttons to toggle chat | guess-mode
 - Impl. ctr + t to toggle chat | guess-mode
