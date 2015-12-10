@@ -12,6 +12,7 @@ module.exports = function() {
             './src/**/*.js',
             './*.js'
         ],
+        build: './build/',
         client: client,
         index: client + 'index.html',
         js: [
@@ -20,7 +21,7 @@ module.exports = function() {
             '!' + clientApp + '**/*.spec.js'
         ],
         clientCss: client + 'styles/**/*.css',
-        less: client + 'styles/_bootstrap.less',
+        less: client + 'styles/*.less',
         server: server,
         source: 'src/',
         temp: temp,

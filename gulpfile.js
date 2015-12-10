@@ -4,13 +4,13 @@ var del = require('del');
 var gulp = require('gulp');
 var stylish = require('jshint-stylish');
 var wiredep = require('wiredep').stream;
-var $ = require('gulp-load-plugins')({
-    lazy: true
-});
-
+var $ = require('gulp-load-plugins')({ lazy: true });
 var port = process.env.PORT || config.defaultPort;
 
-gulp.task('lint', function() {
+gulp.task('help', $.taskListing);
+gulp.task('default', ['help']);
+
+gulp.task('lint', function () {
     log('Analyzing source with JSHint');
     return gulp
         .src(config.allJs)
@@ -19,12 +19,12 @@ gulp.task('lint', function() {
         .pipe($.jshint.reporter(stylish));
 });
 
-gulp.task('clean-styles', function() {
+gulp.task('clean-styles', function () {
     var files = config.temp + '**/*.css';
     clean(files);
 });
 
-gulp.task('css', function() {
+gulp.task('css', function () {
     log('Copying CSS from development styles');
 
     return gulp
@@ -32,7 +32,7 @@ gulp.task('css', function() {
         .pipe(gulp.dest(config.temp));
 });
 
-gulp.task('styles', ['clean-styles', 'css'], function() {
+gulp.task('styles', ['clean-styles', 'css'], function () {
     log('Compiling Less -> CSS');
 
     return gulp
@@ -46,11 +46,20 @@ gulp.task('styles', ['clean-styles', 'css'], function() {
 
 });
 
-// gulp.task('less-watcher', function () {
-// 	gulp.watch([config.less], ['styles']);
-// });
+gulp.task('fonts', function () {
+    log('Copying fonts');
 
-gulp.task('wiredep', function() {
+    return gulp
+        .src(config.fonts)
+        .pipe(gulp.dest(config.build + 'fonts'));
+});
+
+gulp.task('less-watcher', function () {
+    log('Less watcher is running');
+    gulp.watch([config.less], ['styles', 'css']);
+});
+
+gulp.task('wiredep', function () {
     log('Wire up the bower css js and our app js into the html');
     var options = config.getWiredepDefaultOptions();
 
@@ -61,7 +70,7 @@ gulp.task('wiredep', function() {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('inject', ['wiredep', 'styles', 'css'], function() {
+gulp.task('inject', ['wiredep'], function () {
     log('Wire up the app css into the html, and call wiredep');
 
     return gulp
@@ -70,37 +79,39 @@ gulp.task('inject', ['wiredep', 'styles', 'css'], function() {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('serve-dev', function() {
+gulp.task('serve-dev', ['less-watcher'], function () {
     var isDev = true;
 
     var nodeOptions = {
         script: config.nodeServer,
-        ext: 'js less',
+        ext: 'js',
         ignore: [
             config.index
         ],
         env: {
             PORT: port,
-            NODE_ENV: isDev ? 'dev' : 'build'
+            NODE_ENV: isDev ? 'development' : 'production'
         },
-        watch: [config.source],
+        watch: [
+            config.source
+        ],
         // delayTime: 1,
         // tasks: ['inject', 'lint']
     };
 
     return $.nodemon(nodeOptions)
-        .on('restart', function(ev) {
+        .on('restart', function (ev) {
             log('****************** nodemon restarted');
             log('files changed on restart:\n' + ev);
         })
-        .on('start', ['inject', 'lint'], function() {
+        .on('start', ['inject', 'lint'], function () {
             log('****************** nodemon started');
             // startBrowserSync();
         })
-        .on('crash', function() {
+        .on('crash', function () {
             log('****************** nodemon crashed: script crashed for some reason');
         })
-        .on('exit', function() {
+        .on('exit', function () {
             log('****************** nodemon exited cleanly.');
         });
 });

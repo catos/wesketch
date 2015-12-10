@@ -1,16 +1,16 @@
-(function() {
+(function () {
     'use strict';
 
     var express = require('express');
-    var env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+    var environment = process.env.NODE_ENV || 'development';
     var app = express();
-    var server = require('http').createServer(app);    
+    var server = require('http').createServer(app);
     var io = require('socket.io').listen(server);
 
     /**
      * Config
      */
-    var settings = require('./config/settings.js')[env];
+    var settings = require('./config/settings.js')[environment];
 
     require('./config/express')(app);
 
@@ -18,7 +18,7 @@
 
     require('./config/passport')();
 
-    require('./config/routes')(app, settings);
+    require('./config/routes')(app, settings, environment);
 
     require('./config/sockets')(io);
 
@@ -37,8 +37,8 @@
 
     console.log('Listening on port ' + settings.port);
     console.log(
-        '\tenv = ' + env +
+        '\tenv = ' + environment +
         '\n\t__dirname = ' + __dirname +
         '\n\tprocess.cwd = ' + process.cwd());
     console.log('_o\\   \\o|   |o|   |o/   /o_');
-}());
+} ());

@@ -1,27 +1,18 @@
-var express = require('express'),
-    passport = require('passport'),
-    jwt = require('jwt-simple'),
-    moment = require('moment'),
-    User = require('../api/users/users.model.js');
+var express = require('express');
+var passport = require('passport');
+var jwt = require('jwt-simple');
+var moment = require('moment');
+var User = require('../api/users/users.model.js');
 
-module.exports = function (app, settings) {
+var batteryRoutes = require('../api/batteries/batteries.route.js');
+var userRoutes = require('../api/users/users.route.js');
 
-    // -- CLIENT --------------------------------------------------
-
-    // Serve all files from client directory
-    app.use(express.static('./src/client'));
-    app.use(express.static('./'));
-    
-    // Server all files from bower_components
-    app.use('/bower_components', express.static('bower_components'));
-
+module.exports = function (app, settings, environment) {
 
     // -- API ----------------------------------------------
-    
-    // TODO: Move all require's to top
-    require('../api/batteries/batteries.route.js')(app, settings);
-    // TODO: Move all require's to top
-    require('../api/users/users.route.js')(app, settings);
+
+    batteryRoutes(app, settings);
+    userRoutes(app, settings);
 
     // -- PASSPORT ---------------------------------
 
@@ -76,16 +67,29 @@ module.exports = function (app, settings) {
             token: token
         });
     }
-    
+
     // -- SERVER --------------------------------------------------
 
     // Server start page (index.jade)
     app.get('/server', function (req, res) {
         res.render(settings.rootPath + 'server/views/index');
     });
-    
-    // Any deep link calls should return index.html
-    app.use('/*', express.static('./src/client/index.html'));
+
+    // -- CLIENT --------------------------------------------------
+
+    switch (environment) {
+        case 'development': {
+            console.log('** DEVELOPMENT **');
+            app.use('/', express.static('./src/client/'));
+            app.use('/', express.static('./'));
+            break;
+        }
+        case 'production': {
+            console.log('** PRODUCTION **');
+            app.use('/', express.static('./build/stage/'));
+            break;
+        }
+    }
 
     // 404
     app.use(function fourOfour(req, res, next) {
