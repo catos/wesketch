@@ -10,7 +10,7 @@
             'blocks.alert',
             'blocks.sawkit',
             'blocks.tokenIdentity',
-
+            
             'components.wesketch',
 
             'ui.router',

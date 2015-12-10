@@ -86,7 +86,8 @@ module.exports = function (app, settings, environment) {
         }
         case 'production': {
             console.log('** PRODUCTION **');
-            app.use('/', express.static('./build/stage/'));
+            // app.use('/', express.static('./build/stage/'));
+            app.use('/', express.static('./build/'));
             break;
         }
     }

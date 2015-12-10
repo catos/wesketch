@@ -21,6 +21,9 @@ module.exports = function() {
             '!' + clientApp + '**/*.spec.js'
         ],
         clientCss: client + 'styles/**/*.css',
+        fonts: './bower_components/fontawesome/fonts/**/*.*',
+        html: clientApp + '**/*.html',
+        images: client + 'images/**/*.*',
         less: client + 'styles/*.less',
         server: server,
         source: 'src/',

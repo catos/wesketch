@@ -5,7 +5,7 @@
         .module('components.wesketch')
         .directive('wesketch', wesketch);
 
-    // TODO: move back to feature, this is not a component 
+    // TODO: move back to feature, this is not a component
     function wesketch() {
         var directive = {
             restrict: 'EA',

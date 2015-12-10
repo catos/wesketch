@@ -1,3 +1,9 @@
+# Hmm
+
+// set NODE_ENV=production
+// node src/server/server.js
+
+
 # TODO
 
 ## weSketch
@@ -30,6 +36,9 @@
 - http://www.hutchinson.io/building-a-real-time-application-with-express-socketio-and-ember/
 - http://fdietz.github.io/2015/04/16/day-4-how-to-build-your-own-team-chat-in-five-days-expressjs-socket-io-and-angularjs-component-based-design-patterns.html
 - https://github.com/fdietz/how_to_build_your_own_team_chat_in_five_days/tree/master/day_4/nodejs_express_socketio_chat/public/app
+
+## Gulp
+- Angular's Template Cache
 
 ## Client
 - Reset password

@@ -32,7 +32,6 @@
     /**
      * Start server
      */
-    // app.listen(settings.port);
     server.listen(settings.port);
 
     console.log('Listening on port ' + settings.port);

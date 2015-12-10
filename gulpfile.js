@@ -5,10 +5,15 @@ var gulp = require('gulp');
 var stylish = require('jshint-stylish');
 var wiredep = require('wiredep').stream;
 var $ = require('gulp-load-plugins')({ lazy: true });
+var useref = require('gulp-useref');
 var port = process.env.PORT || config.defaultPort;
 
 gulp.task('help', $.taskListing);
 gulp.task('default', ['help']);
+
+/**
+ * Lint
+ **/
 
 gulp.task('lint', function () {
     log('Analyzing source with JSHint');
@@ -19,10 +24,31 @@ gulp.task('lint', function () {
         .pipe($.jshint.reporter(stylish));
 });
 
-gulp.task('clean-styles', function () {
-    var files = config.temp + '**/*.css';
-    clean(files);
+/**
+ * Clean
+ **/
+
+gulp.task('clean', function () {
+    var delconfig = [].concat(config.build, config.temp);
+    log('Cleaning: ' + $.util.colors.blue(delconfig));
+    del(delconfig);
 });
+
+gulp.task('clean-fonts', function () {
+    return clean(config.build + 'fonts/**/*.*');
+});
+
+gulp.task('clean-images', function () {
+    return clean(config.build + 'images/**/*.*');
+});
+
+gulp.task('clean-styles', function () {
+    return clean(config.temp + '**/*.css');
+});
+
+/**
+ * CSS, LESS, fonts and images
+ **/
 
 gulp.task('css', function () {
     log('Copying CSS from development styles');
@@ -32,7 +58,24 @@ gulp.task('css', function () {
         .pipe(gulp.dest(config.temp));
 });
 
-gulp.task('styles', ['clean-styles', 'css'], function () {
+gulp.task('fonts', ['clean-fonts'], function () {
+    log('Copying fonts');
+
+    return gulp
+        .src(config.fonts)
+        .pipe(gulp.dest(config.build + 'fonts'));
+});
+
+gulp.task('images', ['clean-images'], function () {
+    log('Copying and compressing the images');
+
+    return gulp
+        .src(config.images)
+        .pipe($.imagemin({ optimizationLevel: 4 }))
+        .pipe(gulp.dest(config.build + 'images'));
+});
+
+gulp.task('styles', ['css', 'clean-styles'], function () {
     log('Compiling Less -> CSS');
 
     return gulp
@@ -43,22 +86,21 @@ gulp.task('styles', ['clean-styles', 'css'], function () {
             browsers: ['last 2 version', '> 5%']
         }))
         .pipe(gulp.dest(config.temp));
-
 });
 
-gulp.task('fonts', function () {
-    log('Copying fonts');
+/**
+ * Watchers
+ **/
 
-    return gulp
-        .src(config.fonts)
-        .pipe(gulp.dest(config.build + 'fonts'));
-});
+// TODO: kan jeg fjerne denne ?
+// gulp.task('less-watcher', function () {
+//     log('Less watcher is running');
+//     gulp.watch([config.less], ['styles', 'css']);
+// });
 
-gulp.task('less-watcher', function () {
-    log('Less watcher is running');
-    gulp.watch([config.less], ['styles', 'css']);
-});
-
+/**
+ * Wiredep and Inject
+ **/
 gulp.task('wiredep', function () {
     log('Wire up the bower css js and our app js into the html');
     var options = config.getWiredepDefaultOptions();
@@ -79,8 +121,26 @@ gulp.task('inject', ['wiredep'], function () {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('serve-dev', ['less-watcher'], function () {
-    var isDev = true;
+gulp.task('optimize', ['inject'], function () {
+    log('Optimizing the javascript, css, html');
+
+    return gulp
+        .src(config.index)
+        .pipe($.plumber())
+        .pipe(useref({ searchPath: './' }))
+        .pipe(gulp.dest(config.build));
+});
+
+gulp.task('serve-build', ['optimize'], function () {
+    serve(false /* isDev */);
+});
+
+// gulp.task('serve-dev', ['less-watcher'], function () {
+gulp.task('serve-dev', ['inject'], function () {
+    serve(true /* isDev */);
+});
+
+function serve(isDev) {
 
     var nodeOptions = {
         script: config.nodeServer,
@@ -101,20 +161,23 @@ gulp.task('serve-dev', ['less-watcher'], function () {
 
     return $.nodemon(nodeOptions)
         .on('restart', function (ev) {
-            log('****************** nodemon restarted');
+            log('*** Nodemon restarted');
             log('files changed on restart:\n' + ev);
         })
+        // TODO: her må jeg kjøre optimize (ikke inject) hvis det er prod
         .on('start', ['inject', 'lint'], function () {
-            log('****************** nodemon started');
-            // startBrowserSync();
+            log('*** Nodemon started');
+
+            // TODO: Funker dette ?
+            gulp.watch([config.less], ['styles', 'css']);
         })
         .on('crash', function () {
-            log('****************** nodemon crashed: script crashed for some reason');
+            log('*** Nodemon crashed: script crashed for some reason');
         })
         .on('exit', function () {
-            log('****************** nodemon exited cleanly.');
+            log('*** Nodemon exited cleanly.');
         });
-});
+};
 
 // ------------------------------
 

@@ -12,12 +12,15 @@
         }
     </style>
 
+    <!-- build:css styles/lib.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="/bower_components/fontawesome/css/font-awesome.css" />
     <link rel="stylesheet" href="/bower_components/animate.css/animate.css" />
     <!-- endbower -->
+    <!-- endbuild -->
 
+    <!-- build:css styles/app.css-->
     <!-- inject:css -->
     <link rel="stylesheet" href="/.tmp/_bootstrap.css">
     <link rel="stylesheet" href="/.tmp/chat.css">
@@ -27,6 +30,7 @@
     <link rel="stylesheet" href="/.tmp/variables.css">
     <link rel="stylesheet" href="/.tmp/wesketch.css">
     <!-- endinject -->
+    <!-- endbuild -->
 
 </head>
 
@@ -36,6 +40,7 @@
 
     <div ng-include="'/app/blocks/alert/alert.html'"></div>
 
+    <!-- build:js js/lib.js -->
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
@@ -43,22 +48,22 @@
     <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="/bower_components/satellizer/satellizer.js"></script>
     <script src="/bower_components/angular-resource/angular-resource.js"></script>
-    <!-- endbower -->
-
     <script src="/bower_components/socket.io-client/socket.io.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
 
-
+    <!-- build:js js/app.js-->
     <!-- inject:js -->
     <script src="/src/client/app/app.module.js"></script>
     <script src="/src/client/app/account/account.module.js"></script>
-    <script src="/src/client/app/batteries/batteries.module.js"></script>
     <script src="/src/client/app/chat/chat.module.js"></script>
+    <script src="/src/client/app/batteries/batteries.module.js"></script>
     <script src="/src/client/app/draw/draw.module.js"></script>
     <script src="/src/client/app/home/home.module.js"></script>
     <script src="/src/client/app/layout/layout.module.js"></script>
     <script src="/src/client/app/users/users.module.js"></script>
-    <script src="/src/client/app/blocks/alert/alert.module.js"></script>
     <script src="/src/client/app/blocks/sawkit/sawkit.module.js"></script>
+    <script src="/src/client/app/blocks/alert/alert.module.js"></script>
     <script src="/src/client/app/blocks/token-identity/token-identity.module.js"></script>
     <script src="/src/client/app/components/wesketch/wesketch.module.js"></script>
     <script src="/src/client/app/app.config.js"></script>
@@ -66,13 +71,13 @@
     <script src="/src/client/app/account/login.controller.js"></script>
     <script src="/src/client/app/account/logout.controller.js"></script>
     <script src="/src/client/app/account/register.controller.js"></script>
+    <script src="/src/client/app/chat/chat.controller.js"></script>
+    <script src="/src/client/app/chat/chat.route.js"></script>
     <script src="/src/client/app/batteries/batteries-list.controller.js"></script>
     <script src="/src/client/app/batteries/batteries.controller.js"></script>
     <script src="/src/client/app/batteries/batteries.route.js"></script>
     <script src="/src/client/app/batteries/batteries.service.js"></script>
     <script src="/src/client/app/batteries/battery-details.controller.js"></script>
-    <script src="/src/client/app/chat/chat.controller.js"></script>
-    <script src="/src/client/app/chat/chat.route.js"></script>
     <script src="/src/client/app/draw/draw.controller.js"></script>
     <script src="/src/client/app/draw/draw.routes.js"></script>
     <script src="/src/client/app/home/home.controller.js"></script>
@@ -86,13 +91,14 @@
     <script src="/src/client/app/users/users-list.controller.js"></script>
     <script src="/src/client/app/users/users.route.js"></script>
     <script src="/src/client/app/users/users.service.js"></script>
-    <script src="/src/client/app/blocks/alert/alert.js"></script>
     <script src="/src/client/app/blocks/sawkit/sawkit.js"></script>
+    <script src="/src/client/app/blocks/alert/alert.js"></script>
     <script src="/src/client/app/blocks/token-identity/token-identity.js"></script>
     <script src="/src/client/app/components/wesketch/wesketch-scroll-down.directive.js"></script>
     <script src="/src/client/app/components/wesketch/wesketch.controller.js"></script>
     <script src="/src/client/app/components/wesketch/wesketch.directive.js"></script>
     <!-- endinject -->
+    <!-- endbuild -->
 
 </body>
 
