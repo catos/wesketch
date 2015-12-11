@@ -1,35 +1,26 @@
-# Hmm
-
-// set NODE_ENV=production
-// node src/server/server.js
-
-
 # TODO
 
 ## weSketch
-- Fix domain ca7o.com: google apps -> cato@ca7o.com
+
+### Client
 - Easier words
-- Impl. buttons to toggle chat | guess-mode
-- Impl. ctr + t to toggle chat | guess-mode
-- Only drawing player can clear the drawingboard
-- Reset game when all clients leave
-- 'updateState' exclude currentword for all players except drawingplayer
-- Replace console.log with a custom logger (that can support heroku-logging?)
-- End game after x turns, show score
-- Draw stack
-- Client catchup
+- Fix domain
+- Fix give hint
+- Draw stack, makes it possible for clients to catchup
 - Undo / Redo
-- Width 100% og scale for different client viewports!
+- Scaleable canvas
 - Eraser tool
 - Fill tool
-- Fix give hint
 - Request pause
-- Reading material
-	- http://stackoverflow.com/a/27025090
-	- http://www.jacklmoore.com/notes/mouse-position/
-	- http://codepen.io/goker/pen/kbEdn
-	- Game-loop = http://buildnewgames.com/real-time-multiplayer/
-	- http://encosia.com/first-class-functions-as-an-alternative-to-javascripts-switch-statement/
+
+### Server
+- Minify js & css
+- Only apply draw restrictions in drawing-phase
+- Exclude currentword for all players except drawingplayer
+- Replace console.log with a custom logger (that can also support heroku-logging?)
+- IsNullOrEmpty på guess og chat
+- Reset game when all clients leave
+- Check development || production in client...app.config.js
 
 ## Chat
 - http://briantford.com/blog/angular-socket-io

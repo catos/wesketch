@@ -1,16 +1,16 @@
-(function() {
+(function () {
     'use strict';
 
     var appSettings = {
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
-        
-        ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-        SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-        
-        // ApiUrl: 'http://localhost:7203/',
-        // SocketUrl: 'http://localhost:7203/'
-    };    
+
+        // ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+        // SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+
+        ApiUrl: 'http://localhost:7203/',
+        SocketUrl: 'http://localhost:7203/'
+    };
 
     angular
         .module('app')
@@ -32,21 +32,19 @@
 
     function run($rootScope, $state, $auth, alert, tokenIdentity) {
         $rootScope.$on('$stateChangeStart',
-            function(event, toState, toParams, fromState, fromParams) {
+            function (event, toState, toParams, fromState, fromParams) {
 
                 if (toState.restricted) {
 
-                    if (toState.restricted.requiresLogin && !tokenIdentity.isAuthenticated())
-                    {
+                    if (toState.restricted.requiresLogin && !tokenIdentity.isAuthenticated()) {
                         $state.transitionTo('layout.account.login');
                         event.preventDefault();
                     }
 
-                    if (toState.restricted.requiresAdmin && !tokenIdentity.isAdmin())
-                    {
+                    if (toState.restricted.requiresAdmin && !tokenIdentity.isAdmin()) {
                         alert.show(
-                            'info', 
-                            'Restricted area', 
+                            'info',
+                            'Restricted area',
                             'You do not have sufficient permissions to enter this area');
                         $state.go('layout.home');
                         event.preventDefault();

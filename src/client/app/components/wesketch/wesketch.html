@@ -1,9 +1,9 @@
 <div class="wesketch">
 
-    <div id="canvas-height" class="row">
+    <div class="row row-canvas">
         <div class="col-xs-9">
 
-            <canvas width="500" height="500" id="canvas">
+            <canvas width="480" height="480" id="canvas">
             </canvas>
 
         </div>
@@ -41,26 +41,26 @@
                 </div>
             </div>
 
-            <div ng-show="vm.hintCount" class="function-group function-group-hint">
+            <!--<div ng-show="vm.hintCount" class="function-group function-group-hint">
                 <div class="title">Hint</div>
                 <div class="timer">{{vm.state.hint}}</div>
-            </div>
+            </div>-->
 
             <div ng-show="vm.player.id === vm.state.drawingPlayer.id" class="function-group function-group-drawing-player">
                 <div class="title">Current word</div>
                 <div class="text-uppercase current-word">{{vm.state.currentWord}}</div>
-                <button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>
+                <!--<button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>-->
                 <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
             </div>
 
         </div>
     </div>
 
-    <div class="row info-bar">
+    <div class="row row-info">
         Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}
     </div>
 
-    <div class="row chat">
+    <div class="row row-chat">
         <div class="col-xs-9">
             <div id="messages" class="messages" ws-scroll-down="vm.chatMessages">
                 <div ng-repeat="message in vm.chatMessages track by $index" class="message text-{{message.type}}">
@@ -74,8 +74,7 @@
                     <button class="btn" ng-class="{ 'btn-primary' : !vm.inputGuessMode }" ng-click="vm.setInputGuessMode(false)" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
                 </span>
 
-                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="vm.onKeyUp($event)">
-                <!--<input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="$event.keyCode == 13 ? vm.addMessage(vm.newMessage) : null">-->
+                <input class="form-control" type="text" ng-model="vm.newMessage" ng-keyup="vm.onInputKey($event)">
 
                 <span class="input-group-btn">
                     <button class="btn btn-primary" ng-click="vm.addMessage()" type="button">Send</button>

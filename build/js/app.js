@@ -87,6 +87,13 @@
 	angular.module('blocks.alert', []);
 })();
 (function() {
+    'use strict';
+
+    angular
+        .module('blocks.tokenIdentity', []);
+})();
+
+(function() {
 	'use strict';
 
 	angular.module('blocks.sawkit', []);
@@ -95,29 +102,22 @@
     'use strict';
 
     angular
-        .module('blocks.tokenIdentity', []);
-})();
-
-(function() {
-    'use strict';
-
-    angular
         .module('components.wesketch', []);
 })();
 
-(function() {
+(function () {
     'use strict';
 
     var appSettings = {
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
-        
-        ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-        SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-        
-        // ApiUrl: 'http://localhost:7203/',
-        // SocketUrl: 'http://localhost:7203/'
-    };    
+
+        // ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+        // SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+
+        ApiUrl: 'http://localhost:7203/',
+        SocketUrl: 'http://localhost:7203/'
+    };
 
     angular
         .module('app')
@@ -139,21 +139,19 @@
 
     function run($rootScope, $state, $auth, alert, tokenIdentity) {
         $rootScope.$on('$stateChangeStart',
-            function(event, toState, toParams, fromState, fromParams) {
+            function (event, toState, toParams, fromState, fromParams) {
 
                 if (toState.restricted) {
 
-                    if (toState.restricted.requiresLogin && !tokenIdentity.isAuthenticated())
-                    {
+                    if (toState.restricted.requiresLogin && !tokenIdentity.isAuthenticated()) {
                         $state.transitionTo('layout.account.login');
                         event.preventDefault();
                     }
 
-                    if (toState.restricted.requiresAdmin && !tokenIdentity.isAdmin())
-                    {
+                    if (toState.restricted.requiresAdmin && !tokenIdentity.isAdmin()) {
                         alert.show(
-                            'info', 
-                            'Restricted area', 
+                            'info',
+                            'Restricted area',
                             'You do not have sufficient permissions to enter this area');
                         $state.go('layout.home');
                         event.preventDefault();
@@ -995,55 +993,6 @@
 		}
 	}
 })();
-/* global io */
-(function () {
-        'use strict';
-
-	angular
-		.module('blocks.sawkit')
-		.factory('sawkit', sawkit);
-
-	sawkit.$inject = ['$rootScope', 'appSettings'];
-	function sawkit($rootScope, appSettings) {
-
-		var socket;
-
-		var service = {
-            connect: connect,
-			on: on,
-			emit: emit
-		};
-
-        return service;
-
-        function connect(room) {
-             socket = io.connect(appSettings.SocketUrl + room);
-             console.log('sawkit is connecting to room: ' + room);
-        }
-
-        function on(eventName, callback) {
-            socket.on(eventName, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                    callback.apply(socket, args);
-                });
-            });
-        }
-
-        function emit(eventName, data, callback) {
-            socket.emit(eventName, data, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                    if (callback) {
-                        callback.apply(socket, args);
-                    }
-                });
-            });
-        }
-
-	}
-})();
-
 (function() {
     'use strict';
 
@@ -1134,6 +1083,55 @@
     }
 })();
 
+/* global io */
+(function () {
+        'use strict';
+
+	angular
+		.module('blocks.sawkit')
+		.factory('sawkit', sawkit);
+
+	sawkit.$inject = ['$rootScope', 'appSettings'];
+	function sawkit($rootScope, appSettings) {
+
+		var socket;
+
+		var service = {
+            connect: connect,
+			on: on,
+			emit: emit
+		};
+
+        return service;
+
+        function connect(room) {
+             socket = io.connect(appSettings.SocketUrl + room);
+             console.log('sawkit is connecting to room: ' + room);
+        }
+
+        function on(eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        }
+
+        function emit(eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            });
+        }
+
+	}
+})();
+
 (function () {
 	'use strict';
 
@@ -1206,6 +1204,7 @@
 
         vm.state = {};
         vm.myMessages = [];
+        vm.inputGuessMode = false;
         vm.chatMessages = [];
         vm.newMessage = '';
         vm.drawSettings = {
@@ -1223,9 +1222,10 @@
         // TODO: remove later...
         vm.messagesElement = {};
 
+        vm.setInputGuessMode = setInputGuessMode;
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
-        vm.onKeyUp = onKeyUp;
+        vm.onInputKey = onInputKey;
 
         init();
 
@@ -1300,7 +1300,7 @@
             console.log('onResize: ', event);
         }
 
-        function onKeyUp(event) {
+        function onInputKey(event) {
 
             switch (event.keyCode) {
                 // Enter key
@@ -1313,6 +1313,32 @@
                     vm.newMessage = vm.myMessages[vm.myMessages.length - 1];
                     break;
                 }
+
+                // | - Toggle guess mode
+                case 220: {
+                    console.log(vm.newMessage);
+                    vm.newMessage = vm.newMessage.replace('|', '');
+                    setInputGuessMode(!vm.inputGuessMode);
+                    // vm.newMessage = vm.newMessage.substr(0, vm.newMessage.length - 1);
+                    break;
+                }
+            }
+
+            if (vm.inputGuessMode && vm.newMessage.substr(0, 1) !== '!') {
+                vm.newMessage = '!' + vm.newMessage;
+            }
+        }
+
+        function setInputGuessMode(value) {
+            vm.inputGuessMode = value;
+
+            var firstChar = vm.newMessage.substr(0, 1);
+            if (!vm.inputGuessMode && firstChar === '!') {
+                vm.newMessage = vm.newMessage.substr(1, vm.newMessage.length);
+            }
+
+            if (vm.inputGuessMode && firstChar !== '!') {
+                vm.newMessage = '!' + vm.newMessage;
             }
         }
 
@@ -1327,17 +1353,17 @@
                 return;
             }
 
-            var eventType = 'guessWord';
+            var eventType = 'addMessage';
             var eventValue = {
                 timestamp: new Date(),
-                type: 'guess-word',
+                type: 'chat',
                 from: vm.player.name,
                 message: vm.newMessage
             };
 
             if (vm.newMessage.charAt(0) === '!') {
-                eventType = 'addMessage';
-                eventValue.type = 'chat';
+                eventType = 'guessWord';
+                eventValue.type = 'guess-word';
                 eventValue.message = vm.newMessage.substr(1);
             }
 
@@ -1411,6 +1437,11 @@
 
             serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
+
+                var message = serverEvent.value;
+                if (message.type === 'important') {
+                    alert.show('info', '', serverEvent.value.message);
+                }
             };
 
             serverEvents.serverError = function (serverEvent) {
@@ -1497,12 +1528,12 @@ $templateCache.put("app/chat/chat.html","<h3>Chat</h3><hr><div class=chat><div c
 $templateCache.put("app/draw/draw.html","<wesketch></wesketch>");
 $templateCache.put("app/home/home.html","<section><h1>Home</h1><p>{{vm.message}}</p></section>");
 $templateCache.put("app/layout/footer.html","<div class=container><p class=text-muted>Føkkings footer assa.</p></div>");
-$templateCache.put("app/layout/header.html","<nav class=\"navbar navbar-default\"><div class=navbar-header><a class=\"btn navbar-btn navbar-toggle\" ng-init=\"navCollapsed = true\" ng-click=\"navCollapsed = !navCollapsed\" data-toggle=collapse data-target=.navbar-collapse><span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></a></div><div class=\"navbar-collapse collapse\" ng-class=\"{\'in\': !navCollapsed}\"><ul class=\"nav navbar-nav navbar-right\"><li><a ui-sref=layout.home>{{vm.message}}</a></li><li ng-show=vm.tokenIdentity.isAuthenticated()><a ui-sref=layout.account>Welcome \'{{vm.tokenIdentity.currentUser.name}}\'</a></li><li ng-show=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.logout>Logout</a></li><li ng-hide=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.login>Login</a></li><li ng-show=vm.tokenIdentity.isAdmin() dropdown><a href=# dropdown-toggle><i class=\"fa fa-cog\"></i> <span class=caret></span></a><ul class=dropdown-menu role=menu aria-labelledby=single-button><li><a href=/server>Server</a></li><li class=divider></li><li><a href=http://passportjs.org/docs/username-password>Passportjs</a></li><li><a href=https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs>Authentication in Single Page Applications</a></li><li class=divider></li><li><a href=\"https://mongolab.com/\"><i class=\"fa fa-database\"></i> Mongolab.com</a></li><li><a href=\"http://getbootstrap.com/css/\">Bootstrap</a></li><li><a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">Font Awesome</a></li><li><a href=https://github.com/johnpapa/angular-styleguide><i class=\"fa fa-github\"></i> <strong>Angular Styleguide</strong></a></li><li><a href=https://github.com/catos/Multivision><i class=\"fa fa-github\"></i> Multivision</a></li><li class=divider></li><li><a href=http://www.angularjs.org><i class=\"fa fa-html5\"></i> Angularjs</a></li><li><a href=http://mongoosejs.com/docs/guide.html>MongooseJs</a></li><li><a href=\"https://angular-ui.github.io/\">Angular UI</a></li><li><a href=\"http://momentjs.com/\">Moment.js</a></li><li class=divider></li><li><a href=\"http://webapplayers.com/inspinia_admin-v2.3/\">Inspiration</a></li><li class=divider></li><li><a href=https://devcenter.heroku.com/articles/troubleshooting-node-deploys>Troubleshooting Node.js Deploys</a></li></ul></li></ul></div></nav>");
-$templateCache.put("app/layout/layout.html","<div id=fw-wrapper class=container-fluid><div id=fw-sidebar ui-view=sidebar></div><div id=fw-page-wrapper><header id=fw-header ui-view=header></header><div id=fw-main-content ui-view=container></div><footer id=fw-footer ui-view=footer></footer></div></div><div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong>{{alert.title}}:</strong> {{alert.message}}</div>");
-$templateCache.put("app/layout/sidebar.html","<ul><li class=header><a ui-sref=layout.home>CSA</a></li><li ui-sref-active=active><a ui-sref=layout.users.list>Users</a></li><li ui-sref-active=active><a ui-sref=layout.draw>Draw</a></li></ul>");
+$templateCache.put("app/layout/header.html","<nav class=\"navbar navbar-default\"><div class=navbar-header><a class=\"btn navbar-btn navbar-toggle\" ng-init=\"navCollapsed = true\" ng-click=\"navCollapsed = !navCollapsed\" data-toggle=collapse data-target=.navbar-collapse><span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></a></div><div class=\"navbar-collapse collapse\" ng-class=\"{\'in\': !navCollapsed}\"><ul class=\"nav navbar-nav\"><li><a href=https://github.com/catos/CSA/blob/master/README.md#todo target=_blank><i class=\"fa fa-github\"></i> Project homepage</a></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a ui-sref=layout.home>{{vm.message}}</a></li><li ng-show=vm.tokenIdentity.isAuthenticated()><a ui-sref=layout.account>Welcome \'{{vm.tokenIdentity.currentUser.name}}\'</a></li><li ng-show=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.logout>Logout</a></li><li ng-hide=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.login>Login</a></li><li ng-show=vm.tokenIdentity.isAdmin() dropdown><a href=# dropdown-toggle><i class=\"fa fa-cog\"></i> <span class=caret></span></a><ul class=dropdown-menu role=menu aria-labelledby=single-button><li><a href=/server>Server</a></li><li class=divider></li><li><a href=http://passportjs.org/docs/username-password>Passportjs</a></li><li><a href=https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs>Authentication in Single Page Applications</a></li><li class=divider></li><li><a href=\"https://mongolab.com/\"><i class=\"fa fa-database\"></i> Mongolab.com</a></li><li><a href=\"http://getbootstrap.com/css/\">Bootstrap</a></li><li><a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">Font Awesome</a></li><li><a href=https://github.com/johnpapa/angular-styleguide><i class=\"fa fa-github\"></i> <strong>Angular Styleguide</strong></a></li><li><a href=https://github.com/catos/Multivision><i class=\"fa fa-github\"></i> Multivision</a></li><li class=divider></li><li><a href=http://www.angularjs.org><i class=\"fa fa-html5\"></i> Angularjs</a></li><li><a href=http://mongoosejs.com/docs/guide.html>MongooseJs</a></li><li><a href=\"https://angular-ui.github.io/\">Angular UI</a></li><li><a href=\"http://momentjs.com/\">Moment.js</a></li><li class=divider></li><li><a href=\"http://webapplayers.com/inspinia_admin-v2.3/\">Inspiration</a></li><li class=divider></li><li><a href=https://devcenter.heroku.com/articles/troubleshooting-node-deploys>Troubleshooting Node.js Deploys</a></li></ul></li></ul></div></nav>");
+$templateCache.put("app/layout/layout.html","<div id=fw-wrapper class=container-fluid><div id=fw-sidebar ui-view=sidebar></div><div id=fw-page-wrapper><header id=fw-header ui-view=header></header><div id=fw-main-content ui-view=container></div><footer id=fw-footer ui-view=footer></footer></div></div><div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong ng-show=alert.title.length>{{alert.title}}:</strong> {{alert.message}}</div>");
+$templateCache.put("app/layout/sidebar.html","<ul><li class=header><a ui-sref=layout.home>CSA</a></li><li ui-sref-active=active><a ui-sref=layout.users.list><i class=\"fa fa-users\"></i> Users</a></li><li ui-sref-active=active><a ui-sref=layout.draw><i class=\"fa fa-paint-brush\"></i> Draw</a></li></ul>");
 $templateCache.put("app/users/user-create.html","<section><div class=row><div class=col-md-12><h3>Create New User</h3><form><div class=form-group><label for=inputName>Name</label> <input type=name class=form-control id=inputName placeholder=Name data-ng-model=vm.user.name required></div><div class=form-group><label for=inputEmail>Email</label> <input type=text class=form-control id=inputEmail placeholder=foo@bar.com data-ng-model=vm.user.email required></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword data-ng-model=vm.user.password></div><div class=form-group><label for=inputRepeatPassword>Repeat password</label> <input type=password class=form-control id=inputRepeatPassword></div><div class=form-group><div class=checkbox><label><input type=checkbox value ng-model=vm.user.isAdmin> Administrator</label></div></div><div class=form-group><button type=submit class=\"btn btn-default pull-right\" data-ng-click=vm.submit()>Submit</button></div></form></div></div></section>");
 $templateCache.put("app/users/user-edit.html","<section><div class=row><div class=col-md-12><h3>Edit \'{{vm.user.name}}\' <small>#{{vm.user._id}}</small></h3><hr><a class=\"btn btn-danger btn-sm\" href=# data-ng-click=vm.del()>Delete user</a> <a class=\"btn btn-info btn-sm\" href=# data-ng-click=vm.resetPassword()>Reset password</a><hr><form><div class=form-group><label for=inputName>Name</label> <input type=name class=form-control id=inputName placeholder=Name data-ng-model=vm.user.name required></div><div class=form-group><label for=inputEmail>Email</label> <input type=text class=form-control id=inputEmail placeholder=foo@bar.com data-ng-model=vm.user.email required></div><div class=form-group><div class=checkbox><label><input type=checkbox value ng-model=vm.user.isAdmin> Administrator</label></div></div><div class=form-group><button type=submit class=\"btn btn-default pull-right\" data-ng-click=vm.submit()>Submit</button></div></form></div></div></section>");
 $templateCache.put("app/users/users-list.html","<h3>Users <small>Count: {{vm.users.length}}</small></h3><table class=\"table table-striped table-bordered table-hover\"><tr><th>_id</th><th class=table-main-column>Name</th><th>Username</th></tr><tr data-ng-repeat=\"user in vm.users\"><td>{{user._id}}</td><td><a ui-sref=\"layout.users.edit({ id: user._id})\">{{user.name}}</a> <span ng-show=user.isAdmin class=\"label label-info\">Admin</span></td><td>{{user.email}}</td></tr></table>");
 $templateCache.put("app/users/users.html","<section><ul class=\"nav nav-pills\"><li ui-sref-active=active><a ui-sref=layout.users.list>List</a></li><li ui-sref-active=active><a ui-sref=layout.users.create>New user</a></li></ul><div ui-view></div></section>");
-$templateCache.put("app/blocks/alert/alert.html","<div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong>{{alert.title}}:</strong> {{alert.message}}</div>");
-$templateCache.put("app/components/wesketch/wesketch.html","<div class=wesketch><div id=canvas-height class=row><div class=col-xs-9><canvas width=500 height=500 id=canvas></canvas></div><div class=\"col-xs-3 functions-row\"><div class=\"function-group function-group-tools\"><div class=title>Tools</div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'clear\')\"><i class=\"fa fa-times\"></i></div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'changeTool\', \'brush\')\"><i class=\"fa fa-paint-brush\"></i></div></div><div class=\"function-group function-group-tool-sizes\"><div class=title>Sizes</div><div class=wesketch-button><i class=\"fa fa-minus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth - 2 })\"></i></div><div class=wesketch-button><i class=\"fa fa-plus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth + 2 })\"></i></div><strong>Size: {{vm.drawSettings.lineWidth}}</strong></div><div class=\"function-group function-group-palette\"><div class=title>Palette</div><div ng-repeat=\"color in vm.drawSettings.colors\" style=\"background-color: {{color}}\" ng-class=\"color === vm.drawSettings.strokeStyle ? \'current\' : \'\'\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { strokeStyle: color })\" class=wesketch-button></div></div><div class=\"function-group function-group-timer\"><div class=title>Timer</div><div class=timer>{{vm.state.timer.remaining}}</div><small>Seconds remaining</small><div class=checkbox ng-show=\"vm.state.phase === vm.state.phaseTypes.preGame\"><label><input type=checkbox ng-checked=vm.player.ready ng-click=\"vm.sendClientEvent(\'togglePlayerReady\')\"> I am ready</label></div></div><div ng-show=vm.hintCount class=\"function-group function-group-hint\"><div class=title>Hint</div><div class=timer>{{vm.state.hint}}</div></div><div ng-show=\"vm.player.id === vm.state.drawingPlayer.id\" class=\"function-group function-group-drawing-player\"><div class=title>Current word</div><div class=\"text-uppercase current-word\">{{vm.state.currentWord}}</div><button class=\"btn btn-sm btn-success\" ng-click=\"vm.sendClientEvent(\'giveHint\')\">Give hint</button> <button class=\"btn btn-sm btn-danger\" ng-click=\"vm.sendClientEvent(\'giveUp\')\">Give up</button></div></div></div><div class=\"row info-bar\">Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}</div><div class=\"row chat\"><div class=col-xs-9><div id=messages class=messages ws-scroll-down=vm.chatMessages><div ng-repeat=\"message in vm.chatMessages track by $index\" class=\"message text-{{message.type}}\"><small class=text-muted>{{message.timestamp | date:\'HH:mm:ss\'}}</small> <strong ng-show=message.from>{{message.from}}:</strong> {{message.message}}</div></div><div class=\"new-message input-group\"><span class=input-group-btn><button class=\"btn btn-primary\" ng-click=\"vm.sendClientEvent(\'chatMode\', \'guess\')\" type=button><i title=\"Guess the word mode\" class=\"fa fa-exclamation-circle\"></i></button> <button class=\"btn btn-default\" ng-click=\"vm.sendClientEvent(\'chatMode\', \'chat\')\" type=button><i title=\"Chat mode\" class=\"fa fa-comment\"></i></button></span> <input class=form-control type=text ng-model=vm.newMessage ng-keyup=vm.onKeyUp($event)><span class=input-group-btn><button class=\"btn btn-primary\" ng-click=vm.addMessage() type=button>Send</button></span></div></div><div class=\"col-xs-3 players\"><table class=table><tr ng-repeat=\"player in vm.state.players\"><td data-player-id={{player.id}} ng-class=\"{ \'ready\' : player.ready }\"><i ng-show=player.ready class=\"fa fa-check\"></i> {{player.name}}</td><td>{{player.score}}</td></tr></table></div></div><div class=row><div class=col-xs-12><hr><button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'nonExistingEvent\', \'with some value...\')\">Unknown handler</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'resetGame\')\">Reset game</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateState\')\">Update State</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\')\">Update Settings</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'testCode\')\">Test code</button><div><div><strong>vm.player:</strong></div>{{vm.player}}</div><div><div><strong>vm.state.players:</strong></div>{{vm.state.players}}</div><div><div><strong>vm.state:</strong></div>{{vm.state}}</div></div></div></div>");}]);
+$templateCache.put("app/blocks/alert/alert.html","");
+$templateCache.put("app/components/wesketch/wesketch.html","<div class=wesketch><div class=\"row row-canvas\"><div class=col-xs-9><canvas width=480 height=480 id=canvas></canvas></div><div class=\"col-xs-3 functions-row\"><div class=\"function-group function-group-tools\"><div class=title>Tools</div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'clear\')\"><i class=\"fa fa-times\"></i></div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'changeTool\', \'brush\')\"><i class=\"fa fa-paint-brush\"></i></div></div><div class=\"function-group function-group-tool-sizes\"><div class=title>Sizes</div><div class=wesketch-button><i class=\"fa fa-minus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth - 2 })\"></i></div><div class=wesketch-button><i class=\"fa fa-plus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth + 2 })\"></i></div><strong>Size: {{vm.drawSettings.lineWidth}}</strong></div><div class=\"function-group function-group-palette\"><div class=title>Palette</div><div ng-repeat=\"color in vm.drawSettings.colors\" style=\"background-color: {{color}}\" ng-class=\"color === vm.drawSettings.strokeStyle ? \'current\' : \'\'\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { strokeStyle: color })\" class=wesketch-button></div></div><div class=\"function-group function-group-timer\"><div class=title>Timer</div><div class=timer>{{vm.state.timer.remaining}}</div><small>Seconds remaining</small><div class=checkbox ng-show=\"vm.state.phase === vm.state.phaseTypes.preGame\"><label><input type=checkbox ng-checked=vm.player.ready ng-click=\"vm.sendClientEvent(\'togglePlayerReady\')\"> I am ready</label></div></div><div ng-show=\"vm.player.id === vm.state.drawingPlayer.id\" class=\"function-group function-group-drawing-player\"><div class=title>Current word</div><div class=\"text-uppercase current-word\">{{vm.state.currentWord}}</div><button class=\"btn btn-sm btn-danger\" ng-click=\"vm.sendClientEvent(\'giveUp\')\">Give up</button></div></div></div><div class=\"row row-info\">Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}</div><div class=\"row row-chat\"><div class=col-xs-9><div id=messages class=messages ws-scroll-down=vm.chatMessages><div ng-repeat=\"message in vm.chatMessages track by $index\" class=\"message text-{{message.type}}\"><small class=text-muted>{{message.timestamp | date:\'HH:mm:ss\'}}</small> <strong ng-show=message.from>{{message.from}}:</strong> {{message.message}}</div></div><div class=\"new-message input-group\"><span class=input-group-btn><button class=btn ng-class=\"{ \'btn-primary\' : vm.inputGuessMode }\" ng-click=vm.setInputGuessMode(true) type=button><i title=\"Guess mode\" class=\"fa fa-exclamation-circle\"></i></button> <button class=btn ng-class=\"{ \'btn-primary\' : !vm.inputGuessMode }\" ng-click=vm.setInputGuessMode(false) type=button><i title=\"Chat mode\" class=\"fa fa-comment\"></i></button></span> <input class=form-control type=text ng-model=vm.newMessage ng-keyup=vm.onInputKey($event)> <span class=input-group-btn><button class=\"btn btn-primary\" ng-click=vm.addMessage() type=button>Send</button></span></div></div><div class=\"col-xs-3 players\"><table class=table><tr ng-repeat=\"player in vm.state.players\"><td data-player-id={{player.id}} ng-class=\"{ \'ready\' : player.ready }\"><i ng-show=player.ready class=\"fa fa-check\"></i> {{player.name}}</td><td>{{player.score}}</td></tr></table></div></div><div class=row ng-show=\"vm.player.name === \'Cato Skogholt\'\"><div class=col-xs-12><hr><button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'nonExistingEvent\', \'with some value...\')\">Unknown handler</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'resetGame\')\">Reset game</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateState\')\">Update State</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\')\">Update Settings</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'testCode\')\">Test code</button><div><div><strong>vm.player:</strong></div>{{vm.player}}</div><div><div><strong>vm.state.players:</strong></div>{{vm.state.players}}</div><div><div><strong>vm.state:</strong></div>{{vm.state}}</div></div></div></div>");}]);

@@ -34,13 +34,12 @@ var server = module.exports = {
         currentWord: '',
 
         timer: {
-            remaining: 60,
+            remaining: 90,
             stop: false,
             stopAndReset: false
         }
     }
 };
-
 
 server.init = function (weesketch, next) {
     server.weesketch = weesketch;
@@ -76,6 +75,13 @@ server.onClientEvent = function (client, clientEvent) {
         };
 
         clientEvents.updateDrawSettings = function (clientEvent) {
+            // Only drawing player can change drawSettings
+            if (server.state.drawingPlayer.id === clientEvent.player.id) {
+                server.sendServerEvent(clientEvent.type, clientEvent.value);
+            }
+        };
+
+        clientEvents.clear = function (clientEvent) {
             // Only drawing player can change drawSettings
             if (server.state.drawingPlayer.id === clientEvent.player.id) {
                 server.sendServerEvent(clientEvent.type, clientEvent.value);
@@ -186,12 +192,7 @@ server.onClientEvent = function (client, clientEvent) {
         };
 
         clientEvents.testCode = function (clientEvent) {
-            var endGamePlz = _.some(server.state.players, function (player) {
-                return player.drawCount < 3;
-            });
-
-            console.log('endGamePlz: ' + endGamePlz);
-
+            server.sendServerMessage('important', 'Just testing!');
         };
 
         clientEvents.default = function (clientEvent) {
@@ -217,7 +218,7 @@ server.onClientDisconnected = function (clientId) {
 
     if (server.state.players.length <= 0) {
         console.log('All clients left, reset the game');
-        server.resetGame('All clients left, reset the game');
+        server.resetGame();
         return;
     }
 
@@ -232,7 +233,7 @@ server.resetGame = function () {
     server.state.drawingPlayer = {};
     server.state.round = 0;
 
-    server.state.timer.remaining = 60;
+    server.state.timer.remaining = 90;
     server.state.timer.stop = true;
     server.state.timer.stopAndReset = true;
 
@@ -281,14 +282,14 @@ server.startRound = function () {
 
     // Send message to players
     var msg = 'Starting round #' + server.state.round +
-        ', ' + server.state.drawingPlayer.email + ' is drawing';
-    server.sendServerMessage('info', msg);
+        ', ' + server.state.drawingPlayer.name + ' is drawing';
+    server.sendServerMessage('important', msg);
 
     // Update clients with altered state
     server.sendServerEvent('updateState', server.state);
 
     // Start timer
-    server.startTimer(60, server.endRound);
+    server.startTimer(90, server.endRound);
 };
 
 /**
@@ -361,8 +362,8 @@ server.endRound = function () {
         player.isDrawing = false;
     });
 
-    server.startTimer(20, server.startRound);
-    server.sendServerMessage('info', 'Next round starts in 20 seconds...');
+    server.startTimer(10, server.startRound);
+    server.sendServerMessage('important', 'Next round starts in 10 seconds...');
 
     // Clear the drawing area
     server.sendServerEvent('clear');
@@ -384,7 +385,7 @@ server.endGame = function () {
     server.state.phase = server.state.phaseTypes.endGame;
 
     server.startTimer(30, server.resetGame);
-    server.sendServerMessage('info', 'Game ends in 30 seconds...');
+    server.sendServerMessage('important', 'Game ends in 30 seconds...');
 
 };
 
@@ -408,7 +409,7 @@ server.sendServerEvent = function (type, value) {
         value: value
     });
 
-    if (type === 'brush') {
+    if (type === 'brush' || type === 'updateTimer') {
         return;
     }
 

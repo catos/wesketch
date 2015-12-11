@@ -67,7 +67,7 @@
         vm.setInputGuessMode = setInputGuessMode;
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
-        vm.onKeyUp = onKeyUp;
+        vm.onInputKey = onInputKey;
 
         init();
 
@@ -142,7 +142,7 @@
             console.log('onResize: ', event);
         }
 
-        function onKeyUp(event) {
+        function onInputKey(event) {
 
             switch (event.keyCode) {
                 // Enter key
@@ -155,31 +155,31 @@
                     vm.newMessage = vm.myMessages[vm.myMessages.length - 1];
                     break;
                 }
-                
-                // Toggle guess mode
+
+                // | - Toggle guess mode
                 case 220: {
+                    console.log(vm.newMessage);
+                    vm.newMessage = vm.newMessage.replace('|', '');
                     setInputGuessMode(!vm.inputGuessMode);
-                    vm.newMessage = vm.newMessage.substr(0, vm.newMessage.length - 1);
-                    break; 
+                    // vm.newMessage = vm.newMessage.substr(0, vm.newMessage.length - 1);
+                    break;
                 }
             }
-            
-            if (!vm.inputGuessMode && vm.newMessage.substr(0, 1) !== '!') {
+
+            if (vm.inputGuessMode && vm.newMessage.substr(0, 1) !== '!') {
                 vm.newMessage = '!' + vm.newMessage;
-            } else {
-                
             }
         }
 
         function setInputGuessMode(value) {
             vm.inputGuessMode = value;
-            
+
             var firstChar = vm.newMessage.substr(0, 1);
-            if (vm.inputGuessMode && firstChar === '!') {
+            if (!vm.inputGuessMode && firstChar === '!') {
                 vm.newMessage = vm.newMessage.substr(1, vm.newMessage.length);
             }
-            
-            if (!vm.inputGuessMode && firstChar !== '!') {
+
+            if (vm.inputGuessMode && firstChar !== '!') {
                 vm.newMessage = '!' + vm.newMessage;
             }
         }
@@ -195,17 +195,17 @@
                 return;
             }
 
-            var eventType = 'guessWord';
+            var eventType = 'addMessage';
             var eventValue = {
                 timestamp: new Date(),
-                type: 'guess-word',
+                type: 'chat',
                 from: vm.player.name,
                 message: vm.newMessage
             };
 
             if (vm.newMessage.charAt(0) === '!') {
-                eventType = 'addMessage';
-                eventValue.type = 'chat';
+                eventType = 'guessWord';
+                eventValue.type = 'guess-word';
                 eventValue.message = vm.newMessage.substr(1);
             }
 
@@ -279,6 +279,11 @@
 
             serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
+
+                var message = serverEvent.value;
+                if (message.type === 'important') {
+                    alert.show('info', '', serverEvent.value.message);
+                }
             };
 
             serverEvents.serverError = function (serverEvent) {

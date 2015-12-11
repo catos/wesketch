@@ -1,4 +1,6 @@
 .wesketch {
+    margin-top: -15px;
+
     * {
         user-select: none;
     }
@@ -89,20 +91,28 @@
         }
     }
 
-    .info-bar {
+    .row-canvas {
+        padding-bottom: 5px;
+    }
+    
+    .row-info {
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
         background: #f1f1f1;
         padding: 8px 15px;
     }
 
-    .chat {
+    .row-chat {
         .messages {
-            height: 200px;
+            height: 150px;
             overflow-y: scroll;
 
             .text-guess-word {
                 font-weight: bold;
+            }
+
+            .text-important {
+                color: #3c763d;
             }
         }
     }
