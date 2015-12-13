@@ -3,6 +3,7 @@
 ## weSketch
 
 ### Client
+- First man to guess
 - Easier words
 - Fix domain
 - Fix give hint
@@ -12,6 +13,23 @@
 - Eraser tool
 - Fill tool
 - Request pause
+- Player are drawing x times in a row...
+- Next round starts in X seconds: show who the next drawing player is
+- Sounds....especially when someone wins
+- Time reduces when someone guess the right word
+- Sound on timer near the end
+- Reset currentDrawingPlayer when end game
+- Show scores in the middle, toggle OK
+- Make scores more interesting
+- Word does not show when game ends
+- Lenke på ord til søk på google
+- Shortcuts på tools
+- Theme, mørkere bakgrunn
+- Scroll wheel -> brush size
+- Marker på hvem som har gjetta ordet
+- Order by points på player-lista
+- LOL => LOL selv om det sammenlignes med lowercase
+- Brown is missing
 
 ### Server
 - Minify js & css
