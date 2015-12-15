@@ -1,3 +1,4 @@
+/* global Howl */
 (function () {
     'use strict';
 
@@ -21,6 +22,7 @@
             '#008000', '#800080', '#008080',
             '#000080'
         ];
+        var sfx = {};
 
         /**
          * Viewmodel variables
@@ -64,6 +66,7 @@
 
         // TODO: remove later...
         vm.messagesElement = {};
+        vm.testButton = testButton;
 
         /**
          * Viewmodel functions
@@ -72,6 +75,11 @@
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
         vm.onInputKey = onInputKey;
+        
+        // TODO: lag en generell toggle-functino ?
+        // TODO: og så trenger jeg booleans til view etterpå
+        vm.muteSfx = muteSfx;
+        vm.muteMusic = muteMusic;
 
         /**
          * Developer
@@ -89,21 +97,6 @@
             vm.canvas = document.getElementById('canvas');
             vm.messagesElement = document.getElementById('messages');
             if (vm.canvas !== undefined) {
-
-                // TODO: resize canvas
-                // vm.canvas.onresize = onResize;
-                // var w = angular.element($window);
-                // w.bind('resize', function () {
-                //     console.log('resize!');
-
-                //     var rowElement = document.getElementById('canvas-height');
-                //     console.log('rowElement.clientHeight: ' + rowElement.offsetHeight);
-                //     vm.canvas.style.width = '100%';
-                //     vm.canvas.style.height = rowElement.offsetHeight + 'px';
-                //     vm.canvas.width = vm.canvas.offsetWidth;
-                //     vm.canvas.height = vm.canvas.offsetHeight;
-                // });
-
                 vm.canvas.onmousedown = onMouseDown;
                 vm.canvas.onmouseup = onMouseUp;
                 vm.canvas.onmousemove = onMouseMove;
@@ -118,6 +111,31 @@
             vm.sendClientEvent('addPlayer', vm.player);
 
             vm.isAdmin = tokenIdentity.isAdmin();
+
+            prepareSounds(function () {
+                console.log('Finished preparing sounds.');
+            });
+        }
+
+        function prepareSounds(next) {
+
+            sfx.playerJoined = addSfx('SUCCESS TUNE Happy Sticks Short 01.wav');
+            sfx.playerReady = addSfx('TECH INTERFACE Computer Beeps 08.wav');
+            sfx.playerNotReady = addSfx('TECH INTERFACE Computer Terminal Beeps Negative 01.wav');
+            sfx.playerRightAnswer = addSfx('SUCCESS PICKUP Collect Beep 02.wav');
+            sfx.endRoundNoCorrect = addSfx('SUCCESS TUNE Win Ending 09.wav');
+            sfx.endGame = addSfx('SUCCESS TUNE Win Complete 07.wav');
+
+            next();
+
+            function addSfx(path) {
+                var defaults = {
+                    buffer: true,
+                    urls: [''],
+                    volume: 0.1
+                };
+                return new Howl(angular.extend({}, defaults, { urls: ['/sfx/' + path] }));
+            }
         }
 
         /**
@@ -242,6 +260,12 @@
             }
         }
 
+        // TODO: remove...maybe
+        function testButton() {
+            // sfx.playerJoined.play();
+            sfx.playerRightAnswer.play();
+        }
+
         /**
          * Server events
          */
@@ -250,8 +274,9 @@
             var serverEvents = serverEvents || {};
 
             serverEvents.updateState = function (serverEvent) {
+                
                 angular.extend(vm.state, serverEvent.value);
-
+                
                 var updatedPlayer;
                 for (var i = 0; i < vm.state.players.length; i++) {
                     if (vm.state.players[i].email === vm.player.email) {
@@ -287,6 +312,10 @@
 
             serverEvents.clear = function (serverEvent) {
                 vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+            };
+
+            serverEvents.sfx = function (serverEvent) {
+                sfx[serverEvent.value].play();
             };
 
             serverEvents.addMessage = function (serverEvent) {

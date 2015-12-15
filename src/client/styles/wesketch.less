@@ -40,6 +40,7 @@
 
         .timer-remaining {
             font-size: 3.4em;
+            text-shadow: 2px 2px 0px #cccccc;
         }
     }
 
@@ -50,6 +51,16 @@
 
         ul {
             margin: 0;
+        }
+        
+        .sfx,
+        .music {
+            cursor: pointer;    
+        }
+        
+        .sfx-muted,
+        .music-muted {
+            color: #999;
         }
     }
 
@@ -79,13 +90,13 @@
             height: 100%;
             position: relative;
             background-color: #ffffff;
-            padding-left: 150px;
+            padding-left: 175px;
             border-right: 2px solid #1a242f;
 
 
             .players {
                 padding: 5px 10px;
-                width: 150px;
+                width: 175px;
                 height: 100%;
                 position: absolute;
                 left: 0;
@@ -146,10 +157,11 @@
                 height: 100%;
 
                 > div {
-                    background: #fff;
+                    background: #9CB8D3;
                     margin-bottom: 15px;
-                    border: 1px solid #1a242f;
+                    border: 2px solid #1a242f;
                     padding: 10px;
+                    border-radius: 5px;
                 }
 
                 .tools {
@@ -164,7 +176,6 @@
 
     .debug-row {
         margin-top: 10px;
-        background-color: #fee;
         padding: 10px 0;
     }
 }

@@ -1,37 +1,38 @@
 {
-    "name": "CSA",
-    "version": "0.0.0",
-    "homepage": "https://github.com/catos/CSA",
-    "main": "server.js",
-    "authors": [
-        "Cato Skogholt"
-    ],
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "angular": "~1.4.7",
-        "angular-bootstrap": "~0.13.3",
-        "angular-ui-router": "~0.2.15",
-        "bootstrap": "~3.3.5",
-        "fontawesome": "~4.3.0",
-        "satellizer": "~0.13.0",
-        "animate.css": "~3.4.0",
-        "angular-resource": "~1.4.7",
-        "socket.io-client": "~1.3.7"
+  "name": "CSA",
+  "version": "0.0.0",
+  "homepage": "https://github.com/catos/CSA",
+  "main": "server.js",
+  "authors": [
+    "Cato Skogholt"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-bootstrap": "~0.13.3",
+    "angular-ui-router": "~0.2.15",
+    "bootstrap": "~3.3.5",
+    "fontawesome": "~4.3.0",
+    "satellizer": "~0.13.0",
+    "animate.css": "~3.4.0",
+    "angular-resource": "~1.4.7",
+    "socket.io-client": "~1.3.7",
+    "howler.js": "~1.1.28"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": "dist/css/bootstrap.css",
+      "dist": "dist/js/bootstrap.js"
     },
-    "overrides": {
-        "bootstrap": {
-            "main": "dist/css/bootstrap.css",
-            "dist": "dist/js/bootstrap.js"
-        },
-        "socket.io-client": {
-            "main": "socket.io.js"
-        }
+    "socket.io-client": {
+      "main": "socket.io.js"
     }
+  }
 }

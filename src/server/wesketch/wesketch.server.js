@@ -102,6 +102,7 @@ server.onClientEvent = function (client, clientEvent) {
                 server.sendServerMessage('info', player.name + ' joined the game...');
             }
 
+            server.sendServerEvent('sfx', 'playerJoined');
             server.sendServerEvent('updateState', server.state);
         };
 
@@ -119,6 +120,12 @@ server.onClientEvent = function (client, clientEvent) {
                 server.startRound();
             }
 
+            if (player.ready) {
+                server.sendServerEvent('sfx', 'playerReady');
+            } else {
+                server.sendServerEvent('sfx', 'playerNotReady');
+            }
+            
             server.sendServerEvent('updateState', server.state);
         };
 
@@ -157,6 +164,7 @@ server.onClientEvent = function (client, clientEvent) {
             var guess = clientEvent.value.message.toLowerCase();
 
             if (currentWord === guess) {
+                server.sendServerEvent('sfx', 'playerRightAnswer');
                 server.sendServerMessage('guess-word', clientEvent.player.name + ' guessed the correct word!');
                 var player = _.find(server.state.players, { id: clientEvent.player.id });
                 player.guessedWordAt = server.state.timer.remaining;

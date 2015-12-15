@@ -1,8 +1,14 @@
 <div id="wesketch" class="wesketch">
 
+    <!--<audio src="/sfx/SUCCESS TUNE Happy Sticks Short 01.wav" preload="auto">
+        Your browser does not support the <code>audio</code> element.
+    </audio>-->
+
     <div class="top-row row">
         <div class="col-xs-12">
             <ul class="list-inline pull-left">
+                <li><i class="fa fa-volume-up sfx sfx-muted"></i></li>
+                <li><i class="fa fa-music music music-muted"></i></li>
                 <li><span class="info-label">Phase</span> {{vm.state.phase}}</li>
                 <li>Round: {{vm.state.round}}</li>
             </ul>
@@ -30,10 +36,10 @@
                 </div>
                 <ul class="list-unstyled">
                     <li ng-repeat="player in vm.state.players">
-                        <a href="#" data-player-id="{{player.id}}" ng-class="{ 'ready' : player.ready }">
+                        <a data-player-id="{{player.id}}" ng-class="{ 'ready' : player.ready }">
                             <i ng-show="player.ready" class="fa fa-check"></i> {{player.name}}
                         </a>
-                        <span class="badge">{{player.score}}</span>
+                        <span class="player-score">- {{player.score}}</span>
                     </li>
                 </ul>
             </div>
@@ -86,7 +92,7 @@
             </div>
         </div>
         <div class="col-xs-6">
-            <div class="drawing-player-panel">
+            <div ng-show="vm.state.drawingPlayer.id === vm.player.id" class="drawing-player-panel">
                 <div class="current-word">
                     <label for="word">Draw the word: </label>
                     <div class="word">{{vm.state.currentWord}}</div>
@@ -104,7 +110,7 @@
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">Update State</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateDrawSettings')">Update Settings</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('testCode')">Test code</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.testButton()">Test code</button>
 
 
             <div>

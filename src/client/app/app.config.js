@@ -5,11 +5,11 @@
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
 
-        ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-        SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+        // ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+        // SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
 
-        // ApiUrl: 'http://localhost:7203/',
-        // SocketUrl: 'http://localhost:7203/'
+        ApiUrl: 'http://localhost:7203/',
+        SocketUrl: 'http://localhost:7203/'
     };
 
     angular
