@@ -76,6 +76,7 @@
         vm.addMessage = addMessage;
         vm.onInputKey = onInputKey;
         
+        // TODO: update gulp to copy audio to build-folder
         // TODO: lag en generell toggle-functino ?
         // TODO: og så trenger jeg booleans til view etterpå
         vm.muteSfx = muteSfx;
