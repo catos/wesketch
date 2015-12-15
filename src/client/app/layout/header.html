@@ -28,30 +28,30 @@
 			<li ng-hide="vm.tokenIdentity.isAuthenticated()" ui-sref-active="active">
 				<a ui-sref="layout.account.login">Login</a>
 			</li>
+			<li>
+				<a href="#" ng-click="vm.fullscreen($event)"><i class="fa fa-square-o"></i></a>
+			</li>
 
 			<li ng-show="vm.tokenIdentity.isAdmin()" dropdown>
 				<a href="#" dropdown-toggle><i class="fa fa-cog"></i> <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-					<!--<li ui-sref-active="active"><a ui-sref="layout.batteries.list">Batteries</a></li>-->
-					<!--<li ui-sref-active="active"><a ui-sref="layout.chat">Chat</a></li>-->
+					<li ui-sref-active="active"><a ui-sref="layout.batteries.list"><i class="fa fa-battery-half"></i> Batteries</a></li>
+					<li ui-sref-active="active"><a ui-sref="layout.chat"><i class="fa fa-comment"></i> Chat</a></li>
 					<li ui-sref-active="active"><a ui-sref="layout.users.list"><i class="fa fa-users"></i> Users</a></li>
-					<li class="divider"></li>
 					<li><a href="/server">Server</a></li>
 					<li class="divider"></li>
-					<li><a href="https://mongolab.com/"><i class="fa fa-database"></i> Mongolab.com</a></li>
-					<li><a href="http://getbootstrap.com/css/">Bootstrap</a></li>
-					<li><a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
-					<li><a href="https://github.com/johnpapa/angular-styleguide"><i class="fa fa-github"></i> <strong>Angular Styleguide</strong></a></li>
-					<li><a href="https://github.com/catos/Multivision"><i class="fa fa-github"></i> Multivision</a></li>
-					<li class="divider"></li>
+					<li><a href="http://getbootstrap.com/css/"><i class="fa fa-css3"></i> Bootstrap</a></li>
+					<li><a href="http://fortawesome.github.io/Font-Awesome/icons/"><i class="fa fa-font"></i> Font Awesome</a></li>
 					<li><a href="http://www.angularjs.org"><i class="fa fa-html5"></i> Angularjs</a></li>
-					<li><a href="http://mongoosejs.com/docs/guide.html">MongooseJs</a></li>
-					<li><a href="https://angular-ui.github.io/">Angular UI</a></li>
-					<li><a href="http://momentjs.com/">Moment.js</a></li>
+					<li><a href="https://angular-ui.github.io/"><i class="fa fa-html5"></i> Angular UI</a></li>
+					<li class="divider"></li>
+					<li><a href="https://github.com/johnpapa/angular-styleguide"><i class="fa fa-github"></i> <strong>Angular Styleguide</strong></a></li>
+					<li><a href="https://dashboard.heroku.com/apps">Heroku Dashboard</a></li>
+					<li><a href="https://blooming-eyrie-6843.herokuapp.com/">blooming-eyrie-6843.herokuapp.com</a></li>
+					<li><a href="https://devcenter.heroku.com/articles/troubleshooting-node-deploys">Troubleshooting Node.js Deploys</a></li>
+					<li><a href="https://mongolab.com/"><i class="fa fa-database"></i> Mongolab.com</a></li>
 					<li class="divider"></li>
 					<li><a href="http://webapplayers.com/inspinia_admin-v2.3/">Inspiration</a></li>
-					<li class="divider"></li>
-					<li><a href="https://devcenter.heroku.com/articles/troubleshooting-node-deploys">Troubleshooting Node.js Deploys</a></li>
 				</ul>
 			</li>
 		</ul>

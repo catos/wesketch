@@ -1,6 +1,10 @@
 .wesketch {
-    margin-top: -15px;
     height: 500px;
+
+    .main-row {
+        height: 100%;
+    }
+
     * {
         user-select: none;
     }
@@ -19,105 +23,148 @@
             border-style: dashed;
         }
     }
-    .players {
-        height: 100%;
-        position: relative;
-        background-color: #a1a1a1;
-        table {
-            margin-bottom: 0;
-        }
-        .ready {
-            color: forestgreen;
-        }
-    }
-    .chat {
-        padding: 0;
-        height: 100%;
-        position: relative;
-        background-color: #c1c1c1;
-        padding-bottom: 50px;
-        .messages {
-            height: 100%;
-            overflow-y: scroll;
-            .text-guess-word {
-                font-weight: bold;
-            }
-            .text-important {
-                color: #3c763d;
-            }
-        }
-        .new-message {
-            height: 50px;
-        }
-    }
-    .canvas {
-        height: 100%;
-        position: relative;
-        background-color: #f1f1f1;
-        padding-bottom: 50px;
-        canvas {
-            background-color: #e1e1e1;
 
-            // border: 2px solid #ccc;
-            display: block;
-            cursor: crosshair;
-            &:active {
-                cursor: crosshair;
-            }
-        }
-        .tools {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: 100px;
-        }
-        .brush-sizes {
-            position: absolute;
-            top: 110px;
-            right: 10px;
-            width: 100px;
-            height: 100px;
-        }
-        .palette {
-            position: absolute;
-            top: 210px;
-            right: 10px;
-            width: 100px;
-            height: 100px;
-        }
-        .drawing-player-tools {
-            background-color: #cae;
-            // position: absolute;
-            // bottom: 0px;
-            // left: 0px;
-            // right: 10px;
-            // width: 100%;
-            // height: 50px;
-            > * {
-                float: left;
-            }
-        }
-    }
-    .info-bar {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 200px;
-        margin-left: -100px;
-        background-color: #f1f1f1;
-        border: 1px solid #333;
-        z-index: 1;
-    }
     .timer {
         position: absolute;
-        top: 100px;
+        top: -15px;
         left: 50%;
         width: 100px;
         height: 100px;
         margin-left: -50px;
-        background-color: #0000f1;
-        border: 1px solid #333;
+        background-color: #fff;
+        border: 2px solid #1a242f;
         z-index: 1;
+        border-radius: 50px;
+        text-align: center;
+        padding: 10px;
+
+        .timer-remaining {
+            font-size: 3.4em;
+        }
+    }
+
+    .top-row {
+        padding: 10px 0;
+        background: #f1f1f1;
+        border-bottom: 2px solid #1a242f;
+
+        ul {
+            margin: 0;
+        }
+    }
+
+    .bottom-row {
+        background-color: #9CB8D3;
+        padding: 10px 0;
+        border-top: 2px solid #1a242f;
+
+        .drawing-player-panel {
+
+            * {
+                display: inline-block;
+            }
+
+            .word {
+                font-weight: 700;
+                letter-spacing: 2px;
+                margin-right: 10px;
+                font-size: 2.0em;
+            }
+        }
+    }
+
+    .main-row {
+        .chat {
+            padding: 0;
+            height: 100%;
+            position: relative;
+            background-color: #ffffff;
+            padding-left: 150px;
+            border-right: 2px solid #1a242f;
+
+
+            .players {
+                padding: 5px 10px;
+                width: 150px;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background-color: #f1f1f1;
+                border-right: 2px solid #ccc;
+
+                ul {
+                    li {
+                        a {
+                            color: #333;
+                            padding: 2px 0;
+                            display: inline-block;
+
+                            .ready {
+                                color: forestgreen;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .messages {
+                padding: 5px 10px;
+                height: 100%;
+                overflow-y: scroll;
+                .text-guess-word {
+                    font-weight: bold;
+                }
+                .text-important {
+                    color: #3c763d;
+                }
+            }
+
+        }
+        .canvas {
+            height: 100%;
+            position: relative;
+            background-color: #f1f1f1;
+            padding: 0;
+
+            canvas {
+                background-color: #fff;
+
+                // border: 2px solid #ccc;
+                display: block;
+                cursor: crosshair;
+                &:active {
+                    cursor: crosshair;
+                }
+            }
+
+            .drawing-tools {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 105px;
+                height: 100%;
+
+                > div {
+                    background: #fff;
+                    margin-bottom: 15px;
+                    border: 1px solid #1a242f;
+                    padding: 10px;
+                }
+
+                .tools {
+                }
+                .brush-sizes {
+                }
+                .palette {
+                }
+            }
+        }
+    }
+
+    .debug-row {
+        margin-top: 10px;
+        background-color: #fee;
+        padding: 10px 0;
     }
 }

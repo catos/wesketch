@@ -1,46 +1,77 @@
-<div class="wesketch row">
+<div id="wesketch" class="wesketch">
 
-    <div class="info-bar">
-        Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}
+    <div class="top-row row">
+        <div class="col-xs-12">
+            <ul class="list-inline pull-left">
+                <li><span class="info-label">Phase</span> {{vm.state.phase}}</li>
+                <li>Round: {{vm.state.round}}</li>
+            </ul>
 
-        <div class="hint">
-            <div class="title">Hint</div>
-            <div class="timer">{{vm.state.hint}}</div>
-        </div>
-
-    </div>
-
-    <div class="timer">
-        <div class="title">Timer</div>
-        <div class="remaining">{{vm.state.timer.remaining}}</div>
-        <small>Seconds remaining</small>
-
-        <div class="checkbox" ng-show="vm.state.phase === vm.state.phaseTypes.preGame">
-            <label>
-                <input type="checkbox" ng-checked="vm.player.ready" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
-            </label>
+            <ul class="list-inline pull-right">
+                <li>Drawing: {{vm.state.drawingPlayer.name}}</li>
+                <li>Next: Another Player</li>
+                <li>Hint: {{vm.state.hint}}</li>
+            </ul>
         </div>
     </div>
 
-    <div class="col-xs-2 players">
-        <table class="table">
-            <tr ng-repeat="player in vm.state.players">
-                <td data-player-id="{{player.id}}" ng-class="{ 'ready' : player.ready }">
-                    <i ng-show="player.ready" class="fa fa-check"></i> {{player.name}}
-                </td>
-                <td>{{player.score}}</td>
-            </tr>
-        </table>
-    </div>
+    <div class="main-row row">
 
-    <div class="col-xs-4 chat">
+        <div class="timer">
+            <div class="timer-remaining">{{vm.state.timer.remaining}}</div>
+        </div>
+
+        <div class="col-xs-6 chat">
+            <div class="players">
+                <div class="checkbox" ng-show="vm.state.phase === vm.state.phaseTypes.preGame">
+                    <label>
+                        <input type="checkbox" ng-checked="vm.player.ready" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
+                    </label>
+                </div>
+                <ul class="list-unstyled">
+                    <li ng-repeat="player in vm.state.players">
+                        <a href="#" data-player-id="{{player.id}}" ng-class="{ 'ready' : player.ready }">
+                            <i ng-show="player.ready" class="fa fa-check"></i> {{player.name}}
+                        </a>
+                        <span class="badge">{{player.score}}</span>
+                    </li>
+                </ul>
+            </div>
             <div id="messages" class="messages" ws-scroll-down="vm.chatMessages">
                 <div ng-repeat="message in vm.chatMessages track by $index" class="message text-{{message.type}}">
                     <small class="text-muted">{{message.timestamp | date:'HH:mm:ss'}}</small>
                     <strong ng-show="message.from">{{message.from}}: </strong> {{message.message}}
                 </div>
             </div>
+        </div>
 
+        <div class="col-xs-6 canvas">
+            <canvas width="500" height="500" id="canvas">
+            </canvas>
+
+            <div class="drawing-tools">
+                <div class="tools">
+                    <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div>
+                    <div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
+                </div>
+
+                <div class="brush-sizes">
+                    <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth - 2 })"></i></div>
+                    <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth + 2 })"></i></div>
+                    <div>Size: {{vm.drawSettings.lineWidth}}</div>
+                </div>
+
+                <div class="palette">
+                    <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''"
+                    ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-row row">
+        <div class="col-xs-6">
             <div class="new-message input-group">
                 <span class="input-group-btn">
                     <button class="btn" ng-class="{ 'btn-primary' : vm.inputGuessMode }" ng-click="vm.setInputGuessMode(true)" type="button"><i title="Guess mode" class="fa fa-exclamation-circle"></i></button>
@@ -53,69 +84,49 @@
                     <button class="btn btn-primary" ng-click="vm.addMessage()" type="button">Send</button>
                 </span>
             </div>
-    </div>
-
-    <div class="col-xs-6 canvas">
-        <canvas width="450" height="450" id="canvas">
-        </canvas>
-
-        <div class="tools">
-            <div class="title">Tools</div>
-            <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div>
-            <div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
         </div>
+        <div class="col-xs-6">
+            <div class="drawing-player-panel">
+                <div class="current-word">
+                    <label for="word">Draw the word: </label>
+                    <div class="word">{{vm.state.currentWord}}</div>
+                </div>
 
-        <div class="brush-sizes">
-            <div class="title">Sizes</div>
-            <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth - 2 })"></i></div>
-            <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth + 2 })"></i></div>
-            <strong>Size: {{vm.drawSettings.lineWidth}}</strong>
-        </div>
-
-        <div class="palette">
-            <div class="title">Palette</div>
-            <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''" ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button">
+                <button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>
+                <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
             </div>
         </div>
-
-        <div class="drawing-player-tools">
-            <div class="title">Current word</div>
-            <div class="text-uppercase current-word">{{vm.state.currentWord}}</div>
-            <!--<button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>-->
-            <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
-        </div>
-
     </div>
 
-</div>
-
-<hr>
-
-<div class="debug" ng-show="vm.iDeveloper">
-    <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
-    <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
-    <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">Update State</button>
-    <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateDrawSettings')">Update Settings</button>
-    <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('testCode')">Test code</button>
+    <div class="debug-row row" ng-show="vm.isAdmin">
+        <div class="col-xs-12">
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">Update State</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateDrawSettings')">Update Settings</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('testCode')">Test code</button>
 
 
-    <div>
-        <div>
-            <strong>vm.player:</strong>
+            <div>
+                <div>
+                    <strong>vm.player:</strong>
+                </div>
+                {{vm.player}}
+            </div>
+
+            <div>
+                <div>
+                    <strong>vm.state.players:</strong>
+                </div>
+                {{vm.state.players}}
+            </div>
+            <div>
+                <div>
+                    <strong>vm.state:</strong>
+                </div>
+                {{vm.state}}
+            </div>
         </div>
-        {{vm.player}}
     </div>
 
-    <div>
-        <div>
-            <strong>vm.state.players:</strong>
-        </div>
-        {{vm.state.players}}
-    </div>
-    <div>
-        <div>
-            <strong>vm.state:</strong>
-        </div>
-        {{vm.state}}
-    </div>
 </div>

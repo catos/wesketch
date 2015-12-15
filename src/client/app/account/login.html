@@ -1,12 +1,12 @@
 <form ng-submit="vm.submit()">
-    
-    <!--<div class="form-group">
+
+    <div class="form-group">
         <label for="doesNotExist">Quick logins</label>
-        <button class="btn btn-default" ng-click="vm.quickSignIn('asdf@asdf.com', 'asdf')">Kåre</button>
-        <button class="btn btn-default" ng-click="vm.quickSignIn('kim.robert.blix@gmail.com', 'stortiss')">Kim</button>
-        <button class="btn btn-default" ng-click="vm.quickSignIn('espen.breivik@gmail.com', 'stortiss')">Espen</button>
-    </div>-->
-    
+        <div>
+            <button class="btn btn-default" ng-click="vm.quickSignIn('test@test.com', 'test')">Kåre</button>
+        </div>
+    </div>
+
     <div class="form-group">
         <label for="inputEmail">Email address</label>
         <input type="email" class="form-control" id="inputEmail" placeholder="Email" ng-model="vm.email">
@@ -19,7 +19,7 @@
         <button type="submit" class="btn btn-primary">Login</button>
         <a ui-sref="layout.account.register" class="text-muted pull-right">Register</a>
         <a ui-sref="layout.account.forgotPassword">Forgot password ?</a>
-    </div>  
+    </div>
     <div class="form-group">
         <div class="alert alert-info" ng-show="vm.message.length">{{vm.message}}</div>
     </div>

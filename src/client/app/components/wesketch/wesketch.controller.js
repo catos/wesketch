@@ -13,16 +13,17 @@
          */
         var tools = ['brush', 'eraser', 'fill'];
         var colors = [
-            '#000', '#fff', '#c0c0c0',
-            '#808080', '#f00', '#0f0',
-            '#00f', '#ff0', '#0ff',
-            '#f0f', '#800', '#808000',
+            '#000000', '#696969', '#808080',
+            '#c0c0c0', '#f5f5f5', '#ffffff',
+            '#ff0000', '#00ff00', '#0000ff',    // RGB
+            '#ff0', '#0ff', '#f0f',             // CMYK
+            '#800', '#808000',
             '#008000', '#800080', '#008080',
             '#000080'
         ];
 
         /**
-         * Viewmodel
+         * Viewmodel variables
          */
         var vm = this;
         vm.canvas = null;
@@ -64,10 +65,19 @@
         // TODO: remove later...
         vm.messagesElement = {};
 
+        /**
+         * Viewmodel functions
+         */
         vm.setInputGuessMode = setInputGuessMode;
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
         vm.onInputKey = onInputKey;
+
+        /**
+         * Developer
+         */
+        vm.isAdmin = false;
+
 
         init();
 
@@ -106,6 +116,8 @@
             vm.player.email = tokenIdentity.currentUser.email;
             vm.player.name = tokenIdentity.currentUser.name;
             vm.sendClientEvent('addPlayer', vm.player);
+
+            vm.isAdmin = tokenIdentity.isAdmin();
         }
 
         /**
