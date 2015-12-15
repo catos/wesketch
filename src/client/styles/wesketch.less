@@ -1,79 +1,9 @@
 .wesketch {
     margin-top: -15px;
-
+    height: 500px;
     * {
         user-select: none;
     }
-
-    canvas {
-        border: 2px solid #ccc;
-        display: block;
-        cursor: crosshair;
-        &:active {
-            cursor: crosshair;
-        }
-    }
-
-    .functions-row {
-        background-color: #f1f1f1;
-        padding: 15px;
-    }
-
-    .function-group {
-        position: relative;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        margin-bottom: 20px;
-
-        h1 {
-            margin: 0;
-        }
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-
-        .title {
-            position: absolute;
-            top: -9px;
-            left: 5px;
-            color: #999;
-            padding: 0 5px;
-            background-color: #f1f1f1;
-            text-transform: uppercase;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-    }
-
-    .function-group-drawing-player {
-        text-align: center;
-
-        .btn {
-            margin-bottom: 10px;
-
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-
-        .current-word {
-            padding: 5px 0;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-    }
-
-    .function-group-timer {
-        text-align: center;
-
-        .timer {
-            font-size: 1.5em;
-        }
-    }
-
     .wesketch-button {
         display: inline-block;
         width: 24px;
@@ -84,49 +14,110 @@
         border-radius: 2px;
         background-color: #fefefe;
         cursor: pointer;
-
         &.current {
             border-color: #000;
             border-style: dashed;
         }
     }
-
-    .row-canvas {
-        padding-bottom: 5px;
-    }
-    
-    .row-info {
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-        background: #f1f1f1;
-        padding: 8px 15px;
-    }
-
-    .row-chat {
-        .messages {
-            height: 150px;
-            overflow-y: scroll;
-
-            .text-guess-word {
-                font-weight: bold;
-            }
-
-            .text-important {
-                color: #3c763d;
-            }
-        }
-    }
-
     .players {
-        background: #f1f1f1;
-
+        height: 100%;
+        position: relative;
+        background-color: #a1a1a1;
         table {
             margin-bottom: 0;
         }
-
         .ready {
             color: forestgreen;
         }
     }
+    .chat {
+        padding: 0;
+        height: 100%;
+        position: relative;
+        background-color: #c1c1c1;
+        padding-bottom: 50px;
+        .messages {
+            height: 100%;
+            overflow-y: scroll;
+            .text-guess-word {
+                font-weight: bold;
+            }
+            .text-important {
+                color: #3c763d;
+            }
+        }
+        .new-message {
+            height: 50px;
+        }
+    }
+    .canvas {
+        height: 100%;
+        position: relative;
+        background-color: #f1f1f1;
+        padding-bottom: 50px;
+        canvas {
+            background-color: #e1e1e1;
 
+            // border: 2px solid #ccc;
+            display: block;
+            cursor: crosshair;
+            &:active {
+                cursor: crosshair;
+            }
+        }
+        .tools {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 100px;
+            height: 100px;
+        }
+        .brush-sizes {
+            position: absolute;
+            top: 110px;
+            right: 10px;
+            width: 100px;
+            height: 100px;
+        }
+        .palette {
+            position: absolute;
+            top: 210px;
+            right: 10px;
+            width: 100px;
+            height: 100px;
+        }
+        .drawing-player-tools {
+            background-color: #cae;
+            // position: absolute;
+            // bottom: 0px;
+            // left: 0px;
+            // right: 10px;
+            // width: 100%;
+            // height: 50px;
+            > * {
+                float: left;
+            }
+        }
+    }
+    .info-bar {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 200px;
+        margin-left: -100px;
+        background-color: #f1f1f1;
+        border: 1px solid #333;
+        z-index: 1;
+    }
+    .timer {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        margin-left: -50px;
+        background-color: #0000f1;
+        border: 1px solid #333;
+        z-index: 1;
+    }
 }

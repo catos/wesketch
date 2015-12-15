@@ -6,13 +6,13 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		</a>
+		<a class="navbar-brand" ui-sref="layout.home">CSA</a>
 	</div>
 
 	<div class="navbar-collapse collapse" ng-class="{'in': !navCollapsed}">
 		<ul class="nav navbar-nav">
-			<li>
-				<a href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i> Project homepage</a>
-			</li>
+			<li ui-sref-active="active"><a ui-sref="layout.draw"><i class="fa fa-paint-brush"></i> Draw</a></li>
+			<li><a href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i> Project homepage</a></li>
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
@@ -32,10 +32,11 @@
 			<li ng-show="vm.tokenIdentity.isAdmin()" dropdown>
 				<a href="#" dropdown-toggle><i class="fa fa-cog"></i> <span class="caret"></span></a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-					<li><a href="/server">Server</a></li>
+					<!--<li ui-sref-active="active"><a ui-sref="layout.batteries.list">Batteries</a></li>-->
+					<!--<li ui-sref-active="active"><a ui-sref="layout.chat">Chat</a></li>-->
+					<li ui-sref-active="active"><a ui-sref="layout.users.list"><i class="fa fa-users"></i> Users</a></li>
 					<li class="divider"></li>
-					<li><a href="http://passportjs.org/docs/username-password">Passportjs</a></li>
-					<li><a href="https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs">Authentication in Single Page Applications</a></li>
+					<li><a href="/server">Server</a></li>
 					<li class="divider"></li>
 					<li><a href="https://mongolab.com/"><i class="fa fa-database"></i> Mongolab.com</a></li>
 					<li><a href="http://getbootstrap.com/css/">Bootstrap</a></li>
