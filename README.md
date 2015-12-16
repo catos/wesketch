@@ -3,6 +3,7 @@
 ## weSketch
 
 ### Client
+- Update gulp to copy audio to build-folder
 - First man to guess
 - Easier words
 - Fix domain

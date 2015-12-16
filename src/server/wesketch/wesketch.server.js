@@ -60,15 +60,14 @@ server.init = function (weesketch, next) {
  * type:    string              type of event
  * value:   string | object     results may vary
  */
-server.onClientEvent = function (client, clientEvent) {
+server.onClientEvent = function (clientEvent) {
     server.validateClientEvent(clientEvent, function (err, clientEvent) {
-
         if (err) {
             server.sendServerEvent('serverError', err.message);
             return;
         }
 
-        var clientEvents = clientEvents || {};
+        var clientEvents = module.exports = clientEvents || {};
 
         clientEvents.updateState = function () {
             server.sendServerEvent('updateState', server.state);
@@ -92,17 +91,17 @@ server.onClientEvent = function (client, clientEvent) {
             var player = _.find(server.state.players, { email: clientEvent.player.email });
             if (player) {
                 // Update existing player with new id
-                player.id = client.id;
+                player.id = clientEvent.clientId;
                 server.sendServerMessage('info', player.name + ' rejoined the game...');
             } else {
                 // Create new player
-                clientEvent.player.id = client.id;
+                clientEvent.player.id = clientEvent.clientId;
                 player = _.merge({}, playerSchema, clientEvent.player);
                 server.state.players.push(player);
                 server.sendServerMessage('info', player.name + ' joined the game...');
             }
 
-            server.sendServerEvent('sfx', 'playerJoined');
+            server.sendServerEvent('playSound', 'playerJoined');
             server.sendServerEvent('updateState', server.state);
         };
 
@@ -121,11 +120,11 @@ server.onClientEvent = function (client, clientEvent) {
             }
 
             if (player.ready) {
-                server.sendServerEvent('sfx', 'playerReady');
+                server.sendServerEvent('playSound', 'playerReady');
             } else {
-                server.sendServerEvent('sfx', 'playerNotReady');
+                server.sendServerEvent('playSound', 'playerNotReady');
             }
-            
+
             server.sendServerEvent('updateState', server.state);
         };
 
@@ -164,7 +163,7 @@ server.onClientEvent = function (client, clientEvent) {
             var guess = clientEvent.value.message.toLowerCase();
 
             if (currentWord === guess) {
-                server.sendServerEvent('sfx', 'playerRightAnswer');
+                server.sendServerEvent('playSound', 'playerRightAnswer');
                 server.sendServerMessage('guess-word', clientEvent.player.name + ' guessed the correct word!');
                 var player = _.find(server.state.players, { id: clientEvent.player.id });
                 player.guessedWordAt = server.state.timer.remaining;
@@ -199,10 +198,6 @@ server.onClientEvent = function (client, clientEvent) {
             server.sendServerMessage('info', 'Game was reset by ' + clientEvent.player.name);
         };
 
-        clientEvents.testCode = function (clientEvent) {
-            server.sendServerMessage('important', 'Just testing!');
-        };
-
         clientEvents.default = function (clientEvent) {
             server.sendServerEvent(clientEvent.type, clientEvent.value);
         };
@@ -214,6 +209,7 @@ server.onClientEvent = function (client, clientEvent) {
         }
     });
 };
+
 
 /**
  * Disconnect Client
@@ -433,6 +429,7 @@ server.sendServerEvent = function (type, value) {
  */
 server.validateClientEvent = function (clientEvent, cb) {
     var validTypes = [
+        'playSound',
         'giveHint',
         'giveUp',
         'testCode',

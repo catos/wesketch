@@ -7,8 +7,8 @@
     <div class="top-row row">
         <div class="col-xs-12">
             <ul class="list-inline pull-left">
-                <li><i class="fa fa-volume-up sfx sfx-muted"></i></li>
-                <li><i class="fa fa-music music music-muted"></i></li>
+                <li><i class="fa fa-volume-up sfx" ng-class="{ 'sfx-muted' : vm.soundSettings.muteSfx}" ng-click="vm.toggleSoundSettings('muteSfx')"></i></li>
+                <li><i class="fa fa-music music" ng-class="{ 'music-muted' : vm.soundSettings.muteMusic}" ng-click="vm.toggleSoundSettings('muteMusic')"></i></li>
                 <li><span class="info-label">Phase</span> {{vm.state.phase}}</li>
                 <li>Round: {{vm.state.round}}</li>
             </ul>
@@ -17,6 +17,7 @@
                 <li>Drawing: {{vm.state.drawingPlayer.name}}</li>
                 <li>Next: Another Player</li>
                 <li>Hint: {{vm.state.hint}}</li>
+                <li><a href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i></a></li>
             </ul>
         </div>
     </div>
@@ -106,11 +107,10 @@
 
     <div class="debug-row row" ng-show="vm.isAdmin">
         <div class="col-xs-12">
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('nonExistingEvent', 'with some value...')">Unknown handler</button>
+
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateState')">Update State</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('updateDrawSettings')">Update Settings</button>
-            <button class="btn btn-sm btn-primary" ng-click="vm.testButton()">Test code</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('playSound', 'playerJoined');">Sfx: playerJoined</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('playSound', 'playerRightAnswer');">Sfx: playerRightAnswer</button>
 
 
             <div>

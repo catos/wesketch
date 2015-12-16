@@ -19,7 +19,8 @@ module.exports = function (io) {
                  * Client events
                  */
                 client.on('clientEvent', function (clientEvent) {
-                    server.onClientEvent(client, clientEvent);
+                    clientEvent.clientId = client.id;
+                    server.onClientEvent(clientEvent);
                 });
 
             });

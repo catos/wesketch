@@ -16,8 +16,8 @@
         var colors = [
             '#000000', '#696969', '#808080',
             '#c0c0c0', '#f5f5f5', '#ffffff',
-            '#ff0000', '#00ff00', '#0000ff',    // RGB
-            '#ff0', '#0ff', '#f0f',             // CMYK
+            '#ff0000', '#00ff00', '#0000ff',
+            '#ff0', '#0ff', '#f0f',
             '#800', '#808000',
             '#008000', '#800080', '#008080',
             '#000080'
@@ -52,6 +52,14 @@
         vm.inputGuessMode = false;
         vm.chatMessages = [];
         vm.newMessage = '';
+
+        // TODO: lag en generell toggle-functino ?
+        // TODO: og så trenger jeg booleans til view etterpå
+        vm.soundSettings = {
+            muteSfx: false,
+            muteMusic: false
+        };
+
         vm.drawSettings = {
             lineWidth: 2,
             lineJoin: 'round', // 'butt', 'round', 'square'
@@ -66,21 +74,15 @@
 
         // TODO: remove later...
         vm.messagesElement = {};
-        vm.testButton = testButton;
 
         /**
          * Viewmodel functions
          */
+        vm.toggleSoundSettings = toggleSoundSettings;
         vm.setInputGuessMode = setInputGuessMode;
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
         vm.onInputKey = onInputKey;
-        
-        // TODO: update gulp to copy audio to build-folder
-        // TODO: lag en generell toggle-functino ?
-        // TODO: og så trenger jeg booleans til view etterpå
-        vm.muteSfx = muteSfx;
-        vm.muteMusic = muteMusic;
 
         /**
          * Developer
@@ -215,6 +217,11 @@
             }
         }
 
+        function toggleSoundSettings(setting) {
+            console.log('toggleSoundSettings: ' + setting);
+            vm.soundSettings[setting] = !vm.soundSettings[setting];
+        }
+
         function addMessage() {
 
             vm.myMessages.push(vm.newMessage);
@@ -261,12 +268,6 @@
             }
         }
 
-        // TODO: remove...maybe
-        function testButton() {
-            // sfx.playerJoined.play();
-            sfx.playerRightAnswer.play();
-        }
-
         /**
          * Server events
          */
@@ -275,9 +276,9 @@
             var serverEvents = serverEvents || {};
 
             serverEvents.updateState = function (serverEvent) {
-                
+
                 angular.extend(vm.state, serverEvent.value);
-                
+
                 var updatedPlayer;
                 for (var i = 0; i < vm.state.players.length; i++) {
                     if (vm.state.players[i].email === vm.player.email) {
@@ -315,8 +316,10 @@
                 vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
             };
 
-            serverEvents.sfx = function (serverEvent) {
-                sfx[serverEvent.value].play();
+            serverEvents.playSound = function (serverEvent) {
+                if (!vm.soundSettings.muteSfx) {
+                    sfx[serverEvent.value].play();
+                }
             };
 
             serverEvents.addMessage = function (serverEvent) {
