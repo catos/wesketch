@@ -14,13 +14,13 @@
          */
         var tools = ['brush', 'eraser', 'fill'];
         var colors = [
-            '#000000', '#696969', '#808080',
-            '#c0c0c0', '#f5f5f5', '#ffffff',
-            '#ff0000', '#00ff00', '#0000ff',
-            '#ff0', '#0ff', '#f0f',
-            '#800', '#808000',
-            '#008000', '#800080', '#008080',
-            '#000080'
+            '#000000', '#c0c0c0', '#ffffff',
+            '#2c4fa5', '#007cc9', '#00acf3',
+            '#00a446', '#5bb339', '#95c51f',
+            '#f1b700', '#fbdd00', '#fff200',
+            '#d9242a', '#de5b1f', '#e58100',
+            '#c50c70', '#d9058f', '#e486b9',
+            '#6c4b1f', '#a98754', '#c2ac79'
         ];
         var sfx = {};
 
@@ -65,11 +65,11 @@
             lineJoin: 'round', // 'butt', 'round', 'square'
             lineCap: 'round', // 'bevel', 'round', 'miter',
 
-            currentTool: tools[0],
             tools: tools,
-
-            strokeStyle: colors[0],
             colors: colors,
+
+            currentTool: tools[0],
+            strokeStyle: colors[0],
         };
 
         // TODO: remove later...
@@ -296,7 +296,6 @@
                 vm.state.timer = serverEvent.value;
             };
 
-            // TODO: sjekk hva som overføres av data her...vil ha minst mulig
             serverEvents.brush = function (serverEvent) {
                 var coords = serverEvent.value;
 

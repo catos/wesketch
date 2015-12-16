@@ -5,15 +5,15 @@
     </audio>-->
 
     <div class="top-row row">
-        <div class="col-xs-12">
-            <ul class="list-inline pull-left">
+        <div class="col-left col-xs-6">
+            <ul class="list-inline pull-right">
                 <li><i class="fa fa-volume-up sfx" ng-class="{ 'sfx-muted' : vm.soundSettings.muteSfx}" ng-click="vm.toggleSoundSettings('muteSfx')"></i></li>
                 <li><i class="fa fa-music music" ng-class="{ 'music-muted' : vm.soundSettings.muteMusic}" ng-click="vm.toggleSoundSettings('muteMusic')"></i></li>
-                <li><span class="info-label">Phase</span> {{vm.state.phase}}</li>
-                <li>Round: {{vm.state.round}}</li>
+                <li>Round <strong>{{vm.state.round}}</strong> of <strong>{{vm.state.roundsTotal}}</strong></li>
             </ul>
-
-            <ul class="list-inline pull-right">
+        </div>
+        <div class="col-right col-xs-6">
+            <ul class="list-inline">
                 <li>Drawing: {{vm.state.drawingPlayer.name}}</li>
                 <li>Next: Another Player</li>
                 <li>Hint: {{vm.state.hint}}</li>

@@ -1,16 +1,5 @@
 var _ = require('lodash');
 
-var playerSchema = {
-    id: -1,
-    email: '',
-    name: '',
-    ready: false,
-    isDrawing: false,
-    guessedWordAt: -1,
-    drawCount: 0,
-    score: 0
-};
-
 var server = module.exports = {
     weesketch: {},
     wordlist: [],
@@ -28,6 +17,7 @@ var server = module.exports = {
         drawingPlayer: {},
 
         round: 0,
+        roundsTotal: 0,
 
         hintCount: 0,
         hint: '',
@@ -88,6 +78,17 @@ server.onClientEvent = function (clientEvent) {
         };
 
         clientEvents.addPlayer = function (clientEvent) {
+            var playerSchema = {
+                id: -1,
+                email: '',
+                name: '',
+                ready: false,
+                isDrawing: false,
+                guessedWordAt: -1,
+                drawCount: 0,
+                score: 0
+            };
+
             var player = _.find(server.state.players, { email: clientEvent.player.email });
             if (player) {
                 // Update existing player with new id
@@ -98,6 +99,10 @@ server.onClientEvent = function (clientEvent) {
                 clientEvent.player.id = clientEvent.clientId;
                 player = _.merge({}, playerSchema, clientEvent.player);
                 server.state.players.push(player);
+
+                // Update roundsTotal
+                server.state.roundsTotal = server.state.players.length * 3;
+
                 server.sendServerMessage('info', player.name + ' joined the game...');
             }
 
@@ -128,7 +133,6 @@ server.onClientEvent = function (clientEvent) {
             server.sendServerEvent('updateState', server.state);
         };
 
-        // TODO: this is wrong!
         clientEvents.giveHint = function (clientEvent) {
             if (server.state.hintCount < 4) {
                 server.state.hintCount++;

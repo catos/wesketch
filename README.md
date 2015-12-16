@@ -31,6 +31,7 @@
 - Order by points på player-lista
 - LOL => LOL selv om det sammenlignes med lowercase
 - Brown is missing
+- serverEvents.brush: sjekk hva som overføres, vil ha minst mulig data her
 
 ### Server
 - Minify js & css
