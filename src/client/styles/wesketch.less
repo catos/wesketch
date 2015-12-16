@@ -1,5 +1,14 @@
+@border: #1a242f;
+@primary-background: #9CB8D3;
+
 .wesketch {
     height: 500px;
+
+    &.drawing-player {
+        .bottom-row {
+            background-color:#E0D7B6;
+        }
+    }
 
     .main-row {
         height: 100%;
@@ -32,7 +41,7 @@
         height: 100px;
         margin-left: -50px;
         background-color: #fff;
-        border: 2px solid #1a242f;
+        border: 2px solid @border;
         z-index: 1;
         border-radius: 50px;
         text-align: center;
@@ -47,14 +56,14 @@
     .top-row {
         padding: 10px 0;
         background: #f1f1f1;
-        border-bottom: 2px solid #1a242f;
+        border-bottom: 2px solid @border;
 
         ul {
             margin: 0;
 
             li {
                 a {
-                    color: #1a242f;
+                    color: @border;
                 }
             }
         }
@@ -80,9 +89,9 @@
     }
 
     .bottom-row {
-        background-color: #9CB8D3;
+        background-color: @primary-background;
         padding: 10px 0;
-        border-top: 2px solid #1a242f;
+        border-top: 2px solid @border;
 
         .drawing-player-panel {
 
@@ -106,7 +115,7 @@
             position: relative;
             background-color: #ffffff;
             padding-left: 175px;
-            border-right: 2px solid #1a242f;
+            border-right: 2px solid @border;
 
 
             .players {
@@ -172,9 +181,9 @@
                 height: 100%;
 
                 > div {
-                    background: #9CB8D3;
+                    background: @primary-background;
                     margin-bottom: 15px;
-                    border: 2px solid #1a242f;
+                    border: 2px solid @border;
                     padding: 10px;
                     border-radius: 5px;
                 }

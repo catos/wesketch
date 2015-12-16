@@ -14,7 +14,6 @@ var server = module.exports = {
         },
 
         players: [],
-        drawingPlayer: {},
 
         round: 0,
         roundsTotal: 0,
@@ -65,14 +64,16 @@ server.onClientEvent = function (clientEvent) {
 
         clientEvents.updateDrawSettings = function (clientEvent) {
             // Only drawing player can change drawSettings
-            if (server.state.drawingPlayer.id === clientEvent.player.id) {
+            var drawingPlayer = _.find(server.state.players, { isDrawing: true });
+            if (drawingPlayer.id === clientEvent.player.id) {
                 server.sendServerEvent(clientEvent.type, clientEvent.value);
             }
         };
 
         clientEvents.clear = function (clientEvent) {
             // Only drawing player can change drawSettings
-            if (server.state.drawingPlayer.id === clientEvent.player.id) {
+            var drawingPlayer = _.find(server.state.players, { isDrawing: true });
+            if (drawingPlayer.id === clientEvent.player.id) {
                 server.sendServerEvent(clientEvent.type, clientEvent.value);
             }
         };
@@ -84,7 +85,7 @@ server.onClientEvent = function (clientEvent) {
                 name: '',
                 ready: false,
                 isDrawing: false,
-                guessedWordAt: -1,
+                guessedWord: false,
                 drawCount: 0,
                 score: 0
             };
@@ -112,6 +113,12 @@ server.onClientEvent = function (clientEvent) {
 
         clientEvents.togglePlayerReady = function (clientEvent) {
             var player = _.find(server.state.players, { id: clientEvent.player.id });
+
+            if (player === undefined) {
+                server.sendServerEvent('serverError', 'Could not find player with id = ' + clientEvent.player.id);
+                return;
+            }
+
             player.ready = !player.ready;
 
             var message = (player.ready) ?
@@ -166,22 +173,49 @@ server.onClientEvent = function (clientEvent) {
             var currentWord = server.state.currentWord.toLowerCase();
             var guess = clientEvent.value.message.toLowerCase();
 
+            // Someone guessed correct!
             if (currentWord === guess) {
+                
+                var finishedPlayers = _.where(server.state.players, { 'guessedWord': true, 'isDrawing': false })
+                var firstGuess = finishedPlayers.length === 0;
+                var player = _.find(server.state.players, { id: clientEvent.player.id });
+                var drawingPlayer = _.find(server.state.players, { isDrawing: true });
+
+                // Play sound & send message
                 server.sendServerEvent('playSound', 'playerRightAnswer');
                 server.sendServerMessage('guess-word', clientEvent.player.name + ' guessed the correct word!');
-                var player = _.find(server.state.players, { id: clientEvent.player.id });
-                player.guessedWordAt = server.state.timer.remaining;
 
-                // Check if all non-drawing players guess the word
+                // Calculate playerScore
+                var playerScore = 10 - finishedPlayers.length;
+                if (playerScore < 5) {
+                    playerScore = 5;
+                }
+                
+                // Update player score
+                player.score += playerScore;
+                player.guessedWord = true;
+
+                // Update drawingPlayer score
+                var drawingPlayerScore = firstGuess ? 10 : 1;
+                drawingPlayer.score += drawingPlayerScore;
+
+                // Check if all non-drawing players guessed the word
                 var playersRemaining = _.some(server.state.players, function (player) {
-                    return player.guessedWordAt === -1 && player.isDrawing === false;
+                    return !player.guessedWord && !player.isDrawing;
                 });
-
                 if (!playersRemaining) {
                     server.state.timer.stop = true;
                     server.sendServerMessage('info', 'All players guessed the word!');
+                    return;
                 }
 
+                // Reduce timer after first guess
+                if (firstGuess && server.state.timer.remaining > 30) {
+                    server.state.timer.remaining = 30;
+                }
+                    
+                server.sendServerEvent('updateState', server.state);
+                
                 return;
             }
 
@@ -238,7 +272,6 @@ server.onClientDisconnected = function (clientId) {
  */
 server.resetGame = function () {
     server.state.phase = server.state.phaseTypes.preGame;
-    server.state.drawingPlayer = {};
     server.state.round = 0;
 
     server.state.timer.remaining = 90;
@@ -253,7 +286,7 @@ server.resetGame = function () {
     _.forEach(server.state.players, function (player) {
         player.ready = false;
         player.isDrawing = false;
-        player.guessedWordAt = -1;
+        player.guessedWord = false;
         player.drawCount = 0;
         player.score = 0;
     });
@@ -279,9 +312,9 @@ server.startRound = function () {
 
     // Choose drawing player
     var playersSorted = _.sortBy(server.state.players, 'drawCount');
-    playersSorted[0].drawCount++;
-    playersSorted[0].isDrawing = true;
-    server.state.drawingPlayer = playersSorted[0];
+    var drawingPlayer = playersSorted[0];
+    drawingPlayer.drawCount++;
+    drawingPlayer.isDrawing = true;
 
     // Choose new word from wordlist.
     server.state.hintCount = 0;
@@ -289,9 +322,9 @@ server.startRound = function () {
     server.state.currentWord = _.sample(server.wordlist);
 
     // Send message to players
-    var msg = 'Starting round #' + server.state.round +
-        ', ' + server.state.drawingPlayer.name + ' is drawing';
-    server.sendServerMessage('important', msg);
+    server.sendServerMessage(
+        'important',
+        'Starting round ' + server.state.round + ', ' + drawingPlayer.name + ' is drawing');
 
     // Update clients with altered state
     server.sendServerEvent('updateState', server.state);
@@ -357,16 +390,10 @@ server.endRound = function () {
     // Present the word
     server.sendServerMessage('info', 'The word was: ' + server.state.currentWord);
 
-    // Distribute points & reset players
-    var drawingPlayer = _.find(server.state.players, { id: server.state.drawingPlayer.id });
+    // Reset players
+    // TODO: revider reset players
     _.forEach(server.state.players, function (player) {
-
-        if (player.guessedWordAt > -1) {
-            player.score++;
-            drawingPlayer.score++;
-        }
-
-        player.guessedWordAt = -1;
+        player.guessedWord = false;
         player.isDrawing = false;
     });
 
@@ -375,9 +402,6 @@ server.endRound = function () {
 
     // Clear the drawing area
     server.sendServerEvent('clear');
-
-    // Reset drawing player to disable drawing player features while waiting for next turn
-    server.state.drawingPlayer = {};
 
     // Update clients with altered state
     server.sendServerEvent('updateState', server.state);

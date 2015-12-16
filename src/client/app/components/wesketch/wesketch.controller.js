@@ -46,6 +46,7 @@
             id: -1,
             email: ''
         };
+        vm.drawingPlayer = {};
 
         vm.state = {};
         vm.myMessages = [];
@@ -148,7 +149,7 @@
             vm.coords.from = getCoords(event);
             vm.drawing = true;
 
-            if (vm.state.drawingPlayer.id === vm.player.id) {
+            if (vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
             }
@@ -159,7 +160,7 @@
         }
 
         function onMouseMove(event) {
-            if (vm.drawing && vm.state.drawingPlayer.id === vm.player.id) {
+            if (vm.drawing && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
 
@@ -227,7 +228,7 @@
             vm.myMessages.push(vm.newMessage);
 
             // Drawing player cannot use chat
-            if (vm.player.id === vm.state.drawingPlayer.id) {
+            if (vm.player.id === vm.drawingPlayer.id) {
                 alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
                 vm.newMessage = '';
                 return;
@@ -279,13 +280,20 @@
 
                 angular.extend(vm.state, serverEvent.value);
 
-                var updatedPlayer;
+                for (var i = 0; i < vm.state.players.length; i++) {
+                    if (vm.state.players[i].isDrawing) {
+                        vm.drawingPlayer = vm.state.players[i];
+                        break;
+                    }
+                }                
+
+                var player;
                 for (var i = 0; i < vm.state.players.length; i++) {
                     if (vm.state.players[i].email === vm.player.email) {
-                        updatedPlayer = vm.state.players[i];
+                        player = vm.state.players[i];
                     }
                 }
-                angular.extend(vm.player, updatedPlayer);
+                angular.extend(vm.player, player);
             };
 
             serverEvents.updateDrawSettings = function (serverEvent) {

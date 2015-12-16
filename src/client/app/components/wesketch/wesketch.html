@@ -1,4 +1,4 @@
-<div id="wesketch" class="wesketch">
+<div id="wesketch" class="wesketch" ng-class="{'drawing-player' : vm.player.isDrawing}">
 
     <!--<audio src="/sfx/SUCCESS TUNE Happy Sticks Short 01.wav" preload="auto">
         Your browser does not support the <code>audio</code> element.
@@ -14,7 +14,7 @@
         </div>
         <div class="col-right col-xs-6">
             <ul class="list-inline">
-                <li>Drawing: {{vm.state.drawingPlayer.name}}</li>
+                <li>Drawing: {{vm.drawingPlayer.name}}</li>
                 <li>Next: Another Player</li>
                 <li>Hint: {{vm.state.hint}}</li>
                 <li><a href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i></a></li>
@@ -93,7 +93,7 @@
             </div>
         </div>
         <div class="col-xs-6">
-            <div ng-show="vm.state.drawingPlayer.id === vm.player.id" class="drawing-player-panel">
+            <div ng-show="vm.player.isDrawing" class="drawing-player-panel">
                 <div class="current-word">
                     <label for="word">Draw the word: </label>
                     <div class="word">{{vm.state.currentWord}}</div>
