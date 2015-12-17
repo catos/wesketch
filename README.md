@@ -12,15 +12,19 @@
 - Unnecessary fullscreen button added, it includes the framework on zoom so it brings nothing more than the basic browser feature.
 - Drawing player has a different colored UI to indicate that he (or she) is in fact the drawing player
 - Timer shakes on 30 seconds...
+- Tense music starts after the first correct guess
 - Drawing-tools are now hidden for non-drawing players
+- Input mode now toggles automatically between chat and guess depending on gamephase
+- Scoreboard implemented, should pop up at the end of a game
+- Word should now be shown after the last round
 
 ## Version 0.1.0 - Prototype
 - Input mode: use the buttons beside the text-input (or | "pipe") to toggle between chat and guess mode.
+- Walking skeleton using socket.io, angularjs and nodejs
 
 ## TODO
 
-### Client
-- Update gulp to copy audio to build-folder
+### WeSketch Client
 - Easier words
 - Fix domain
 - Fix give hint
@@ -30,12 +34,7 @@
 - Eraser tool
 - Fill tool
 - Request pause
-- Player are drawing x times in a row...
 - Next round starts in X seconds: show who the next drawing player is
-- Sound on timer near the end
-- Reset currentDrawingPlayer when end game
-- Show scores in the middle, toggle OK
-- Word does not show when game ends
 - Lenke på ord til søk på google
 - Shortcuts på tools
 - Theme, mørkere bakgrunn
@@ -45,7 +44,7 @@
 - LOL => LOL selv om det sammenlignes med lowercase
 - serverEvents.brush: sjekk hva som overføres, vil ha minst mulig data her
 
-### Server
+### WeSketch Server
 - Minify js & css
 - Only apply draw restrictions in drawing-phase
 - Exclude currentword for all players except drawingplayer

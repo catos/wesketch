@@ -185,6 +185,10 @@ body {
   color: forestgreen;
   font-weight: 700;
 }
+.wesketch .main-row .chat .players .guessed-correct {
+  color: darkred;
+  font-weight: 700;
+}
 .wesketch .main-row .chat .players .ready-button {
   width: 100%;
 }

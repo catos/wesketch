@@ -33,7 +33,7 @@
                     <span>I am ready</span>
                 </div>
                 <table class="table">
-                    <tr ng-repeat="player in vm.state.players" ng-class="{ 'ready' : player.ready }">
+                    <tr ng-repeat="player in vm.state.players" ng-class="{ 'ready' : player.ready, 'guessed-correct' : player.guessedWord }">
                         <td data-player-id="{{player.id}}">{{player.name}}</td>
                         <td class="player-score">{{player.score}}</td>
                     </tr>
@@ -111,7 +111,7 @@
 
     </div>
 
-    <div class="debug-row row" ng-show="vm.isAdmin">
+    <div class="debug-row row" ng-show="vm.player.email === 'cskogholt@gmail.com'">
         <div class="col-xs-12">
 
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>

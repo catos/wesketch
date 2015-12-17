@@ -159,6 +159,7 @@ server.onClientEvent = function (clientEvent) {
         clientEvents.giveUp = function (clientEvent) {
             server.state.timer.stop = true;
             server.sendServerMessage('info', clientEvent.player.name + ' gives up.');
+            server.sendServerEvent('stopSound', 'timerTension');
         };
 
         clientEvents.guessWord = function (clientEvent) {
