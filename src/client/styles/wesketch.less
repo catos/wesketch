@@ -8,6 +8,18 @@
         .bottom-row {
             background-color:#E0D7B6;
         }
+
+        .main-row {
+            .chat {
+                .players {
+                    background-color: #FFFDF8;
+                }
+            }
+        }
+
+        .top-row {
+            background-color: #FFFDF8;
+        }
     }
 
     .main-row {
@@ -16,21 +28,6 @@
 
     * {
         user-select: none;
-    }
-    .wesketch-button {
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        border: 1px solid #999;
-        margin-right: 3px;
-        text-align: center;
-        border-radius: 2px;
-        background-color: #fefefe;
-        cursor: pointer;
-        &.current {
-            border-color: #000;
-            border-style: dashed;
-        }
     }
 
     .timer {
@@ -177,23 +174,38 @@
                 position: absolute;
                 top: 10px;
                 right: 10px;
-                width: 105px;
-                height: 100%;
+                width: 102px;
+                background: #9CB8D3;
+                margin-bottom: 15px;
+                border: 2px solid #1a242f;
+                padding: 10px;
+                border-radius: 10px;
 
                 > div {
-                    background: @primary-background;
                     margin-bottom: 15px;
-                    border: 2px solid @border;
-                    padding: 10px;
-                    border-radius: 5px;
+
+                    &:last-child {
+                        margin: 0;
+                    }
                 }
 
-                .tools {
+                .wesketch-button {
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    border: 1px solid #000;
+                    margin-right: 2px;
+                    text-align: center;
+                    border-radius: 2px;
+                    background-color: #fefefe;
+                    cursor: pointer;
+                    &.current {
+                        border-color: #000;
+                        border-style: dashed;
+                    }
                 }
-                .brush-sizes {
-                }
-                .palette {
-                }
+
+
             }
         }
     }

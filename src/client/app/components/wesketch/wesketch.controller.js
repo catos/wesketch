@@ -6,9 +6,9 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['alert', 'sawkit', 'tokenIdentity'];
+    WesketchController.$inject = ['$filter', 'alert', 'sawkit', 'tokenIdentity'];
 
-    function WesketchController(alert, sawkit, tokenIdentity) {
+    function WesketchController($filter, alert, sawkit, tokenIdentity) {
         /**
          * Private variables
          */
@@ -149,6 +149,9 @@
             vm.coords.from = getCoords(event);
             vm.drawing = true;
 
+            // TODO remove
+            console.log('vm.drawingPlayer.id: ' + vm.drawingPlayer.id);
+            console.log('vm.player.id: ' + vm.player.id);
             if (vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
@@ -277,22 +280,14 @@
             var serverEvents = serverEvents || {};
 
             serverEvents.updateState = function (serverEvent) {
-
+                // Update state
                 angular.extend(vm.state, serverEvent.value);
 
-                for (var i = 0; i < vm.state.players.length; i++) {
-                    if (vm.state.players[i].isDrawing) {
-                        vm.drawingPlayer = vm.state.players[i];
-                        break;
-                    }
-                }                
+                // Reassign drawing player
+                vm.drawingPlayer = $filter('filter')(vm.state.players, { isDrawing: true }, true)[0];
 
-                var player;
-                for (var i = 0; i < vm.state.players.length; i++) {
-                    if (vm.state.players[i].email === vm.player.email) {
-                        player = vm.state.players[i];
-                    }
-                }
+                // Update player
+                var player = $filter('filter')(vm.state.players, { email: vm.player.email }, true)[0];
                 angular.extend(vm.player, player);
             };
 

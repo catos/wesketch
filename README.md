@@ -1,19 +1,25 @@
 
-# WeSketch
+# WeSketch v0.2.0
 
-## How to play
+## Version 0.2.0 - Three shades of brown
+- Revamped UI: experience should be more comfortable, especially on smaller devices (such as Espens iMacBookPro4k)
+- Revised scoring
+	- Drawing player gets 10 points for the first guess, then 1 point for each folloing guess until 15, which is the maximum.
+	- Guessing players gets 10 points for begin first, each following player gets 1 less until 5, which is the minimum.
+- Sfx on: player joined, player guessed correct, 30 seconds timer start
+- Added toggle music and audio (not persistent)
+- Updated palette with new awesome color, including 3 shades of brown!
+- Unnecessary fullscreen button added, it includes the framework on zoom so it brings nothing more than the basic browser feature.
+- Drawing player has a different colored UI to indicate that he (or she) is in fact the drawing player
 
-## Scoring
-
-Drawing player gets 10 points for the first guess, then 1 point for each folloing guess until 15, which is the maximum
-Guessing players gets 10 points for begin first, each following player gets 1 less until 5, which is the minimum
+## Version 0.1.0 - Prototype
+- Input mode: use the buttons beside the text-input (or | "pipe") to toggle between chat and guess mode.
 
 ## TODO
 
 ### Client
-- Make scores more interesting
 - Hide drawing-tools for non-drawing players
-- Group drawing-tools 
+- Group drawing-tools
 - Update gulp to copy audio to build-folder
 - First man to guess
 - Easier words

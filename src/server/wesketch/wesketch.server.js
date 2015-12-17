@@ -65,7 +65,7 @@ server.onClientEvent = function (clientEvent) {
         clientEvents.updateDrawSettings = function (clientEvent) {
             // Only drawing player can change drawSettings
             var drawingPlayer = _.find(server.state.players, { isDrawing: true });
-            if (drawingPlayer.id === clientEvent.player.id) {
+            if (drawingPlayer !== undefined && drawingPlayer.id === clientEvent.player.id) {
                 server.sendServerEvent(clientEvent.type, clientEvent.value);
             }
         };
@@ -73,7 +73,7 @@ server.onClientEvent = function (clientEvent) {
         clientEvents.clear = function (clientEvent) {
             // Only drawing player can change drawSettings
             var drawingPlayer = _.find(server.state.players, { isDrawing: true });
-            if (drawingPlayer.id === clientEvent.player.id) {
+            if (drawingPlayer !== undefined && drawingPlayer.id === clientEvent.player.id) {
                 server.sendServerEvent(clientEvent.type, clientEvent.value);
             }
         };
@@ -175,8 +175,8 @@ server.onClientEvent = function (clientEvent) {
 
             // Someone guessed correct!
             if (currentWord === guess) {
-                
-                var finishedPlayers = _.where(server.state.players, { 'guessedWord': true, 'isDrawing': false })
+
+                var finishedPlayers = _.where(server.state.players, { 'guessedWord': true, 'isDrawing': false });
                 var firstGuess = finishedPlayers.length === 0;
                 var player = _.find(server.state.players, { id: clientEvent.player.id });
                 var drawingPlayer = _.find(server.state.players, { isDrawing: true });
@@ -190,7 +190,7 @@ server.onClientEvent = function (clientEvent) {
                 if (playerScore < 5) {
                     playerScore = 5;
                 }
-                
+
                 // Update player score
                 player.score += playerScore;
                 player.guessedWord = true;
@@ -213,9 +213,9 @@ server.onClientEvent = function (clientEvent) {
                 if (firstGuess && server.state.timer.remaining > 30) {
                     server.state.timer.remaining = 30;
                 }
-                    
+
                 server.sendServerEvent('updateState', server.state);
-                
+
                 return;
             }
 

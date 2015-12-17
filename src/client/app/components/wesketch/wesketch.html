@@ -57,24 +57,25 @@
             </canvas>
 
             <div class="drawing-tools">
-                <div class="tools">
-                    <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div>
-                    <div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
+
+                <div>
+                    <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div><div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
                 </div>
 
-                <div class="brush-sizes">
-                    <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth - 2 })"></i></div>
-                    <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth + 2 })"></i></div>
-                    <div>Size: {{vm.drawSettings.lineWidth}}</div>
+                <div>
+                    <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth - 2 })"></i></div><div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth + 2 })"></i></div><div class="wesketch-button">{{vm.drawSettings.lineWidth}}</div>
                 </div>
 
-                <div class="palette">
+                <div>
                     <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''"
                     ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button">
                     </div>
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <div class="bottom-row row">
