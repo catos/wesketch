@@ -178,15 +178,10 @@ body {
   background-color: #f1f1f1;
   border-right: 2px solid #ccc;
 }
-.wesketch .main-row .chat .players ul li a {
-  color: #333;
-  padding: 2px 0;
-  display: inline-block;
+.wesketch .main-row .chat .players table tr td {
+  padding: 4px 0;
 }
-.wesketch .main-row .chat .players ul li a:hover {
-  text-decoration: none;
-}
-.wesketch .main-row .chat .players ul li a.ready {
+.wesketch .main-row .chat .players .ready {
   color: forestgreen;
   font-weight: 700;
 }

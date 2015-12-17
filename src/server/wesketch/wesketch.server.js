@@ -204,12 +204,14 @@ server.onClientEvent = function (clientEvent) {
                 if (!playersRemaining) {
                     server.state.timer.stop = true;
                     server.sendServerMessage('info', 'All players guessed the word!');
+                    server.sendServerEvent('stopSound', 'timerTension');
                     return;
                 }
 
                 // Reduce timer after first guess
                 if (firstGuess && server.state.timer.remaining > 30) {
                     server.state.timer.remaining = 30;
+                    server.sendServerEvent('playSound', 'timerTension');
                 }
 
                 server.sendServerEvent('updateState', server.state);

@@ -128,6 +128,7 @@
             sfx.playerReady = addSfx('TECH INTERFACE Computer Beeps 08.wav');
             sfx.playerRightAnswer = addSfx('SUCCESS PICKUP Collect Beep 02.wav');
             sfx.endRoundNoCorrect = addSfx('SUCCESS TUNE Win Ending 09.wav');
+            sfx.timerTension = addSfx('Time Strain.wav');
             sfx.endGame = addSfx('SUCCESS TUNE Win Complete 07.wav');
 
             next();
@@ -335,6 +336,10 @@
                 }
             };
 
+            serverEvents.stopSound = function (serverEvent) {
+                sfx[serverEvent.value].stop();
+            };
+
             serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
 
@@ -343,12 +348,12 @@
                     alert.show('info', '', serverEvent.value.message);
                 }
             };
-            
-            serverEvents.showScores = function(serverEvent) {
-                showScores();  
+
+            serverEvents.showScores = function (serverEvent) {
+                showScores();
             };
-            
-            serverEvents.setInputGuessMode = function(serverEvent) {
+
+            serverEvents.setInputGuessMode = function (serverEvent) {
                 setInputGuessMode(serverEvent.value);
             };
 
