@@ -15,15 +15,17 @@
                     background-color: #FFFDF8;
                 }
             }
+
+            .canvas {
+                .drawing-tools {
+                    background-color:#E0D7B6;
+                }
+            }
         }
 
         .top-row {
             background-color: #FFFDF8;
         }
-    }
-
-    .main-row {
-        height: 100%;
     }
 
     * {
@@ -106,6 +108,8 @@
     }
 
     .main-row {
+        height: 100%;
+
         .chat {
             padding: 0;
             height: 100%;
@@ -177,7 +181,7 @@
                 width: 102px;
                 background: #9CB8D3;
                 margin-bottom: 15px;
-                border: 2px solid #1a242f;
+                border: 2px solid @border;
                 padding: 10px;
                 border-radius: 10px;
 

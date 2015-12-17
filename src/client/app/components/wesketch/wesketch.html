@@ -7,6 +7,7 @@
     <div class="top-row row">
         <div class="col-left col-xs-6">
             <ul class="list-inline pull-right">
+                <li><a class="nav-right" href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i></a></li>
                 <li><i class="fa fa-volume-up sfx" ng-class="{ 'sfx-muted' : vm.soundSettings.muteSfx}" ng-click="vm.toggleSoundSettings('muteSfx')"></i></li>
                 <li><i class="fa fa-music music" ng-class="{ 'music-muted' : vm.soundSettings.muteMusic}" ng-click="vm.toggleSoundSettings('muteMusic')"></i></li>
                 <li>Round <strong>{{vm.state.round}}</strong> of <strong>{{vm.state.roundsTotal}}</strong></li>
@@ -14,10 +15,9 @@
         </div>
         <div class="col-right col-xs-6">
             <ul class="list-inline">
-                <li>Drawing: {{vm.drawingPlayer.name}}</li>
-                <li>Next: Another Player</li>
-                <li>Hint: {{vm.state.hint}}</li>
-                <li><a href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i></a></li>
+                <li ng-hide="vm.drawingPlayer === undefined">Drawing: {{vm.drawingPlayer.name}}</li>
+                <li ng-hide="vm.nextDrawingPlayer === undefined">Next: Another Player</li>
+                <!--<li ng-hide="vm.state.hint.length > 0">Hint: {{vm.state.hint}} ({{vm.state.hint.length}})</li>-->
             </ul>
         </div>
     </div>
@@ -56,20 +56,21 @@
             <canvas width="500" height="500" id="canvas">
             </canvas>
 
-            <div class="drawing-tools">
+            <div ng-show="vm.player.isDrawing" class="drawing-tools">
 
                 <div>
-                    <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div><div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
+                    <div class="wesketch-button" ng-click="vm.sendClientEvent('clear')"><i class="fa fa-times"></i></div>
+                    <div class="wesketch-button" ng-click="vm.sendClientEvent('changeTool', 'brush')"><i class="fa fa-paint-brush"></i></div>
                 </div>
 
                 <div>
-                    <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth - 2 })"></i></div><div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth + 2 })"></i></div><div class="wesketch-button">{{vm.drawSettings.lineWidth}}</div>
+                    <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth - 2 })"></i></div>
+                    <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.sendClientEvent('updateDrawSettings', { lineWidth: vm.drawSettings.lineWidth + 2 })"></i></div>
+                    <div class="wesketch-button">{{vm.drawSettings.lineWidth}}</div>
                 </div>
 
                 <div>
-                    <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''"
-                    ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button">
-                    </div>
+                    <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''" ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button"></div>
                 </div>
 
             </div>
@@ -100,7 +101,7 @@
                     <div class="word">{{vm.state.currentWord}}</div>
                 </div>
 
-                <button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>
+                <!--<button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>-->
                 <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
             </div>
         </div>

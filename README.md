@@ -18,6 +18,7 @@
 ## TODO
 
 ### Client
+- Shake timer on < 30 seconds...
 - Hide drawing-tools for non-drawing players
 - Group drawing-tools
 - Update gulp to copy audio to build-folder

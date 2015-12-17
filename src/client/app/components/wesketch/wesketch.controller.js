@@ -149,10 +149,7 @@
             vm.coords.from = getCoords(event);
             vm.drawing = true;
 
-            // TODO remove
-            console.log('vm.drawingPlayer.id: ' + vm.drawingPlayer.id);
-            console.log('vm.player.id: ' + vm.player.id);
-            if (vm.drawingPlayer.id === vm.player.id) {
+            if (vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
             }
@@ -163,7 +160,7 @@
         }
 
         function onMouseMove(event) {
-            if (vm.drawing && vm.drawingPlayer.id === vm.player.id) {
+            if (vm.drawing && vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
 
