@@ -319,6 +319,9 @@ server.startRound = function () {
     server.state.hint = '';
     server.state.currentWord = _.sample(server.wordlist);
 
+    // Set inputGuessMode = true
+    server.sendServerEvent('setInputGuessMode', true);
+
     // Send message to players
     server.sendServerMessage(
         'important',
@@ -373,6 +376,9 @@ server.endRound = function () {
 
     // Update game state
     server.state.phase = server.state.phaseTypes.roundEnd;
+
+    // Set inputGuessMode = false
+    server.sendServerEvent('setInputGuessMode', false);
 
     // Present the word
     server.sendServerMessage('info', 'The word was: ' + server.state.currentWord);

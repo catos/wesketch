@@ -228,7 +228,7 @@
             vm.myMessages.push(vm.newMessage);
 
             // Drawing player cannot use chat
-            if (vm.player.id === vm.drawingPlayer.id) {
+            if (vm.drawingPlayer !== undefined && vm.player.id === vm.drawingPlayer.id) {
                 alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
                 vm.newMessage = '';
                 return;
@@ -346,6 +346,10 @@
             
             serverEvents.showScores = function(serverEvent) {
                 showScores();  
+            };
+            
+            serverEvents.setInputGuessMode = function(serverEvent) {
+                setInputGuessMode(serverEvent.value);
             };
 
             serverEvents.serverError = function (serverEvent) {
