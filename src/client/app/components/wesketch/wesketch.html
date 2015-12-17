@@ -1,10 +1,7 @@
 <div id="wesketch" class="wesketch" ng-class="{'drawing-player' : vm.player.isDrawing}">
 
-    <!--<audio src="/sfx/SUCCESS TUNE Happy Sticks Short 01.wav" preload="auto">
-        Your browser does not support the <code>audio</code> element.
-    </audio>-->
-
     <div class="top-row row">
+
         <div class="col-left col-xs-6">
             <ul class="list-inline pull-right">
                 <li><a class="nav-right" href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i></a></li>
@@ -20,6 +17,7 @@
                 <!--<li ng-hide="vm.state.hint.length > 0">Hint: {{vm.state.hint}} ({{vm.state.hint.length}})</li>-->
             </ul>
         </div>
+
     </div>
 
     <div class="main-row row">
@@ -82,6 +80,7 @@
     </div>
 
     <div class="bottom-row row">
+
         <div class="col-xs-12">
 
             <div ng-hide="vm.player.isDrawing" class="new-message input-group">
@@ -113,6 +112,31 @@
             </div>
 
         </div>
+
+    </div>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="debug-row row" ng-show="vm.isAdmin">
@@ -121,6 +145,7 @@
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('resetGame')">Reset game</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('playSound', 'playerJoined');">Sfx: playerJoined</button>
             <button class="btn btn-sm btn-primary" ng-click="vm.sendClientEvent('playSound', 'playerRightAnswer');">Sfx: playerRightAnswer</button>
+            <button class="btn btn-sm btn-primary" ng-click="vm.showScores();">Scores</button>
 
 
             <div>

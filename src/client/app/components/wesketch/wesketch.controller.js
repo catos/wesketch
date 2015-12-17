@@ -6,9 +6,9 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['$filter', 'alert', 'sawkit', 'tokenIdentity'];
+    WesketchController.$inject = ['$filter', '$uibModal', 'alert', 'sawkit', 'tokenIdentity'];
 
-    function WesketchController($filter, alert, sawkit, tokenIdentity) {
+    function WesketchController($filter, $uibModal, alert, sawkit, tokenIdentity) {
         /**
          * Private variables
          */
@@ -84,6 +84,7 @@
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
         vm.onInputKey = onInputKey;
+        vm.showScores = showScores;
 
         /**
          * Developer
@@ -267,6 +268,30 @@
                     ', type = ' + type +
                     ', value = ' + value);
             }
+        }
+
+        function showScores() {
+            var modalInstance = $uibModal.open({
+                // animation: $scope.animationsEnabled,
+                templateUrl: '/app/components/wesketch/wesketch.game-scores.html',
+                // controller: 'ModalInstanceCtrl',
+                // size: size,
+                resolve: {
+                    // items: function () {
+                    //     return $scope.items;
+                    // }
+                }
+            });
+
+            // modalInstance.result.then(function (selectedItem) {
+            //     // $scope.selected = selectedItem;
+            // }, function () {
+            //     // $log.info('Modal dismissed at: ' + new Date());
+            // });
+
+            // $scope.toggleAnimation = function () {
+            //     $scope.animationsEnabled = !$scope.animationsEnabled;
+            // };
         }
 
         /**

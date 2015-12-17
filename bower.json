@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "angular": "~1.4.7",
-    "angular-bootstrap": "~0.13.3",
+    "angular-bootstrap": "~0.14.3",
     "angular-ui-router": "~0.2.15",
     "bootstrap": "~3.3.5",
     "fontawesome": "~4.3.0",
@@ -34,5 +34,8 @@
     "socket.io-client": {
       "main": "socket.io.js"
     }
+  },
+  "resolutions": {
+    "angular-bootstrap": "~0.14.3"
   }
 }

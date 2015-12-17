@@ -373,17 +373,6 @@ server.startTimer = function (duration, next) {
  */
 server.endRound = function () {
 
-    // Check if End game yet ...
-    var endGame = _.all(server.state.players, function (player) {
-        return player.drawCount === 3;
-    });
-
-    if (endGame) {
-        server.sendServerMessage('info', 'All players have drawn 3 times.');
-        server.endGame();
-        return;
-    }
-
     // Update game state
     server.state.phase = server.state.phaseTypes.roundEnd;
 
@@ -397,14 +386,25 @@ server.endRound = function () {
         player.isDrawing = false;
     });
 
-    server.startTimer(10, server.startRound);
-    server.sendServerMessage('important', 'Next round starts in 10 seconds...');
-
     // Clear the drawing area
     server.sendServerEvent('clear');
 
     // Update clients with altered state
     server.sendServerEvent('updateState', server.state);
+    // Check if End game yet ...
+    var endGame = _.all(server.state.players, function (player) {
+        return player.drawCount === 3;
+    });
+
+    if (endGame) {
+        server.sendServerMessage('info', 'All players have drawn 3 times.');
+        server.endGame();
+        return;
+    }
+
+    // Go to startRound in 10 seconds
+    server.startTimer(10, server.startRound);
+    server.sendServerMessage('important', 'Next round starts in 10 seconds...');
 
 };
 
@@ -416,6 +416,7 @@ server.endGame = function () {
     // Update game state
     server.state.phase = server.state.phaseTypes.endGame;
 
+    // Go to resetGame in 30 seconds
     server.startTimer(30, server.resetGame);
     server.sendServerMessage('important', 'Game ends in 30 seconds...');
 

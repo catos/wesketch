@@ -11,6 +11,8 @@
 - Updated palette with new awesome color, including 3 shades of brown!
 - Unnecessary fullscreen button added, it includes the framework on zoom so it brings nothing more than the basic browser feature.
 - Drawing player has a different colored UI to indicate that he (or she) is in fact the drawing player
+- Timer shakes on 30 seconds...
+- Drawing-tools are now hidden for non-drawing players
 
 ## Version 0.1.0 - Prototype
 - Input mode: use the buttons beside the text-input (or | "pipe") to toggle between chat and guess mode.
@@ -18,11 +20,7 @@
 ## TODO
 
 ### Client
-- Shake timer on < 30 seconds...
-- Hide drawing-tools for non-drawing players
-- Group drawing-tools
 - Update gulp to copy audio to build-folder
-- First man to guess
 - Easier words
 - Fix domain
 - Fix give hint
@@ -34,8 +32,6 @@
 - Request pause
 - Player are drawing x times in a row...
 - Next round starts in X seconds: show who the next drawing player is
-- Sounds....especially when someone wins
-- Time reduces when someone guess the right word
 - Sound on timer near the end
 - Reset currentDrawingPlayer when end game
 - Show scores in the middle, toggle OK
