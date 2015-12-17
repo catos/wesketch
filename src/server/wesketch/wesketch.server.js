@@ -328,8 +328,7 @@ server.startRound = function () {
     server.sendServerEvent('updateState', server.state);
 
     // Start timer
-    // TODO set back timer
-    server.startTimer(10, server.endRound);
+    server.startTimer(90, server.endRound);
 };
 
 /**
@@ -379,7 +378,6 @@ server.endRound = function () {
     server.sendServerMessage('info', 'The word was: ' + server.state.currentWord);
 
     // Reset players
-    // TODO: revider reset players
     _.forEach(server.state.players, function (player) {
         player.guessedWord = false;
         player.isDrawing = false;
@@ -402,8 +400,7 @@ server.endRound = function () {
     }
 
     // Go to startRound in 10 seconds
-    // TODO set back timer
-    server.startTimer(3, server.startRound);
+    server.startTimer(10, server.startRound);
     server.sendServerMessage('important', 'Next round starts in 10 seconds...');
 
 };

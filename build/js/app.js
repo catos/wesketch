@@ -69,17 +69,17 @@
 		.module('app.home', []);
 		
 })();
+(function() {
+	'use strict';
+
+	angular.module('app.users', []);
+})();
 (function () {
 	'use strict';
 
 	angular
 		.module('app.layout', []);
 		
-})();
-(function() {
-	'use strict';
-
-	angular.module('app.users', []);
 })();
 (function() {
 	'use strict';
@@ -112,11 +112,11 @@
         ApplicationName: 'Cato Skogholt Application',
         ApplicationPrefix: 'CSA',
 
-        ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-        SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+        // ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
+        // SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
 
-        // ApiUrl: 'http://localhost:7203/',
-        // SocketUrl: 'http://localhost:7203/'
+        ApiUrl: 'http://localhost:7203/',
+        SocketUrl: 'http://localhost:7203/'
     };
 
     angular
@@ -679,90 +679,6 @@
 	'use strict';
 
 	angular
-		.module('app.layout')
-		.controller('HeaderController', HeaderController);
-
-	HeaderController.$inject = ['tokenIdentity'];
-
-	function HeaderController(tokenIdentity) {
-		var vm = this;
-		vm.tokenIdentity = tokenIdentity;
-	}
-})();
-
-(function () {
-	'use strict';
-
-	angular
-		.module('app.layout')
-		.controller('LayoutController', LayoutController);
-
-	/* @ngInject */
-	function LayoutController() {
-	}
-}());
-(function () {
-	'use strict';
-
-	angular
-		.module('app.layout')
-		.config(configureRoutes);
-
-	configureRoutes.$inject = ['$stateProvider'];
-
-	function configureRoutes($stateProvider) {
-		$stateProvider
-			.state('layout', {
-                url: '',
-				views: {
-					'@': {
-						templateUrl: 'app/layout/layout.html',
-						controller: 'LayoutController',
-						controllerAs: 'vm'
-					},
-					'header@layout': {
-						templateUrl: 'app/layout/header.html',
-						controller: 'HeaderController',
-						controllerAs: 'vm'
-					},
-					'sidebar@layout': {
-						templateUrl: 'app/layout/sidebar.html',
-						controller: 'SidebarController',
-						controllerAs: 'vm'
-					},
-					'container@layout': {
-						template: '<div ui-view></div>',
-					},
-					'footer@layout': {
-						templateUrl: 'app/layout/footer.html',
-						// controller: 'FooterController',
-						// controllerAs: 'vm'
-					}
-				},
-            });
-	}
-} ());
-(function() {
-'use strict';
-
-	angular
-		.module('app.layout')
-		.controller('SidebarController', SidebarController);
-
-	SidebarController.$inject = ['$state'];
-	function SidebarController($state) {
-		var vm = this;
-		
-
-		activate();
-
-		function activate() { }
-	}
-})();
-(function () {
-	'use strict';
-
-	angular
 		.module('app.users')
 		.controller('UserCreateController', UserCreateController);
 
@@ -956,6 +872,88 @@
             });
     }
 
+} ());
+(function () {
+    'use strict';
+
+    angular
+        .module('app.layout')
+        .controller('HeaderController', HeaderController);
+
+    HeaderController.$inject = ['tokenIdentity'];
+
+    function HeaderController(tokenIdentity) {
+        var vm = this;
+        vm.tokenIdentity = tokenIdentity;
+
+        vm.fullscreen = fullscreen;
+
+        function fullscreen($event) {
+            $event.stopPropagation();
+
+            var elem = document.getElementById('fw-wrapper');
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+
+            return false;
+        }
+
+    }
+})();
+
+(function () {
+	'use strict';
+
+	angular
+		.module('app.layout')
+		.controller('LayoutController', LayoutController);
+
+	/* @ngInject */
+	function LayoutController() {
+	}
+}());
+(function () {
+	'use strict';
+
+	angular
+		.module('app.layout')
+		.config(configureRoutes);
+
+	configureRoutes.$inject = ['$stateProvider'];
+
+	function configureRoutes($stateProvider) {
+		$stateProvider
+			.state('layout', {
+                url: '',
+				views: {
+					'@': {
+						templateUrl: 'app/layout/layout.html',
+						controller: 'LayoutController',
+						controllerAs: 'vm'
+					},
+					'header@layout': {
+						templateUrl: 'app/layout/header.html',
+						controller: 'HeaderController',
+						controllerAs: 'vm'
+					},
+					'container@layout': {
+						template: '<div ui-view></div>',
+					},
+					'footer@layout': {
+						templateUrl: 'app/layout/footer.html',
+						// controller: 'FooterController',
+						// controllerAs: 'vm'
+					}
+				},
+            });
+	}
 } ());
 (function () {
 	'use strict';
@@ -1156,6 +1154,7 @@
 
 })();
 
+/* global Howl */
 (function () {
     'use strict';
 
@@ -1163,24 +1162,26 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['alert', 'sawkit', 'tokenIdentity'];
+    WesketchController.$inject = ['$filter', '$uibModal', 'alert', 'sawkit', 'tokenIdentity'];
 
-    function WesketchController(alert, sawkit, tokenIdentity) {
+    function WesketchController($filter, $uibModal, alert, sawkit, tokenIdentity) {
         /**
          * Private variables
          */
         var tools = ['brush', 'eraser', 'fill'];
         var colors = [
-            '#000', '#fff', '#c0c0c0',
-            '#808080', '#f00', '#0f0',
-            '#00f', '#ff0', '#0ff',
-            '#f0f', '#800', '#808000',
-            '#008000', '#800080', '#008080',
-            '#000080'
+            '#000000', '#c0c0c0', '#ffffff',
+            '#2c4fa5', '#007cc9', '#00acf3',
+            '#00a446', '#5bb339', '#95c51f',
+            '#f1b700', '#fbdd00', '#fff200',
+            '#d9242a', '#de5b1f', '#e58100',
+            '#c50c70', '#d9058f', '#e486b9',
+            '#6c4b1f', '#a98754', '#c2ac79'
         ];
+        var sfx = {};
 
         /**
-         * Viewmodel
+         * Viewmodel variables
          */
         var vm = this;
         vm.canvas = null;
@@ -1201,31 +1202,51 @@
             id: -1,
             email: ''
         };
+        vm.drawingPlayer = {};
 
         vm.state = {};
         vm.myMessages = [];
         vm.inputGuessMode = false;
         vm.chatMessages = [];
         vm.newMessage = '';
+
+        // TODO: lag en generell toggle-functino ?
+        // TODO: og så trenger jeg booleans til view etterpå
+        vm.soundSettings = {
+            muteSfx: false,
+            muteMusic: false
+        };
+
         vm.drawSettings = {
             lineWidth: 2,
             lineJoin: 'round', // 'butt', 'round', 'square'
             lineCap: 'round', // 'bevel', 'round', 'miter',
 
-            currentTool: tools[0],
             tools: tools,
-
-            strokeStyle: colors[0],
             colors: colors,
+
+            currentTool: tools[0],
+            strokeStyle: colors[0],
         };
 
         // TODO: remove later...
         vm.messagesElement = {};
 
+        /**
+         * Viewmodel functions
+         */
+        vm.toggleSoundSettings = toggleSoundSettings;
         vm.setInputGuessMode = setInputGuessMode;
         vm.sendClientEvent = sendClientEvent;
         vm.addMessage = addMessage;
         vm.onInputKey = onInputKey;
+        vm.showScores = showScores;
+
+        /**
+         * Developer
+         */
+        vm.isAdmin = false;
+
 
         init();
 
@@ -1237,21 +1258,6 @@
             vm.canvas = document.getElementById('canvas');
             vm.messagesElement = document.getElementById('messages');
             if (vm.canvas !== undefined) {
-
-                // TODO: resize canvas
-                // vm.canvas.onresize = onResize;
-                // var w = angular.element($window);
-                // w.bind('resize', function () {
-                //     console.log('resize!');
-
-                //     var rowElement = document.getElementById('canvas-height');
-                //     console.log('rowElement.clientHeight: ' + rowElement.offsetHeight);
-                //     vm.canvas.style.width = '100%';
-                //     vm.canvas.style.height = rowElement.offsetHeight + 'px';
-                //     vm.canvas.width = vm.canvas.offsetWidth;
-                //     vm.canvas.height = vm.canvas.offsetHeight;
-                // });
-
                 vm.canvas.onmousedown = onMouseDown;
                 vm.canvas.onmouseup = onMouseUp;
                 vm.canvas.onmousemove = onMouseMove;
@@ -1264,6 +1270,32 @@
             vm.player.email = tokenIdentity.currentUser.email;
             vm.player.name = tokenIdentity.currentUser.name;
             vm.sendClientEvent('addPlayer', vm.player);
+
+            vm.isAdmin = tokenIdentity.isAdmin();
+
+            prepareSounds(function () {
+                console.log('Finished preparing sounds.');
+            });
+        }
+
+        function prepareSounds(next) {
+
+            sfx.playerJoined = addSfx('SUCCESS TUNE Happy Sticks Short 01.wav');
+            sfx.playerReady = addSfx('TECH INTERFACE Computer Beeps 08.wav');
+            sfx.playerRightAnswer = addSfx('SUCCESS PICKUP Collect Beep 02.wav');
+            sfx.endRoundNoCorrect = addSfx('SUCCESS TUNE Win Ending 09.wav');
+            sfx.endGame = addSfx('SUCCESS TUNE Win Complete 07.wav');
+
+            next();
+
+            function addSfx(path) {
+                var defaults = {
+                    buffer: true,
+                    urls: [''],
+                    volume: 0.1
+                };
+                return new Howl(angular.extend({}, defaults, { urls: ['/sounds/' + path] }));
+            }
         }
 
         /**
@@ -1273,7 +1305,7 @@
             vm.coords.from = getCoords(event);
             vm.drawing = true;
 
-            if (vm.state.drawingPlayer.id === vm.player.id) {
+            if (vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
             }
@@ -1284,7 +1316,7 @@
         }
 
         function onMouseMove(event) {
-            if (vm.drawing && vm.state.drawingPlayer.id === vm.player.id) {
+            if (vm.drawing && vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
 
@@ -1342,12 +1374,17 @@
             }
         }
 
+        function toggleSoundSettings(setting) {
+            console.log('toggleSoundSettings: ' + setting);
+            vm.soundSettings[setting] = !vm.soundSettings[setting];
+        }
+
         function addMessage() {
 
             vm.myMessages.push(vm.newMessage);
 
             // Drawing player cannot use chat
-            if (vm.player.id === vm.state.drawingPlayer.id) {
+            if (vm.player.id === vm.drawingPlayer.id) {
                 alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
                 vm.newMessage = '';
                 return;
@@ -1388,6 +1425,20 @@
             }
         }
 
+        function showScores() {
+            $uibModal.open({
+                // templateUrl: 'app/components/wesketch/wesketch.scores.html',
+                template: '<div class="wesketch-scores"><div class="modal-header"><h3 class="modal-title">Scoreboard!</h3></div><div class="modal-body"><table class="table table-bordered table-striped"><tr><th>Player</th><th>Score</th></tr><tr ng-repeat="player in vm.players"><td>{{player.name}}</td><td>{{player.score}}</td></tr></table></div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="vm.close()">Close</button></div></div>',
+                controller: 'WesketchScoresController',
+                controllerAs: 'vm',
+                resolve: {
+                    players: function () {
+                        return vm.state.players;
+                    }
+                }
+            });
+        }
+
         /**
          * Server events
          */
@@ -1396,15 +1447,15 @@
             var serverEvents = serverEvents || {};
 
             serverEvents.updateState = function (serverEvent) {
+                // Update state
                 angular.extend(vm.state, serverEvent.value);
 
-                var updatedPlayer;
-                for (var i = 0; i < vm.state.players.length; i++) {
-                    if (vm.state.players[i].email === vm.player.email) {
-                        updatedPlayer = vm.state.players[i];
-                    }
-                }
-                angular.extend(vm.player, updatedPlayer);
+                // Reassign drawing player
+                vm.drawingPlayer = $filter('filter')(vm.state.players, { isDrawing: true }, true)[0];
+
+                // Update player
+                var player = $filter('filter')(vm.state.players, { email: vm.player.email }, true)[0];
+                angular.extend(vm.player, player);
             };
 
             serverEvents.updateDrawSettings = function (serverEvent) {
@@ -1415,7 +1466,6 @@
                 vm.state.timer = serverEvent.value;
             };
 
-            // TODO: sjekk hva som overføres av data her...vil ha minst mulig
             serverEvents.brush = function (serverEvent) {
                 var coords = serverEvent.value;
 
@@ -1435,6 +1485,12 @@
                 vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
             };
 
+            serverEvents.playSound = function (serverEvent) {
+                if (!vm.soundSettings.muteSfx) {
+                    sfx[serverEvent.value].play();
+                }
+            };
+
             serverEvents.addMessage = function (serverEvent) {
                 vm.chatMessages.push(serverEvent.value);
 
@@ -1442,6 +1498,10 @@
                 if (message.type === 'important') {
                     alert.show('info', '', serverEvent.value.message);
                 }
+            };
+            
+            serverEvents.showScores = function(serverEvent) {
+                showScores();  
             };
 
             serverEvents.serverError = function (serverEvent) {
@@ -1518,8 +1578,27 @@
     }
 })();
 
+(function () {
+	'use strict';
+
+	angular
+		.module('components.wesketch')
+		.controller('WesketchScoresController', WesketchScoresController);
+
+	WesketchScoresController.$inject = ['$uibModalInstance', 'players'];
+	function WesketchScoresController($uibModalInstance, players) {
+		var vm = this;
+		vm.players = players;
+
+		vm.close = close;
+
+		function close() {
+			$uibModalInstance.close();
+		}
+	}
+})();
 angular.module("app.core").run(["$templateCache", function($templateCache) {$templateCache.put("app/account/account.html","<h1>Account</h1><hr><div ui-view></div>");
-$templateCache.put("app/account/login.html","<form ng-submit=vm.submit()><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password></div><div class=form-group><button type=submit class=\"btn btn-primary\">Login</button> <a ui-sref=layout.account.register class=\"text-muted pull-right\">Register</a> <a ui-sref=layout.account.forgotPassword>Forgot password ?</a></div><div class=form-group><div class=\"alert alert-info\" ng-show=vm.message.length>{{vm.message}}</div></div></form>");
+$templateCache.put("app/account/login.html","<form ng-submit=vm.submit()><div class=form-group><label for=doesNotExist>Quick logins</label><div><button class=\"btn btn-default\" ng-click=\"vm.quickSignIn(\'test@test.com\', \'test\')\">Kåre</button></div></div><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password></div><div class=form-group><button type=submit class=\"btn btn-primary\">Login</button> <a ui-sref=layout.account.register class=\"text-muted pull-right\">Register</a> <a ui-sref=layout.account.forgotPassword>Forgot password ?</a></div><div class=form-group><div class=\"alert alert-info\" ng-show=vm.message.length>{{vm.message}}</div></div></form>");
 $templateCache.put("app/account/register.html","<form name=register ng-submit=vm.submit()><div class=form-group><label for=inputName>Name</label> <input type=text class=form-control id=inputName placeholder=Name ng-model=vm.name required></div><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email required></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password required></div><div class=form-group><label for=inputPasswordConfirm>Confirm password</label> <input type=password class=form-control id=inputPasswordConfirm placeholder=\"Confirm password\" ng-model=vm.password_confirm required></div><div class=form-group><button type=submit class=\"btn btn-primary\">Register</button></div></form>");
 $templateCache.put("app/batteries/batteries-list.html","<h3>Batteries <small>Count: {{vm.batteries.length}}</small></h3><table class=\"table table-striped table-bordered\"><tr><th></th><th>Name</th><th>Created</th><th></th></tr><tr data-ng-repeat=\"battery in vm.batteries\"><td><input type=checkbox></td><td><a ui-sref=\"layout.batteries.details({ id: battery._id})\">#{{battery.number}} - {{battery.name}}</a> <span class=badge>{{battery.cycles.length}}</span></td><td>{{battery.created | date: \'yyyy-MM-dd HH:mm:ss\'}}</td><td><a ui-sref=\"layout.batteries.details({ id: battery._id })\" class=\"btn btn-primary\">Edit</a></td></tr></table>");
 $templateCache.put("app/batteries/batteries.html","<section><small>{{vm.message}}</small><ul class=\"nav nav-pills\"><li ui-sref-active=active><a ui-sref=layout.batteries.list>List</a></li><li ui-sref-active=active><a ui-sref=\"layout.batteries.details({ id: 0 })\">New battery</a></li></ul><div ui-view></div></section>");
@@ -1527,13 +1606,13 @@ $templateCache.put("app/batteries/battery-details.html","<section><div class=row
 $templateCache.put("app/chat/chat.html","<h3>Chat</h3><hr><div class=chat><div class=row><div class=\"col-xs-9 messages\"><div ng-repeat=\"msg in vm.messages\"><small ng-show=msg.received>{{msg.received | date:\'HH:mm:ss\'}} ({{msg.latency}}ms)</small> <strong ng-show=msg.user>{{msg.user.name}}:</strong> {{msg.message}}</div></div><div class=col-xs-3><ul class=list-unstyled ng-repeat=\"user in vm.users\"><li>{{user.name}}</li></ul></div></div><div class=row><div class=col-md-12><div class=input-group><input class=form-control type=text ng-model=vm.newMessage ng-keyup=\"$event.keyCode == 13 ? vm.sendMessage(vm.newMessage) : null\"> <span class=input-group-btn><button class=\"btn btn-primary\" type=button ng-click=vm.sendMessage(vm.newMessage)>Send</button></span></div></div></div></div>");
 $templateCache.put("app/draw/draw.html","<wesketch></wesketch>");
 $templateCache.put("app/home/home.html","<section><h1>Home</h1><p>{{vm.message}}</p></section>");
-$templateCache.put("app/layout/footer.html","<div class=container><p class=text-muted>Føkkings footer assa.</p></div>");
-$templateCache.put("app/layout/header.html","<nav class=\"navbar navbar-default\"><div class=navbar-header><a class=\"btn navbar-btn navbar-toggle\" ng-init=\"navCollapsed = true\" ng-click=\"navCollapsed = !navCollapsed\" data-toggle=collapse data-target=.navbar-collapse><span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></a></div><div class=\"navbar-collapse collapse\" ng-class=\"{\'in\': !navCollapsed}\"><ul class=\"nav navbar-nav\"><li><a href=https://github.com/catos/CSA/blob/master/README.md#todo target=_blank><i class=\"fa fa-github\"></i> Project homepage</a></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a ui-sref=layout.home>{{vm.message}}</a></li><li ng-show=vm.tokenIdentity.isAuthenticated()><a ui-sref=layout.account>Welcome \'{{vm.tokenIdentity.currentUser.name}}\'</a></li><li ng-show=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.logout>Logout</a></li><li ng-hide=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.login>Login</a></li><li ng-show=vm.tokenIdentity.isAdmin() dropdown><a href=# dropdown-toggle><i class=\"fa fa-cog\"></i> <span class=caret></span></a><ul class=dropdown-menu role=menu aria-labelledby=single-button><li><a href=/server>Server</a></li><li class=divider></li><li><a href=http://passportjs.org/docs/username-password>Passportjs</a></li><li><a href=https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs>Authentication in Single Page Applications</a></li><li class=divider></li><li><a href=\"https://mongolab.com/\"><i class=\"fa fa-database\"></i> Mongolab.com</a></li><li><a href=\"http://getbootstrap.com/css/\">Bootstrap</a></li><li><a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">Font Awesome</a></li><li><a href=https://github.com/johnpapa/angular-styleguide><i class=\"fa fa-github\"></i> <strong>Angular Styleguide</strong></a></li><li><a href=https://github.com/catos/Multivision><i class=\"fa fa-github\"></i> Multivision</a></li><li class=divider></li><li><a href=http://www.angularjs.org><i class=\"fa fa-html5\"></i> Angularjs</a></li><li><a href=http://mongoosejs.com/docs/guide.html>MongooseJs</a></li><li><a href=\"https://angular-ui.github.io/\">Angular UI</a></li><li><a href=\"http://momentjs.com/\">Moment.js</a></li><li class=divider></li><li><a href=\"http://webapplayers.com/inspinia_admin-v2.3/\">Inspiration</a></li><li class=divider></li><li><a href=https://devcenter.heroku.com/articles/troubleshooting-node-deploys>Troubleshooting Node.js Deploys</a></li></ul></li></ul></div></nav>");
-$templateCache.put("app/layout/layout.html","<div id=fw-wrapper class=container-fluid><div id=fw-sidebar ui-view=sidebar></div><div id=fw-page-wrapper><header id=fw-header ui-view=header></header><div id=fw-main-content ui-view=container></div><footer id=fw-footer ui-view=footer></footer></div></div><div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong ng-show=alert.title.length>{{alert.title}}:</strong> {{alert.message}}</div>");
-$templateCache.put("app/layout/sidebar.html","<ul><li class=header><a ui-sref=layout.home>CSA</a></li><li ui-sref-active=active><a ui-sref=layout.users.list><i class=\"fa fa-users\"></i> Users</a></li><li ui-sref-active=active><a ui-sref=layout.draw><i class=\"fa fa-paint-brush\"></i> Draw</a></li></ul>");
 $templateCache.put("app/users/user-create.html","<section><div class=row><div class=col-md-12><h3>Create New User</h3><form><div class=form-group><label for=inputName>Name</label> <input type=name class=form-control id=inputName placeholder=Name data-ng-model=vm.user.name required></div><div class=form-group><label for=inputEmail>Email</label> <input type=text class=form-control id=inputEmail placeholder=foo@bar.com data-ng-model=vm.user.email required></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword data-ng-model=vm.user.password></div><div class=form-group><label for=inputRepeatPassword>Repeat password</label> <input type=password class=form-control id=inputRepeatPassword></div><div class=form-group><div class=checkbox><label><input type=checkbox value ng-model=vm.user.isAdmin> Administrator</label></div></div><div class=form-group><button type=submit class=\"btn btn-default pull-right\" data-ng-click=vm.submit()>Submit</button></div></form></div></div></section>");
 $templateCache.put("app/users/user-edit.html","<section><div class=row><div class=col-md-12><h3>Edit \'{{vm.user.name}}\' <small>#{{vm.user._id}}</small></h3><hr><a class=\"btn btn-danger btn-sm\" href=# data-ng-click=vm.del()>Delete user</a> <a class=\"btn btn-info btn-sm\" href=# data-ng-click=vm.resetPassword()>Reset password</a><hr><form><div class=form-group><label for=inputName>Name</label> <input type=name class=form-control id=inputName placeholder=Name data-ng-model=vm.user.name required></div><div class=form-group><label for=inputEmail>Email</label> <input type=text class=form-control id=inputEmail placeholder=foo@bar.com data-ng-model=vm.user.email required></div><div class=form-group><div class=checkbox><label><input type=checkbox value ng-model=vm.user.isAdmin> Administrator</label></div></div><div class=form-group><button type=submit class=\"btn btn-default pull-right\" data-ng-click=vm.submit()>Submit</button></div></form></div></div></section>");
 $templateCache.put("app/users/users-list.html","<h3>Users <small>Count: {{vm.users.length}}</small></h3><table class=\"table table-striped table-bordered table-hover\"><tr><th>_id</th><th class=table-main-column>Name</th><th>Username</th></tr><tr data-ng-repeat=\"user in vm.users\"><td>{{user._id}}</td><td><a ui-sref=\"layout.users.edit({ id: user._id})\">{{user.name}}</a> <span ng-show=user.isAdmin class=\"label label-info\">Admin</span></td><td>{{user.email}}</td></tr></table>");
 $templateCache.put("app/users/users.html","<section><ul class=\"nav nav-pills\"><li ui-sref-active=active><a ui-sref=layout.users.list>List</a></li><li ui-sref-active=active><a ui-sref=layout.users.create>New user</a></li></ul><div ui-view></div></section>");
+$templateCache.put("app/layout/footer.html","<div class=container><p class=text-muted>Føkkings footer assa.</p></div>");
+$templateCache.put("app/layout/header.html","<nav class=\"navbar navbar-default\"><div class=navbar-header><a class=\"btn navbar-btn navbar-toggle\" ng-init=\"navCollapsed = true\" ng-click=\"navCollapsed = !navCollapsed\" data-toggle=collapse data-target=.navbar-collapse><span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></a> <a class=navbar-brand ui-sref=layout.home>CSA</a></div><div class=\"navbar-collapse collapse\" ng-class=\"{\'in\': !navCollapsed}\"><ul class=\"nav navbar-nav\"><li ui-sref-active=active><a ui-sref=layout.draw><i class=\"fa fa-paint-brush\"></i>&nbsp; WeSketch</a></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a ui-sref=layout.home>{{vm.message}}</a></li><li ng-show=vm.tokenIdentity.isAuthenticated()><a ui-sref=layout.account>Welcome \'{{vm.tokenIdentity.currentUser.name}}\'</a></li><li ng-show=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.logout>Logout</a></li><li ng-hide=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.login>Login</a></li><li><a href=# ng-click=vm.fullscreen($event)><i class=\"fa fa-square-o\"></i></a></li><li ng-show=vm.tokenIdentity.isAdmin() uib-dropdown><a href=# uib-dropdown-toggle><i class=\"fa fa-cog\"></i> <span class=caret></span></a><ul class=uib-dropdown-menu role=menu aria-labelledby=single-button><li ui-sref-active=active><a ui-sref=layout.batteries.list><i class=\"fa fa-battery-half\"></i> Batteries</a></li><li ui-sref-active=active><a ui-sref=layout.chat><i class=\"fa fa-comment\"></i> Chat</a></li><li ui-sref-active=active><a ui-sref=layout.users.list><i class=\"fa fa-users\"></i> Users</a></li><li><a href=/server>Server</a></li><li class=divider></li><li><a href=\"http://getbootstrap.com/css/\"><i class=\"fa fa-css3\"></i> Bootstrap</a></li><li><a href=\"http://fortawesome.github.io/Font-Awesome/icons/\"><i class=\"fa fa-font\"></i> Font Awesome</a></li><li><a href=http://www.angularjs.org><i class=\"fa fa-html5\"></i> Angularjs</a></li><li><a href=\"https://angular-ui.github.io/\"><i class=\"fa fa-html5\"></i> Angular UI</a></li><li class=divider></li><li><a href=https://github.com/johnpapa/angular-styleguide><i class=\"fa fa-github\"></i> <strong>Angular Styleguide</strong></a></li><li><a href=https://dashboard.heroku.com/apps>Heroku Dashboard</a></li><li><a href=\"https://blooming-eyrie-6843.herokuapp.com/\">blooming-eyrie-6843.herokuapp.com</a></li><li><a href=https://devcenter.heroku.com/articles/troubleshooting-node-deploys>Troubleshooting Node.js Deploys</a></li><li><a href=\"https://mongolab.com/\"><i class=\"fa fa-database\"></i> Mongolab.com</a></li><li class=divider></li><li><a href=\"http://webapplayers.com/inspinia_admin-v2.3/\">Inspiration</a></li><li><a href=http://audiojungle.net/item/quiz-millionaire-set/577869>Quiz Millionaire Sounds</a></li></ul></li></ul></div></nav>");
+$templateCache.put("app/layout/layout.html","<div id=fw-wrapper class=container-fluid><header id=fw-header ui-view=header></header><div id=fw-main-content ui-view=container></div><footer id=fw-footer ui-view=footer></footer></div><div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong ng-show=alert.title.length>{{alert.title}}:</strong> {{alert.message}}</div>");
 $templateCache.put("app/blocks/alert/alert.html","");
-$templateCache.put("app/components/wesketch/wesketch.html","<div class=wesketch><div class=\"row row-canvas\"><div class=col-xs-9><canvas width=480 height=480 id=canvas></canvas></div><div class=\"col-xs-3 functions-row\"><div class=\"function-group function-group-tools\"><div class=title>Tools</div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'clear\')\"><i class=\"fa fa-times\"></i></div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'changeTool\', \'brush\')\"><i class=\"fa fa-paint-brush\"></i></div></div><div class=\"function-group function-group-tool-sizes\"><div class=title>Sizes</div><div class=wesketch-button><i class=\"fa fa-minus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth - 2 })\"></i></div><div class=wesketch-button><i class=\"fa fa-plus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth + 2 })\"></i></div><strong>Size: {{vm.drawSettings.lineWidth}}</strong></div><div class=\"function-group function-group-palette\"><div class=title>Palette</div><div ng-repeat=\"color in vm.drawSettings.colors\" style=\"background-color: {{color}}\" ng-class=\"color === vm.drawSettings.strokeStyle ? \'current\' : \'\'\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { strokeStyle: color })\" class=wesketch-button></div></div><div class=\"function-group function-group-timer\"><div class=title>Timer</div><div class=timer>{{vm.state.timer.remaining}}</div><small>Seconds remaining</small><div class=checkbox ng-show=\"vm.state.phase === vm.state.phaseTypes.preGame\"><label><input type=checkbox ng-checked=vm.player.ready ng-click=\"vm.sendClientEvent(\'togglePlayerReady\')\"> I am ready</label></div></div><div ng-show=\"vm.player.id === vm.state.drawingPlayer.id\" class=\"function-group function-group-drawing-player\"><div class=title>Current word</div><div class=\"text-uppercase current-word\">{{vm.state.currentWord}}</div><button class=\"btn btn-sm btn-danger\" ng-click=\"vm.sendClientEvent(\'giveUp\')\">Give up</button></div></div></div><div class=\"row row-info\">Phase: {{vm.state.phase}} - Round: {{vm.state.round}} - Drawing: {{vm.state.drawingPlayer.name}}</div><div class=\"row row-chat\"><div class=col-xs-9><div id=messages class=messages ws-scroll-down=vm.chatMessages><div ng-repeat=\"message in vm.chatMessages track by $index\" class=\"message text-{{message.type}}\"><small class=text-muted>{{message.timestamp | date:\'HH:mm:ss\'}}</small> <strong ng-show=message.from>{{message.from}}:</strong> {{message.message}}</div></div><div class=\"new-message input-group\"><span class=input-group-btn><button class=btn ng-class=\"{ \'btn-primary\' : vm.inputGuessMode }\" ng-click=vm.setInputGuessMode(true) type=button><i title=\"Guess mode\" class=\"fa fa-exclamation-circle\"></i></button> <button class=btn ng-class=\"{ \'btn-primary\' : !vm.inputGuessMode }\" ng-click=vm.setInputGuessMode(false) type=button><i title=\"Chat mode\" class=\"fa fa-comment\"></i></button></span> <input class=form-control type=text ng-model=vm.newMessage ng-keyup=vm.onInputKey($event)> <span class=input-group-btn><button class=\"btn btn-primary\" ng-click=vm.addMessage() type=button>Send</button></span></div></div><div class=\"col-xs-3 players\"><table class=table><tr ng-repeat=\"player in vm.state.players\"><td data-player-id={{player.id}} ng-class=\"{ \'ready\' : player.ready }\"><i ng-show=player.ready class=\"fa fa-check\"></i> {{player.name}}</td><td>{{player.score}}</td></tr></table></div></div><div class=row ng-show=\"vm.player.name === \'Cato Skogholt\'\"><div class=col-xs-12><hr><button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'nonExistingEvent\', \'with some value...\')\">Unknown handler</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'resetGame\')\">Reset game</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateState\')\">Update State</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\')\">Update Settings</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'testCode\')\">Test code</button><div><div><strong>vm.player:</strong></div>{{vm.player}}</div><div><div><strong>vm.state.players:</strong></div>{{vm.state.players}}</div><div><div><strong>vm.state:</strong></div>{{vm.state}}</div></div></div></div>");}]);
+$templateCache.put("app/components/wesketch/wesketch.html","<div id=wesketch class=wesketch ng-class=\"{\'drawing-player\' : vm.player.isDrawing}\"><div class=\"top-row row\"><div class=\"col-left col-xs-6\"><ul class=\"list-inline pull-right\"><li><a class=nav-right href=https://github.com/catos/CSA/blob/master/README.md#todo target=_blank><i class=\"fa fa-github\"></i></a></li><li><i class=\"fa fa-volume-up sfx\" ng-class=\"{ \'sfx-muted\' : vm.soundSettings.muteSfx}\" ng-click=\"vm.toggleSoundSettings(\'muteSfx\')\"></i></li><li><i class=\"fa fa-music music\" ng-class=\"{ \'music-muted\' : vm.soundSettings.muteMusic}\" ng-click=\"vm.toggleSoundSettings(\'muteMusic\')\"></i></li><li>Round <strong>{{vm.state.round}}</strong> of <strong>{{vm.state.roundsTotal}}</strong></li></ul></div><div class=\"col-right col-xs-6\"><ul class=list-inline><li ng-hide=\"vm.drawingPlayer === undefined\">Drawing: {{vm.drawingPlayer.name}}</li><li ng-hide=\"vm.nextDrawingPlayer === undefined\">Next: Another Player</li></ul></div></div><div class=\"main-row row\"><div class=timer ng-class=\"{ \'animated shake\' : vm.state.timer.remaining === 30 }\"><div class=timer-remaining>{{vm.state.timer.remaining}}</div></div><div class=\"col-xs-6 chat\"><div class=players><div class=checkbox ng-show=\"vm.state.phase === vm.state.phaseTypes.preGame\"><button ng-click=\"vm.sendClientEvent(\'togglePlayerReady\')\" class=\"btn btn-primary ready-button\"></button><input type=checkbox ng-checked=vm.player.ready> <span>I am ready</span></div><ul class=list-unstyled><li ng-repeat=\"player in vm.state.players\"><a data-player-id={{player.id}} ng-class=\"{ \'ready\' : player.ready }\">{{player.name}}</a> <span class=player-score>- {{player.score}}</span></li></ul></div><div id=messages class=messages ws-scroll-down=vm.chatMessages><div ng-repeat=\"message in vm.chatMessages track by $index\" class=\"message text-{{message.type}}\"><small class=text-muted>{{message.timestamp | date:\'HH:mm:ss\'}}</small> <strong ng-show=message.from>{{message.from}}:</strong> {{message.message}}</div></div></div><div class=\"col-xs-6 canvas\"><canvas width=500 height=500 id=canvas></canvas><div ng-show=vm.player.isDrawing class=drawing-tools><div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'clear\')\"><i class=\"fa fa-times\"></i></div><div class=wesketch-button ng-click=\"vm.sendClientEvent(\'changeTool\', \'brush\')\"><i class=\"fa fa-paint-brush\"></i></div></div><div><div class=wesketch-button><i class=\"fa fa-minus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth - 2 })\"></i></div><div class=wesketch-button><i class=\"fa fa-plus-circle\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { lineWidth: vm.drawSettings.lineWidth + 2 })\"></i></div><div class=wesketch-button>{{vm.drawSettings.lineWidth}}</div></div><div><div ng-repeat=\"color in vm.drawSettings.colors\" style=\"background-color: {{color}}\" ng-class=\"color === vm.drawSettings.strokeStyle ? \'current\' : \'\'\" ng-click=\"vm.sendClientEvent(\'updateDrawSettings\', { strokeStyle: color })\" class=wesketch-button></div></div></div></div></div><div class=\"bottom-row row\"><div class=col-xs-12><div ng-hide=vm.player.isDrawing class=\"new-message input-group\"><span class=input-group-btn><button class=btn ng-class=\"{ \'btn-primary\' : vm.inputGuessMode }\" ng-click=vm.setInputGuessMode(true) type=button><i title=\"Guess mode\" class=\"fa fa-exclamation-circle\"></i></button> <button class=btn ng-class=\"{ \'btn-primary\' : !vm.inputGuessMode }\" ng-click=vm.setInputGuessMode(false) type=button><i title=\"Chat mode\" class=\"fa fa-comment\"></i></button></span> <input class=form-control type=text ng-model=vm.newMessage ng-keyup=vm.onInputKey($event)> <span class=input-group-btn><button class=\"btn btn-primary\" ng-click=vm.addMessage() type=button>Send</button></span></div><div ng-show=vm.player.isDrawing class=drawing-player-panel><form class=inline-form><div class=form-group><div class=current-word><span>Draw the word:</span><div class=word>{{vm.state.currentWord}}</div></div></div><div class=form-group><button class=\"btn btn-sm btn-danger\" ng-click=\"vm.sendClientEvent(\'giveUp\')\">Give up</button></div></form></div></div></div><div class=\"debug-row row\" ng-show=vm.isAdmin><div class=col-xs-12><button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'resetGame\')\">Reset game</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'playSound\', \'playerJoined\')\">Sfx: playerJoined</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'playSound\', \'playerRightAnswer\')\">Sfx: playerRightAnswer</button> <button class=\"btn btn-sm btn-primary\" ng-click=\"vm.sendClientEvent(\'showScores\')\">Scores</button><div><div><strong>vm.player:</strong></div>{{vm.player}}</div><div><div><strong>vm.state.players:</strong></div>{{vm.state.players}}</div><div><div><strong>vm.state:</strong></div>{{vm.state}}</div></div></div></div>");
+$templateCache.put("app/components/wesketch/wesketch.scores.html","<div class=wesketch-scores><div class=modal-header><h3 class=modal-title>Scoreboard!</h3></div><div class=modal-body><table class=\"table table-bordered table-striped\"><tr><th>Player</th><th>Score</th></tr><tr ng-repeat=\"player in vm.players\"><td>{{player.name}}</td><td>{{player.score}}</td></tr></table></div><div class=modal-footer><button class=\"btn btn-primary\" type=button ng-click=vm.close()>Close</button></div></div>");}]);

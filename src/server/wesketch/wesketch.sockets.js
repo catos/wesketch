@@ -5,7 +5,6 @@ module.exports = function (io) {
     var weesketch = io
         .of('/weesketch')
         .on('connection', function (client) {
-            console.log('on->connection in wesketch.sockets.js');
             server.init(weesketch, function () {
 
                 /**

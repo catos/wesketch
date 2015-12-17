@@ -42,6 +42,10 @@ gulp.task('clean-images', function () {
     return clean(config.build + 'images/**/*.*');
 });
 
+gulp.task('clean-sounds', function () {
+    return clean(config.build + 'sounds/**/*.*');
+});
+
 gulp.task('clean-styles', function () {
     return clean(config.temp + '**/*.css');
 });
@@ -82,6 +86,14 @@ gulp.task('images', ['clean-images'], function () {
         .src(config.images)
         .pipe($.imagemin({ optimizationLevel: 4 }))
         .pipe(gulp.dest(config.build + 'images'));
+});
+
+gulp.task('sounds', ['clean-sounds'], function () {
+    log('Copying sounds');
+
+    return gulp
+        .src(config.sounds)
+        .pipe(gulp.dest(config.build + 'sounds'));
 });
 
 gulp.task('styles', ['css', 'clean-styles'], function () {
@@ -132,7 +144,7 @@ gulp.task('wiredep', function () {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('inject', ['wiredep', 'styles', 'fonts', 'images', 'templatecache'], function () {
+gulp.task('inject', ['wiredep', 'styles', 'fonts', 'images', 'sounds', 'templatecache'], function () {
     log('Wire up the app css into the html, and call wiredep');
 
     return gulp

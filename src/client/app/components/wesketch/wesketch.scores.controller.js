@@ -8,13 +8,12 @@
 	WesketchScoresController.$inject = ['$uibModalInstance', 'players'];
 	function WesketchScoresController($uibModalInstance, players) {
 		var vm = this;
-		
 		vm.players = players;
-		
-		vm.close = close;		
+
+		vm.close = close;
 
 		function close() {
 			$uibModalInstance.close();
-		};
+		}
 	}
 })();

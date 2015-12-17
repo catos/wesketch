@@ -138,7 +138,7 @@
                     urls: [''],
                     volume: 0.1
                 };
-                return new Howl(angular.extend({}, defaults, { urls: ['/sfx/' + path] }));
+                return new Howl(angular.extend({}, defaults, { urls: ['/sounds/' + path] }));
             }
         }
 
@@ -271,7 +271,8 @@
 
         function showScores() {
             $uibModal.open({
-                templateUrl: '/app/components/wesketch/wesketch.scores.html',
+                // templateUrl: 'app/components/wesketch/wesketch.scores.html',
+                template: '<div class="wesketch-scores"><div class="modal-header"><h3 class="modal-title">Scoreboard!</h3></div><div class="modal-body"><table class="table table-bordered table-striped"><tr><th>Player</th><th>Score</th></tr><tr ng-repeat="player in vm.players"><td>{{player.name}}</td><td>{{player.score}}</td></tr></table></div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="vm.close()">Close</button></div></div>',
                 controller: 'WesketchScoresController',
                 controllerAs: 'vm',
                 resolve: {

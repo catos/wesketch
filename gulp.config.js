@@ -31,6 +31,7 @@ module.exports = function() {
         images: client + 'images/**/*.*',
         less: client + 'styles/*.less',
         server: server,
+        sounds: client + 'sounds/**/*.*',
         source: 'src/',
         temp: temp,
         tempCss: temp + '**/*.css',
