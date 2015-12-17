@@ -93,6 +93,7 @@
         border-top: 2px solid @border;
 
         .drawing-player-panel {
+            text-align: center;
 
             * {
                 display: inline-block;
@@ -102,7 +103,7 @@
                 font-weight: 700;
                 letter-spacing: 2px;
                 margin-right: 10px;
-                font-size: 2.0em;
+                padding: 0 10px;
             }
         }
     }
@@ -140,6 +141,18 @@
                                 color: forestgreen;
                             }
                         }
+                    }
+                }
+
+                .ready-button {
+                    width: 100%;
+                    
+                    span {
+                        padding-left: 20px;
+                    }
+
+                    input[type="checkbox"] {
+                        margin-left: 0;
                     }
                 }
             }

@@ -24,16 +24,17 @@
 
     <div class="main-row row">
 
-        <div class="timer">
+        <div class="timer" ng-class="{ 'animated shake' : vm.state.timer.remaining === 30 }">
             <div class="timer-remaining">{{vm.state.timer.remaining}}</div>
         </div>
 
         <div class="col-xs-6 chat">
             <div class="players">
                 <div class="checkbox" ng-show="vm.state.phase === vm.state.phaseTypes.preGame">
-                    <label>
-                        <input type="checkbox" ng-checked="vm.player.ready" ng-click="vm.sendClientEvent('togglePlayerReady')"> I am ready
-                    </label>
+                    <button ng-click="vm.sendClientEvent('togglePlayerReady')" class="btn btn-primary ready-button">
+                        <input type="checkbox" ng-checked="vm.player.ready">
+                        <span>I am ready</span>
+                    </button>
                 </div>
                 <ul class="list-unstyled">
                     <li ng-repeat="player in vm.state.players">
@@ -70,7 +71,8 @@
                 </div>
 
                 <div>
-                    <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''" ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button"></div>
+                    <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''"
+                    ng-click="vm.sendClientEvent('updateDrawSettings', { strokeStyle: color })" class="wesketch-button"></div>
                 </div>
 
             </div>
@@ -80,8 +82,9 @@
     </div>
 
     <div class="bottom-row row">
-        <div class="col-xs-6">
-            <div class="new-message input-group">
+        <div class="col-xs-12">
+
+            <div ng-hide="vm.player.isDrawing" class="new-message input-group">
                 <span class="input-group-btn">
                     <button class="btn" ng-class="{ 'btn-primary' : vm.inputGuessMode }" ng-click="vm.setInputGuessMode(true)" type="button"><i title="Guess mode" class="fa fa-exclamation-circle"></i></button>
                     <button class="btn" ng-class="{ 'btn-primary' : !vm.inputGuessMode }" ng-click="vm.setInputGuessMode(false)" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
@@ -93,17 +96,22 @@
                     <button class="btn btn-primary" ng-click="vm.addMessage()" type="button">Send</button>
                 </span>
             </div>
-        </div>
-        <div class="col-xs-6">
-            <div ng-show="vm.player.isDrawing" class="drawing-player-panel">
-                <div class="current-word">
-                    <label for="word">Draw the word: </label>
-                    <div class="word">{{vm.state.currentWord}}</div>
-                </div>
 
-                <!--<button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>-->
-                <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
+            <div ng-show="vm.player.isDrawing" class="drawing-player-panel">
+                <form class="inline-form">
+                    <div class="form-group">
+                        <div class="current-word">
+                            <span>Draw the word: </span>
+                            <div class="word">{{vm.state.currentWord}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <!--<button class="btn btn-sm btn-success" ng-click="vm.sendClientEvent('giveHint')">Give hint</button>-->
+                        <button class="btn btn-sm btn-danger" ng-click="vm.sendClientEvent('giveUp')">Give up</button>
+                    </div>
+                </form>
             </div>
+
         </div>
     </div>
 
