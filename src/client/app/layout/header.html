@@ -31,9 +31,9 @@
 				<a href="#" ng-click="vm.fullscreen($event)"><i class="fa fa-square-o"></i></a>
 			</li>
 
-			<li ng-show="vm.tokenIdentity.isAdmin()" dropdown>
-				<a href="#" dropdown-toggle><i class="fa fa-cog"></i> <span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+			<li ng-show="vm.tokenIdentity.isAdmin()" uib-dropdown>
+				<a href="#" uib-dropdown-toggle><i class="fa fa-cog"></i> <span class="caret"></span></a>
+				<ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
 					<li ui-sref-active="active"><a ui-sref="layout.batteries.list"><i class="fa fa-battery-half"></i> Batteries</a></li>
 					<li ui-sref-active="active"><a ui-sref="layout.chat"><i class="fa fa-comment"></i> Chat</a></li>
 					<li ui-sref-active="active"><a ui-sref="layout.users.list"><i class="fa fa-users"></i> Users</a></li>

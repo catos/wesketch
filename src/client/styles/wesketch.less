@@ -1,7 +1,21 @@
+@theme-primary: #2c3e50;
+@theme-primary-lightest: #9CB8D3;
 @border: #1a242f;
-@primary-background: #9CB8D3;
+
+.wesketch-scores {
+    .modal-header {
+        color: #fff;
+        background-color: @theme-primary;
+        border-bottom: 2px solid @border; 
+    }
+    .modal-footer {
+        background-color: @theme-primary-lightest;
+        border-top: 2px solid @border;
+    }
+}
 
 .wesketch {
+    cursor: default;
     height: 500px;
 
     &.drawing-player {
@@ -88,7 +102,7 @@
     }
 
     .bottom-row {
-        background-color: @primary-background;
+        background-color: @theme-primary-lightest;
         padding: 10px 0;
         border-top: 2px solid @border;
 
@@ -136,9 +150,14 @@
                             color: #333;
                             padding: 2px 0;
                             display: inline-block;
-
-                            .ready {
+                            
+                            &:hover {
+                                text-decoration: none;
+                            }
+                            
+                            &.ready {
                                 color: forestgreen;
+                                font-weight: 700;
                             }
                         }
                     }

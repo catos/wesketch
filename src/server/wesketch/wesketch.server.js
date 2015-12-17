@@ -133,8 +133,6 @@ server.onClientEvent = function (clientEvent) {
 
             if (player.ready) {
                 server.sendServerEvent('playSound', 'playerReady');
-            } else {
-                server.sendServerEvent('playSound', 'playerNotReady');
             }
 
             server.sendServerEvent('updateState', server.state);
@@ -330,7 +328,8 @@ server.startRound = function () {
     server.sendServerEvent('updateState', server.state);
 
     // Start timer
-    server.startTimer(90, server.endRound);
+    // TODO set back timer
+    server.startTimer(10, server.endRound);
 };
 
 /**
@@ -403,7 +402,8 @@ server.endRound = function () {
     }
 
     // Go to startRound in 10 seconds
-    server.startTimer(10, server.startRound);
+    // TODO set back timer
+    server.startTimer(3, server.startRound);
     server.sendServerMessage('important', 'Next round starts in 10 seconds...');
 
 };
@@ -415,6 +415,9 @@ server.endGame = function () {
 
     // Update game state
     server.state.phase = server.state.phaseTypes.endGame;
+
+    // Show scores
+    server.sendServerEvent('showScores');
 
     // Go to resetGame in 30 seconds
     server.startTimer(30, server.resetGame);
@@ -458,6 +461,7 @@ server.sendServerEvent = function (type, value) {
  */
 server.validateClientEvent = function (clientEvent, cb) {
     var validTypes = [
+        'showScores',
         'playSound',
         'giveHint',
         'giveUp',

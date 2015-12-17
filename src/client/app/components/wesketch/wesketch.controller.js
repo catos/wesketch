@@ -126,7 +126,6 @@
 
             sfx.playerJoined = addSfx('SUCCESS TUNE Happy Sticks Short 01.wav');
             sfx.playerReady = addSfx('TECH INTERFACE Computer Beeps 08.wav');
-            sfx.playerNotReady = addSfx('TECH INTERFACE Computer Terminal Beeps Negative 01.wav');
             sfx.playerRightAnswer = addSfx('SUCCESS PICKUP Collect Beep 02.wav');
             sfx.endRoundNoCorrect = addSfx('SUCCESS TUNE Win Ending 09.wav');
             sfx.endGame = addSfx('SUCCESS TUNE Win Complete 07.wav');
@@ -271,27 +270,16 @@
         }
 
         function showScores() {
-            var modalInstance = $uibModal.open({
-                // animation: $scope.animationsEnabled,
-                templateUrl: '/app/components/wesketch/wesketch.game-scores.html',
-                // controller: 'ModalInstanceCtrl',
-                // size: size,
+            $uibModal.open({
+                templateUrl: '/app/components/wesketch/wesketch.scores.html',
+                controller: 'WesketchScoresController',
+                controllerAs: 'vm',
                 resolve: {
-                    // items: function () {
-                    //     return $scope.items;
-                    // }
+                    players: function () {
+                        return vm.state.players;
+                    }
                 }
             });
-
-            // modalInstance.result.then(function (selectedItem) {
-            //     // $scope.selected = selectedItem;
-            // }, function () {
-            //     // $log.info('Modal dismissed at: ' + new Date());
-            // });
-
-            // $scope.toggleAnimation = function () {
-            //     $scope.animationsEnabled = !$scope.animationsEnabled;
-            // };
         }
 
         /**
@@ -353,6 +341,10 @@
                 if (message.type === 'important') {
                     alert.show('info', '', serverEvent.value.message);
                 }
+            };
+            
+            serverEvents.showScores = function(serverEvent) {
+                showScores();  
             };
 
             serverEvents.serverError = function (serverEvent) {
