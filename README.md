@@ -2,7 +2,7 @@
 # WeSketch v0.2.0
 
 ## Version 0.2.1
-- A new wordlist appears: it is smaller and much simpler. You may remember me from such word as "cat", "circle", "nothing"
+- A new wordlist appears: it is smaller and much simpler. You may remember me from such word as "cat", "circle" and "nothing"
 
 ## Version 0.2.0 - Three shades of brown
 - Revamped UI: experience should be more comfortable, especially on smaller devices (such as Espens iMacBookPro4k)
