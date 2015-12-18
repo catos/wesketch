@@ -28,8 +28,9 @@
 ## TODO
 
 ### WeSketch Client
-- Easier words
-- Fix domain
+- Remove overflow-hidden on #fw-wrapper
+- Support multiple wordlists, choose in lobby before game
+- CRUD & Import wordslists
 - Fix give hint
 - Draw stack, makes it possible for clients to catchup
 - Undo / Redo
