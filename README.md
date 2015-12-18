@@ -28,6 +28,8 @@
 ## TODO
 
 ### WeSketch Client
+- Sort scoreboard
+- x seconds idle = kick
 - Remove overflow-hidden on #fw-wrapper
 - Support multiple wordlists, choose in lobby before game
 - CRUD & Import wordslists
