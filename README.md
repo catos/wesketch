@@ -28,6 +28,12 @@
 ## TODO
 
 ### WeSketch Client
+- Recalculate # rounds at start of first round
+- Do not submit empty strings
+- Warning om at det er din tur, type lyd
+- Close guess = sound (only for guessing player)
+- Reset drawing settings
+- Clear board after round
 - Sort scoreboard
 - x seconds idle = kick
 - Remove overflow-hidden on #fw-wrapper
