@@ -29,11 +29,11 @@
                     alert.show('warning', 'Something went wrong :(', err.message);
                 });
         }
-        
+
         function quickSignIn(email, password) {
             vm.email = email;
             vm.password = password;
-            
+
             vm.submit();
         }
     }

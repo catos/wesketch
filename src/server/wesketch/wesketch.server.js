@@ -34,7 +34,8 @@ server.init = function (weesketch, next) {
     server.weesketch = weesketch;
 
     if (!server.wordlist.length) {
-        server.wordlist = require('./wesketch.wordlist.js');
+        server.wordlist = require('./wesketch.wordlist-new.js');
+        console.log('server.wordlist: ', server.wordlist);
     }
 
     next();
@@ -321,6 +322,7 @@ server.startRound = function () {
     server.state.hintCount = 0;
     server.state.hint = '';
     server.state.currentWord = _.sample(server.wordlist);
+    console.log('server.state.currentWord: ' + server.state.currentWord);
 
     // Set inputGuessMode = true
     server.sendServerEvent('setInputGuessMode', true);

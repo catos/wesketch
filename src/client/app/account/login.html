@@ -1,11 +1,11 @@
 <form ng-submit="vm.submit()">
 
-    <div class="form-group">
+    <!--<div class="form-group">
         <label for="doesNotExist">Quick logins</label>
         <div>
             <button class="btn btn-default" ng-click="vm.quickSignIn('test@test.com', 'test')">Kåre</button>
         </div>
-    </div>
+    </div>-->
 
     <div class="form-group">
         <label for="inputEmail">Email address</label>
@@ -17,8 +17,12 @@
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Login</button>
-        <a ui-sref="layout.account.register" class="text-muted pull-right">Register</a>
+    </div>
+    <div class="form-group">
         <a ui-sref="layout.account.forgotPassword">Forgot password ?</a>
+    </div>
+    <div class="form-group">
+        <a ui-sref="layout.account.register">Register</a>
     </div>
     <div class="form-group">
         <div class="alert alert-info" ng-show="vm.message.length">{{vm.message}}</div>
