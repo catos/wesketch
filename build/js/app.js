@@ -57,6 +57,13 @@
 		'blocks.tokenIdentity'
 	]);
 })();
+(function () {
+	'use strict';
+
+	angular
+		.module('app.home', []);
+		
+})();
 (function() {
     'use strict';
 
@@ -67,13 +74,6 @@
 
 	angular
 		.module('app.layout', []);
-		
-})();
-(function () {
-	'use strict';
-
-	angular
-		.module('app.home', []);
 		
 })();
 (function() {
@@ -87,17 +87,17 @@
 	angular.module('blocks.alert', []);
 })();
 (function() {
-	'use strict';
-
-	angular.module('blocks.sawkit', []);
-})();
-(function() {
     'use strict';
 
     angular
         .module('blocks.tokenIdentity', []);
 })();
 
+(function() {
+	'use strict';
+
+	angular.module('blocks.sawkit', []);
+})();
 (function() {
     'use strict';
 
@@ -228,11 +228,11 @@
                     alert.show('warning', 'Something went wrong :(', err.message);
                 });
         }
-        
+
         function quickSignIn(email, password) {
             vm.email = email;
             vm.password = password;
-            
+
             vm.submit();
         }
     }
@@ -601,6 +601,46 @@
 	}
 } ());
 
+(function () {
+	'use strict';
+
+	angular
+		.module('app.home')
+		.controller('HomeController', HomeController);
+
+	/* @ngInject */
+	function HomeController() {
+		var vm = this;
+		vm.message = 'Hei, fra HomeController';
+		
+
+		activate();
+
+		function activate() {
+			// Insert initial 
+		}
+	}
+}());
+(function () {
+	'use strict';
+
+	angular
+		.module('app.home')
+		.config(configureRoutes);
+
+	configureRoutes.$inject = ['$stateProvider'];
+
+	function configureRoutes($stateProvider) {
+		$stateProvider
+			.state('layout.home', {
+				url: '/',
+				templateUrl: 'app/home/home.html',
+				controller: 'HomeController',
+				controllerAs: 'vm'
+			});
+
+	}
+} ());
 (function() {
     'use strict';
 
@@ -715,46 +755,6 @@
 					}
 				},
             });
-	}
-} ());
-(function () {
-	'use strict';
-
-	angular
-		.module('app.home')
-		.controller('HomeController', HomeController);
-
-	/* @ngInject */
-	function HomeController() {
-		var vm = this;
-		vm.message = 'Hei, fra HomeController';
-		
-
-		activate();
-
-		function activate() {
-			// Insert initial 
-		}
-	}
-}());
-(function () {
-	'use strict';
-
-	angular
-		.module('app.home')
-		.config(configureRoutes);
-
-	configureRoutes.$inject = ['$stateProvider'];
-
-	function configureRoutes($stateProvider) {
-		$stateProvider
-			.state('layout.home', {
-				url: '/',
-				templateUrl: 'app/home/home.html',
-				controller: 'HomeController',
-				controllerAs: 'vm'
-			});
-
 	}
 } ());
 (function () {
@@ -991,55 +991,6 @@
 		}
 	}
 })();
-/* global io */
-(function () {
-        'use strict';
-
-	angular
-		.module('blocks.sawkit')
-		.factory('sawkit', sawkit);
-
-	sawkit.$inject = ['$rootScope', 'appSettings'];
-	function sawkit($rootScope, appSettings) {
-
-		var socket;
-
-		var service = {
-            connect: connect,
-			on: on,
-			emit: emit
-		};
-
-        return service;
-
-        function connect(room) {
-             socket = io.connect(appSettings.SocketUrl + room);
-             console.log('sawkit is connecting to room: ' + room);
-        }
-
-        function on(eventName, callback) {
-            socket.on(eventName, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                    callback.apply(socket, args);
-                });
-            });
-        }
-
-        function emit(eventName, data, callback) {
-            socket.emit(eventName, data, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                    if (callback) {
-                        callback.apply(socket, args);
-                    }
-                });
-            });
-        }
-
-	}
-})();
-
 (function() {
     'use strict';
 
@@ -1128,6 +1079,55 @@
         }
 
     }
+})();
+
+/* global io */
+(function () {
+        'use strict';
+
+	angular
+		.module('blocks.sawkit')
+		.factory('sawkit', sawkit);
+
+	sawkit.$inject = ['$rootScope', 'appSettings'];
+	function sawkit($rootScope, appSettings) {
+
+		var socket;
+
+		var service = {
+            connect: connect,
+			on: on,
+			emit: emit
+		};
+
+        return service;
+
+        function connect(room) {
+             socket = io.connect(appSettings.SocketUrl + room);
+             console.log('sawkit is connecting to room: ' + room);
+        }
+
+        function on(eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        }
+
+        function emit(eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            });
+        }
+
+	}
 })();
 
 (function () {
@@ -1607,17 +1607,17 @@
 	}
 })();
 angular.module("app.core").run(["$templateCache", function($templateCache) {$templateCache.put("app/account/account.html","<h1>Account</h1><hr><div ui-view></div>");
-$templateCache.put("app/account/login.html","<form ng-submit=vm.submit()><div class=form-group><label for=doesNotExist>Quick logins</label><div><button class=\"btn btn-default\" ng-click=\"vm.quickSignIn(\'test@test.com\', \'test\')\">Kåre</button></div></div><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password></div><div class=form-group><button type=submit class=\"btn btn-primary\">Login</button> <a ui-sref=layout.account.register class=\"text-muted pull-right\">Register</a> <a ui-sref=layout.account.forgotPassword>Forgot password ?</a></div><div class=form-group><div class=\"alert alert-info\" ng-show=vm.message.length>{{vm.message}}</div></div></form>");
+$templateCache.put("app/account/login.html","<form ng-submit=vm.submit()><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password></div><div class=form-group><button type=submit class=\"btn btn-primary\">Login</button></div><div class=form-group><a ui-sref=layout.account.forgotPassword>Forgot password ?</a></div><div class=form-group><a ui-sref=layout.account.register>Register</a></div><div class=form-group><div class=\"alert alert-info\" ng-show=vm.message.length>{{vm.message}}</div></div></form>");
 $templateCache.put("app/account/register.html","<form name=register ng-submit=vm.submit()><div class=form-group><label for=inputName>Name</label> <input type=text class=form-control id=inputName placeholder=Name ng-model=vm.name required></div><div class=form-group><label for=inputEmail>Email address</label> <input type=email class=form-control id=inputEmail placeholder=Email ng-model=vm.email required></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword placeholder=Password ng-model=vm.password required></div><div class=form-group><label for=inputPasswordConfirm>Confirm password</label> <input type=password class=form-control id=inputPasswordConfirm placeholder=\"Confirm password\" ng-model=vm.password_confirm required></div><div class=form-group><button type=submit class=\"btn btn-primary\">Register</button></div></form>");
 $templateCache.put("app/batteries/batteries-list.html","<h3>Batteries <small>Count: {{vm.batteries.length}}</small></h3><table class=\"table table-striped table-bordered\"><tr><th></th><th>Name</th><th>Created</th><th></th></tr><tr data-ng-repeat=\"battery in vm.batteries\"><td><input type=checkbox></td><td><a ui-sref=\"layout.batteries.details({ id: battery._id})\">#{{battery.number}} - {{battery.name}}</a> <span class=badge>{{battery.cycles.length}}</span></td><td>{{battery.created | date: \'yyyy-MM-dd HH:mm:ss\'}}</td><td><a ui-sref=\"layout.batteries.details({ id: battery._id })\" class=\"btn btn-primary\">Edit</a></td></tr></table>");
 $templateCache.put("app/batteries/batteries.html","<section><small>{{vm.message}}</small><ul class=\"nav nav-pills\"><li ui-sref-active=active><a ui-sref=layout.batteries.list>List</a></li><li ui-sref-active=active><a ui-sref=\"layout.batteries.details({ id: 0 })\">New battery</a></li></ul><div ui-view></div></section>");
 $templateCache.put("app/batteries/battery-details.html","<section><div class=row><div class=col-md-6><h3>{{vm.title}} <small><a ui-sref=layout.batteries.list>Back to index</a></small> <a class=\"btn btn-danger btn-sm\" href=# data-ng-click=vm.del()>Delete battery</a> <small ng-show=vm.message.length>{{vm.message}}</small></h3><form><div class=form-group><label for=inputId>_id</label> <input type=text class=form-control id=inputId data-ng-model=vm.battery._id disabled></div><div class=form-group><label for=inputNumber>Number</label> <input type=number class=form-control id=inputNumber placeholder=Number data-ng-model=vm.battery.number></div><div class=form-group><label for=inputName>Name</label> <input type=text class=form-control id=inputName placeholder=\"Example: ONBO 3S 1350mah 20C\" data-ng-model=vm.battery.name></div><div class=form-group><label for=inputCreated>Created</label> <input type=datetime class=form-control id=inputCreated placeholder=Created data-ng-model=vm.battery.created disabled></div><div class=form-group><button type=submit class=\"btn btn-default\" data-ng-click=vm.submit()>Submit</button></div></form></div><div class=col-md-6><form class=form-inline><div class=form-group><h3>Cycles: {{vm.battery.cycles.length}}</h3><table class=\"table table-striped table-bordered\" ng-show=vm.battery.cycles.length><tr><th>Created</th><th>Comment</th><th></th></tr><tr ng-repeat=\"cycle in vm.battery.cycles\"><td>{{cycle.created | date:\'yyyy-MM-dd\'}}</td><td>{{cycle.comment}}</td><td><a class=\"btn btn-primary\" ng-click=vm.deleteCycle($index)><i class=\"fa fa-trash-o\"></i></a></td></tr></table><div class=input-group><input type=datetime class=form-control placeholder=\"Date and time of charge\" is-open=vm.datepickerIsOpened ng-click=vm.toggleDatepicker() datepicker-popup=yyyy-MM-dd ng-model=vm.newCycle.created> <span class=input-group-btn><button type=button class=\"btn btn-default\" ng-click=vm.toggleDatepicker()><i class=\"glyphicon glyphicon-calendar\"></i></button></span></div><input type=text class=form-control placeholder=Comment ng-model=vm.newCycle.comment value=\"Just a sample comment...\"> <button class=\"btn btn-primary\" ng-click=vm.addCycle()>Add Cycle</button></div></form></div></div></section>");
 $templateCache.put("app/chat/chat.html","<h3>Chat</h3><hr><div class=chat><div class=row><div class=\"col-xs-9 messages\"><div ng-repeat=\"msg in vm.messages\"><small ng-show=msg.received>{{msg.received | date:\'HH:mm:ss\'}} ({{msg.latency}}ms)</small> <strong ng-show=msg.user>{{msg.user.name}}:</strong> {{msg.message}}</div></div><div class=col-xs-3><ul class=list-unstyled ng-repeat=\"user in vm.users\"><li>{{user.name}}</li></ul></div></div><div class=row><div class=col-md-12><div class=input-group><input class=form-control type=text ng-model=vm.newMessage ng-keyup=\"$event.keyCode == 13 ? vm.sendMessage(vm.newMessage) : null\"> <span class=input-group-btn><button class=\"btn btn-primary\" type=button ng-click=vm.sendMessage(vm.newMessage)>Send</button></span></div></div></div></div>");
+$templateCache.put("app/home/home.html","<section><h1>Home</h1><p>{{vm.message}}</p></section>");
 $templateCache.put("app/draw/draw.html","<wesketch></wesketch>");
 $templateCache.put("app/layout/footer.html","<div class=container><p class=text-muted>Føkkings footer assa.</p></div>");
 $templateCache.put("app/layout/header.html","<nav class=\"navbar navbar-default\"><div class=navbar-header><a class=\"btn navbar-btn navbar-toggle\" ng-init=\"navCollapsed = true\" ng-click=\"navCollapsed = !navCollapsed\" data-toggle=collapse data-target=.navbar-collapse><span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></a> <a class=navbar-brand ui-sref=layout.home>CSA</a></div><div class=\"navbar-collapse collapse\" ng-class=\"{\'in\': !navCollapsed}\"><ul class=\"nav navbar-nav\"><li ui-sref-active=active><a ui-sref=layout.draw><i class=\"fa fa-paint-brush\"></i>&nbsp; WeSketch</a></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a ui-sref=layout.home>{{vm.message}}</a></li><li ng-show=vm.tokenIdentity.isAuthenticated()><a ui-sref=layout.account>Welcome \'{{vm.tokenIdentity.currentUser.name}}\'</a></li><li ng-show=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.logout>Logout</a></li><li ng-hide=vm.tokenIdentity.isAuthenticated() ui-sref-active=active><a ui-sref=layout.account.login>Login</a></li><li><a href=# ng-click=vm.fullscreen($event)><i class=\"fa fa-square-o\"></i></a></li><li ng-show=vm.tokenIdentity.isAdmin() uib-dropdown><a href=# uib-dropdown-toggle><i class=\"fa fa-cog\"></i> <span class=caret></span></a><ul class=uib-dropdown-menu role=menu aria-labelledby=single-button><li ui-sref-active=active><a ui-sref=layout.batteries.list><i class=\"fa fa-battery-half\"></i> Batteries</a></li><li ui-sref-active=active><a ui-sref=layout.chat><i class=\"fa fa-comment\"></i> Chat</a></li><li ui-sref-active=active><a ui-sref=layout.users.list><i class=\"fa fa-users\"></i> Users</a></li><li><a href=/server>Server</a></li><li class=divider></li><li><a href=\"http://getbootstrap.com/css/\"><i class=\"fa fa-css3\"></i> Bootstrap</a></li><li><a href=\"http://fortawesome.github.io/Font-Awesome/icons/\"><i class=\"fa fa-font\"></i> Font Awesome</a></li><li><a href=http://www.angularjs.org><i class=\"fa fa-html5\"></i> Angularjs</a></li><li><a href=\"https://angular-ui.github.io/\"><i class=\"fa fa-html5\"></i> Angular UI</a></li><li class=divider></li><li><a href=https://github.com/johnpapa/angular-styleguide><i class=\"fa fa-github\"></i> <strong>Angular Styleguide</strong></a></li><li><a href=https://dashboard.heroku.com/apps>Heroku Dashboard</a></li><li><a href=\"https://blooming-eyrie-6843.herokuapp.com/\">blooming-eyrie-6843.herokuapp.com</a></li><li><a href=https://devcenter.heroku.com/articles/troubleshooting-node-deploys>Troubleshooting Node.js Deploys</a></li><li><a href=\"https://mongolab.com/\"><i class=\"fa fa-database\"></i> Mongolab.com</a></li><li class=divider></li><li><a href=\"http://webapplayers.com/inspinia_admin-v2.3/\">Inspiration</a></li><li><a href=http://audiojungle.net/item/quiz-millionaire-set/577869>Quiz Millionaire Sounds</a></li></ul></li></ul></div></nav>");
 $templateCache.put("app/layout/layout.html","<div id=fw-wrapper class=container-fluid><header id=fw-header ui-view=header></header><div id=fw-main-content ui-view=container></div><footer id=fw-footer ui-view=footer></footer></div><div class=\"alert-popup alert alert-{{alert.type}} animated\" ng-class=\"{\'flipInY\': alert.show, \'flipOutY\': !alert.show, \'alert-hidden\': !alert.hasBeenShown}\"><strong ng-show=alert.title.length>{{alert.title}}:</strong> {{alert.message}}</div>");
-$templateCache.put("app/home/home.html","<section><h1>Home</h1><p>{{vm.message}}</p></section>");
 $templateCache.put("app/users/user-create.html","<section><div class=row><div class=col-md-12><h3>Create New User</h3><form><div class=form-group><label for=inputName>Name</label> <input type=name class=form-control id=inputName placeholder=Name data-ng-model=vm.user.name required></div><div class=form-group><label for=inputEmail>Email</label> <input type=text class=form-control id=inputEmail placeholder=foo@bar.com data-ng-model=vm.user.email required></div><div class=form-group><label for=inputPassword>Password</label> <input type=password class=form-control id=inputPassword data-ng-model=vm.user.password></div><div class=form-group><label for=inputRepeatPassword>Repeat password</label> <input type=password class=form-control id=inputRepeatPassword></div><div class=form-group><div class=checkbox><label><input type=checkbox value ng-model=vm.user.isAdmin> Administrator</label></div></div><div class=form-group><button type=submit class=\"btn btn-default pull-right\" data-ng-click=vm.submit()>Submit</button></div></form></div></div></section>");
 $templateCache.put("app/users/user-edit.html","<section><div class=row><div class=col-md-12><h3>Edit \'{{vm.user.name}}\' <small>#{{vm.user._id}}</small></h3><hr><a class=\"btn btn-danger btn-sm\" href=# data-ng-click=vm.del()>Delete user</a> <a class=\"btn btn-info btn-sm\" href=# data-ng-click=vm.resetPassword()>Reset password</a><hr><form><div class=form-group><label for=inputName>Name</label> <input type=name class=form-control id=inputName placeholder=Name data-ng-model=vm.user.name required></div><div class=form-group><label for=inputEmail>Email</label> <input type=text class=form-control id=inputEmail placeholder=foo@bar.com data-ng-model=vm.user.email required></div><div class=form-group><div class=checkbox><label><input type=checkbox value ng-model=vm.user.isAdmin> Administrator</label></div></div><div class=form-group><button type=submit class=\"btn btn-default pull-right\" data-ng-click=vm.submit()>Submit</button></div></form></div></div></section>");
 $templateCache.put("app/users/users-list.html","<h3>Users <small>Count: {{vm.users.length}}</small></h3><table class=\"table table-striped table-bordered table-hover\"><tr><th>_id</th><th class=table-main-column>Name</th><th>Username</th></tr><tr data-ng-repeat=\"user in vm.users\"><td>{{user._id}}</td><td><a ui-sref=\"layout.users.edit({ id: user._id})\">{{user.name}}</a> <span ng-show=user.isAdmin class=\"label label-info\">Admin</span></td><td>{{user.email}}</td></tr></table>");
