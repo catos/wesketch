@@ -225,6 +225,9 @@
         }
 
         function addMessage() {
+            if (!vm.newMessage || vm.newMessage === '!') {
+                return;
+            }
 
             vm.myMessages.push(vm.newMessage);
 

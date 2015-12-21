@@ -1,31 +1,19 @@
 (function () {
     'use strict';
 
-    var appSettings = {
-        ApplicationName: 'Cato Skogholt Application',
-        ApplicationPrefix: 'CSA',
-
-        // ApiUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-        // SocketUrl: 'https://blooming-eyrie-6843.herokuapp.com/',
-
-        ApiUrl: 'http://localhost:7203/',
-        SocketUrl: 'http://localhost:7203/'
-    };
-
     angular
         .module('app')
-        .constant('appSettings', appSettings)
         .config(config)
         .run(run);
 
-    config.$inject = ['$authProvider', '$urlRouterProvider', 'appSettings'];
+    config.$inject = ['$authProvider', '$urlRouterProvider', 'appConfig'];
 
-    function config($authProvider, $urlRouterProvider, appSettings) {
+    function config($authProvider, $urlRouterProvider, appConfig) {
         $urlRouterProvider.otherwise('/');
 
-        $authProvider.loginUrl = appSettings.ApiUrl + 'login';
-        $authProvider.signupUrl = appSettings.ApiUrl + 'register';
-        $authProvider.tokenPrefix = appSettings.ApplicationPrefix;
+        $authProvider.loginUrl = appConfig.apiUrl + 'login';
+        $authProvider.signupUrl = appConfig.apiUrl + 'register';
+        $authProvider.tokenPrefix = appConfig.applicationPrefix;
     }
 
     run.$inject = ['$rootScope', '$state', '$auth', 'alert', 'tokenIdentity'];

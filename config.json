@@ -1,0 +1,18 @@
+{
+    "development": {
+        "appConfig": {
+            "applicationName": "Cato Skogholt Application",
+            "applicationPrefix": "CSA - DEV",
+            "apiUrl": "http://localhost:7203/",
+            "socketUrl": "http://localhost:7203/"
+        }
+    },
+    "production": {
+        "appConfig": {
+            "applicationName": "Cato Skogholt Application",
+            "applicationPrefix": "CSA",
+            "apiUrl": "https://blooming-eyrie-6843.herokuapp.com/",
+            "socketUrl": "https://blooming-eyrie-6843.herokuapp.com/"
+        }
+    }
+}

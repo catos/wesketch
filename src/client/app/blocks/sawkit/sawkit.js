@@ -6,8 +6,8 @@
 		.module('blocks.sawkit')
 		.factory('sawkit', sawkit);
 
-	sawkit.$inject = ['$rootScope', 'appSettings'];
-	function sawkit($rootScope, appSettings) {
+	sawkit.$inject = ['$rootScope', 'appConfig'];
+	function sawkit($rootScope, appConfig) {
 
 		var socket;
 
@@ -20,7 +20,7 @@
         return service;
 
         function connect(room) {
-             socket = io.connect(appSettings.SocketUrl + room);
+             socket = io.connect(appConfig.socketUrl + room);
              console.log('sawkit is connecting to room: ' + room);
         }
 

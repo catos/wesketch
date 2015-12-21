@@ -5,12 +5,12 @@
         .module('app.layout')
         .controller('HeaderController', HeaderController);
 
-    HeaderController.$inject = ['tokenIdentity'];
+    HeaderController.$inject = ['appConfig', 'tokenIdentity'];
 
-    function HeaderController(tokenIdentity) {
+    function HeaderController(appConfig, tokenIdentity) {
         var vm = this;
+        vm.appConfig = appConfig;
         vm.tokenIdentity = tokenIdentity;
-
         vm.fullscreen = fullscreen;
 
         function fullscreen($event) {

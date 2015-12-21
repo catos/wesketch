@@ -1,7 +1,0 @@
-{
-  "name": "app.config",
-  "constants": {
-    "myFirstCnt": true,
-    "mySecondCnt": { "hello": "world" }
-  }
-}

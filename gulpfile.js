@@ -1,3 +1,4 @@
+/* global process */
 var args = require('yargs').argv;
 var config = require('./gulp.config.js')();
 var del = require('del');
@@ -7,6 +8,7 @@ var wiredep = require('wiredep').stream;
 var $ = require('gulp-load-plugins')({ lazy: true });
 var useref = require('gulp-useref');
 var port = process.env.PORT || config.defaultPort;
+var environment = process.env.NODE_ENV || 'development';
 
 gulp.task('help', $.taskListing);
 gulp.task('default', ['help']);
@@ -28,14 +30,23 @@ gulp.task('lint', function () {
  * Client config
  */
 
-gulp.task('config', function () {
-    log('Create and copy client configuration');
-
-    gulp.src(config.clientConfig)
-        .pipe($.ngConstant())
-        .pipe(gulp.dest(config.temp));
+gulp.task('clean-config', function () {
+    return clean(config.temp + 'ngConstants.js');
 });
 
+gulp.task('config', ['clean-config'], function () {
+    log('Create and copy configuration');
+
+    var myConfig = require('./config.json');
+
+    // .src(config.clientConfig)
+    return $.ngConstant({
+        name: 'app.config',
+        constants: myConfig[environment],
+        stream: true
+    })
+    .pipe(gulp.dest(config.temp));
+});
 
 /**
  * Clean
@@ -149,21 +160,24 @@ gulp.task('templatecache', function () {
 gulp.task('wiredep', function () {
     log('Wire up the bower css js and our app js into the html');
     var options = config.getWiredepDefaultOptions();
+    var jsFiles = [].concat(
+        config.js,
+        config.tempJs
+        );
 
     return gulp
         .src(config.index)
         .pipe(wiredep(options))
-        .pipe($.inject(gulp.src(config.js)))
+        .pipe($.inject(gulp.src(jsFiles)))
         .pipe(gulp.dest(config.client));
 });
 
 gulp.task('inject', ['wiredep', 'config', 'styles', 'fonts', 'images', 'sounds', 'templatecache'], function () {
-    log('Wire up the app css & js into the html, and call wiredep');
+    log('Wire up the app css into the html, and call wiredep');
 
     return gulp
         .src(config.index)
         .pipe($.inject(gulp.src(config.tempCss)))
-        // .pipe($.inject(gulp.src(config.tempJs)))
         .pipe(gulp.dest(config.client));
 });
 

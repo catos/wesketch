@@ -6,6 +6,7 @@
         .module('app', [
 
         /* Shared modules */
+            'app.config',
             'app.core',
 
             'components.wesketch',

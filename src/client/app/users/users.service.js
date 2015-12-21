@@ -5,10 +5,10 @@
         .module('app.users')
         .factory('UsersService', UsersService);
 
-    UsersService.$inject = ['$resource', 'appSettings'];
+    UsersService.$inject = ['$resource', 'appConfig'];
 
-    function UsersService($resource, appSettings) {
-        return $resource(appSettings.ApiUrl + 'api/users/:id',
+    function UsersService($resource, appConfig) {
+        return $resource(appConfig.apiUrl + 'api/users/:id',
             { id: '@id' },
             {
                 'get': {

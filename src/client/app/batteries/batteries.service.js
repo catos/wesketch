@@ -5,10 +5,10 @@
         .module('app.batteries')
         .factory('batteriesService', batteriesService);
 
-    batteriesService.$inject = ['$resource', 'appSettings'];
+    batteriesService.$inject = ['$resource', 'appConfig'];
 
-    function batteriesService($resource, appSettings) {
-        return $resource(appSettings.ApiUrl + 'api/batteries/:id',
+    function batteriesService($resource, appConfig) {
+        return $resource(appConfig.apiUrl + 'api/batteries/:id',
             { id: '@id' },
             {
                 'get': {

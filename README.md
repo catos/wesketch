@@ -1,6 +1,10 @@
 
 # WeSketch v0.2.0
 
+## Version 0.2.2
+- Gulp-task 'serve-dev' and 'serve-build' will now produce environment-specific configurations
+- Client will no longer allow empty strings in chat or as guess
+
 ## Version 0.2.1
 - A new wordlist appears: it is smaller and much simpler. You may remember me from such word as "cat", "circle" and "nothing"
 
@@ -29,7 +33,6 @@
 
 ### WeSketch Client
 - Recalculate # rounds at start of first round
-- Do not submit empty strings
 - Warning om at det er din tur, type lyd
 - Close guess = sound (only for guessing player)
 - Reset drawing settings
@@ -63,10 +66,6 @@
 - Replace console.log with a custom logger (that can also support heroku-logging?)
 - IsNullOrEmpty på guess og chat
 - Reset game when all clients leave
-- Check development || production in client...app.config.js
-
-### Gulp
-- Angular's Template Cache
 
 ### Client
 - Reset password

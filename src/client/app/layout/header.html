@@ -6,7 +6,7 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		</a>
-		<a class="navbar-brand" ui-sref="layout.home">CSA</a>
+		<a class="navbar-brand" ui-sref="layout.home">{{vm.appConfig.applicationPrefix}}</a>
 	</div>
 
 	<div class="navbar-collapse collapse" ng-class="{'in': !navCollapsed}">
@@ -15,9 +15,6 @@
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
-			<li>
-				<a ui-sref="layout.home">{{vm.message}}</a>
-			</li>
 			<li ng-show="vm.tokenIdentity.isAuthenticated()">
 				<a ui-sref="layout.account">Welcome '{{vm.tokenIdentity.currentUser.name}}'</a>
 			</li>
