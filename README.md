@@ -73,6 +73,7 @@
 	- http://toddmotto.com/killing-it-with-angular-directives-structure-and-mvvm/
 
 ### Server
+- Move server settings to config.json in root & rename to config ?
 - ORM: Breeze or Waterline
 - Server-side controllers is not DRY, but what do i do with filters and index() ?
 	- Repetetive code on controllers....need a default controller with crud-methods
