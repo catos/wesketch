@@ -3,7 +3,7 @@ module.exports = function() {
     var clientApp = client + 'app/';
     var server = './src/server/';
     var temp = './.tmp/';
-    
+
     var config = {
 
         /**
@@ -21,6 +21,7 @@ module.exports = function() {
             clientApp + '**/*.js',
             '!' + clientApp + '**/*.spec.js'
         ],
+        clientConfig: clientApp + 'config.json',
         clientCss: client + 'styles/**/*.css',
         fonts: [
             './bower_components/fontawesome/fonts/**/*.*',
@@ -35,6 +36,7 @@ module.exports = function() {
         source: 'src/',
         temp: temp,
         tempCss: temp + '**/*.css',
+        tempJs: temp + '**/*.js',
 
         /**
         * templateCache
@@ -45,7 +47,7 @@ module.exports = function() {
                 module: 'app.core',
                 standAlone: false,
                 root: 'app/'
-            }  
+            }
         },
 
         /**

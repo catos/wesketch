@@ -50,6 +50,7 @@
     "gulp-less": "^3.0.3",
     "gulp-load-plugins": "^1.1.0",
     "gulp-minify-html": "^1.0.4",
+    "gulp-ng-constant": "^1.1.0",
     "gulp-nodemon": "^2.0.4",
     "gulp-plumber": "^1.0.1",
     "gulp-print": "^2.0.1",

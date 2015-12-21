@@ -25,6 +25,19 @@ gulp.task('lint', function () {
 });
 
 /**
+ * Client config
+ */
+
+gulp.task('config', function () {
+    log('Create and copy client configuration');
+
+    gulp.src(config.clientConfig)
+        .pipe($.ngConstant())
+        .pipe(gulp.dest(config.temp));
+});
+
+
+/**
  * Clean
  **/
 
@@ -144,12 +157,13 @@ gulp.task('wiredep', function () {
         .pipe(gulp.dest(config.client));
 });
 
-gulp.task('inject', ['wiredep', 'styles', 'fonts', 'images', 'sounds', 'templatecache'], function () {
-    log('Wire up the app css into the html, and call wiredep');
+gulp.task('inject', ['wiredep', 'config', 'styles', 'fonts', 'images', 'sounds', 'templatecache'], function () {
+    log('Wire up the app css & js into the html, and call wiredep');
 
     return gulp
         .src(config.index)
         .pipe($.inject(gulp.src(config.tempCss)))
+        // .pipe($.inject(gulp.src(config.tempJs)))
         .pipe(gulp.dest(config.client));
 });
 
