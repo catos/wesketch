@@ -77,12 +77,48 @@
         /**
          * Viewmodel functions
          */
-        vm.toggleSoundSettings = toggleSoundSettings;
-        vm.setInputGuessMode = setInputGuessMode;
         vm.sendClientEvent = sendClientEvent;
+
+        // vm.toggleSoundSettings = toggleSoundSettings;
+        // vm.setInputGuessMode = setInputGuessMode;
         vm.addMessage = addMessage;
         vm.onInputKey = onInputKey;
-        vm.showScores = showScores;
+
+        // TODO: TEST
+
+        vm.clientEvent = function (event) {
+            var clientEvents = clientEvents || {};
+
+            vm.clientEvents.toggleSoundSettings = function (event) {
+                var setting = event.value;
+                vm.soundSettings[setting] = !vm.soundSettings[setting];
+                console.log('vm.soundSettings: ', vm.soundSettings);
+            };
+
+            vm.clientEvents.setInputGuessMode = function (value) {
+                vm.chat.guessMode = value;
+
+                var firstChar = vm.chat.input.substr(0, 1);
+                if (!vm.chat.guessMode && firstChar === '!') {
+                    vm.chat.input = vm.chat.input.substr(1, vm.chat.input.length);
+                }
+
+                if (vm.chat.guessMode && firstChar !== '!') {
+                    vm.chat.input = '!' + vm.chat.input;
+                }
+            };
+
+            clientEvents.default = function (event) {
+                alert.show('warning', 'clientEvents Error', 'No clientEvent found for type: ' + event.type);
+                console.log('clientEvents Error - No clientEvent found for type: ' + event.type);
+            };
+
+            if (clientEvents[event.type]) {
+                return clientEvents[event.type](event);
+            } else {
+                return clientEvents.default(event);
+            }
+        }
 
         /**
          * Developer
@@ -191,7 +227,7 @@
                 // | - Toggle guess mode
                 case 220: {
                     vm.chat.input = vm.chat.input.replace('|', '');
-                    setInputGuessMode(!vm.chat.guessMode);
+                    vm.clientEvents.setInputGuessMode(!vm.chat.guessMode);
                     // vm.chat.input = vm.chat.input.substr(0, vm.chat.input.length - 1);
                     break;
                 }
@@ -202,29 +238,32 @@
             }
         }
 
-        function setInputGuessMode(value) {
-            vm.chat.guessMode = value;
+        // function setInputGuessMode(value) {
+        //     vm.chat.guessMode = value;
 
-            var firstChar = vm.chat.input.substr(0, 1);
-            if (!vm.chat.guessMode && firstChar === '!') {
-                vm.chat.input = vm.chat.input.substr(1, vm.chat.input.length);
-            }
+        //     var firstChar = vm.chat.input.substr(0, 1);
+        //     if (!vm.chat.guessMode && firstChar === '!') {
+        //         vm.chat.input = vm.chat.input.substr(1, vm.chat.input.length);
+        //     }
 
-            if (vm.chat.guessMode && firstChar !== '!') {
-                vm.chat.input = '!' + vm.chat.input;
-            }
-        }
+        //     if (vm.chat.guessMode && firstChar !== '!') {
+        //         vm.chat.input = '!' + vm.chat.input;
+        //     }
+        // }
 
-        function toggleSoundSettings(setting) {
-            console.log('toggleSoundSettings: ' + setting);
-            vm.soundSettings[setting] = !vm.soundSettings[setting];
-        }
+        // function toggleSoundSettings(setting) {
+        //     console.log('toggleSoundSettings: ' + setting);
+        //     vm.soundSettings[setting] = !vm.soundSettings[setting];
+        // }
 
         function addMessage() {
+
+            // Empty messages are not allowed
             if (!vm.chat.input || vm.chat.input === '!') {
                 return;
             }
 
+            // Add message to personaly history
             vm.chat.myMessages.push(vm.chat.input);
 
             // Drawing player cannot use chat
@@ -267,20 +306,6 @@
                     ', type = ' + type +
                     ', value = ' + value);
             }
-        }
-
-        function showScores() {
-            $uibModal.open({
-                // templateUrl: 'app/components/wesketch/wesketch.scores.html',
-                template: '<div class="wesketch-scores"><div class="modal-header"><h3 class="modal-title">Scoreboard!</h3></div><div class="modal-body"><table class="table table-bordered table-striped"><tr><th>Player</th><th>Score</th></tr><tr ng-repeat="player in vm.players"><td>{{player.name}}</td><td>{{player.score}}</td></tr></table></div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="vm.close()">Close</button></div></div>',
-                controller: 'WesketchScoresController',
-                controllerAs: 'vm',
-                resolve: {
-                    players: function () {
-                        return vm.state.players;
-                    }
-                }
-            });
         }
 
         /**
@@ -349,11 +374,21 @@
             };
 
             serverEvents.showScores = function (serverEvent) {
-                showScores();
+                $uibModal.open({
+                    // templateUrl: 'app/components/wesketch/wesketch.scores.html',
+                    template: '<div class="wesketch-scores"><div class="modal-header"><h3 class="modal-title">Scoreboard!</h3></div><div class="modal-body"><table class="table table-bordered table-striped"><tr><th>Player</th><th>Score</th></tr><tr ng-repeat="player in vm.players"><td>{{player.name}}</td><td>{{player.score}}</td></tr></table></div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="vm.close()">Close</button></div></div>',
+                    controller: 'WesketchScoresController',
+                    controllerAs: 'vm',
+                    resolve: {
+                        players: function () {
+                            return vm.state.players;
+                        }
+                    }
+                });
             };
 
             serverEvents.setInputGuessMode = function (serverEvent) {
-                setInputGuessMode(serverEvent.value);
+                vm.clientEvents.setInputGuessMode(serverEvent.value);
             };
 
             serverEvents.serverError = function (serverEvent) {

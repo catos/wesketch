@@ -5,8 +5,8 @@
         <div class="col-left col-xs-6">
             <ul class="list-inline pull-right">
                 <li><a class="nav-right" href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i></a></li>
-                <li><i class="fa fa-volume-up sfx" ng-class="{ 'sfx-muted' : vm.soundSettings.muteSfx}" ng-click="vm.toggleSoundSettings('muteSfx')"></i></li>
-                <li><i class="fa fa-music music" ng-class="{ 'music-muted' : vm.soundSettings.muteMusic}" ng-click="vm.toggleSoundSettings('muteMusic')"></i></li>
+                <li><i class="fa fa-volume-up sfx" ng-class="{ 'sfx-muted' : vm.soundSettings.muteSfx}" ng-click="vm.clientEvent({ type: 'toggleSoundSettings', value: 'muteSfx'})"></i></li>
+                <li><i class="fa fa-music music" ng-class="{ 'music-muted' : vm.soundSettings.muteMusic}" ng-click="vm.clientEvent({ type: 'toggleSoundSettings', value: 'muteMusic'})"></i></li>
                 <li>Round <strong>{{vm.state.round}}</strong> of <strong>{{vm.state.roundsTotal}}</strong></li>
             </ul>
         </div>
@@ -81,8 +81,8 @@
 
             <div ng-hide="vm.player.isDrawing" class="new-message input-group">
                 <span class="input-group-btn">
-                    <button class="btn" ng-class="{ 'btn-primary' : vm.chat.guessMode }" ng-click="vm.setInputGuessMode(true)" type="button"><i title="Guess mode" class="fa fa-exclamation-circle"></i></button>
-                    <button class="btn" ng-class="{ 'btn-primary' : !vm.chat.guessMode }" ng-click="vm.setInputGuessMode(false)" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
+                    <button class="btn" ng-class="{ 'btn-primary' : vm.chat.guessMode }" ng-click="vm.clientEvents.setInputGuessMode(true)" type="button"><i title="Guess mode" class="fa fa-exclamation-circle"></i></button>
+                    <button class="btn" ng-class="{ 'btn-primary' : !vm.chat.guessMode }" ng-click="vm.clientEvents.setInputGuessMode(false)" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
                 </span>
 
                 <input class="form-control" type="text" ng-model="vm.chat.input" ng-keyup="vm.onInputKey($event)">
