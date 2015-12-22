@@ -28,9 +28,9 @@
          * Viewmodel variables
          */
         var vm = this;
-        vm.canvas = null;
         vm.ctx = null;
-        vm.drawing = false;
+        vm.canvas = null;
+        vm.isDrawing = false;
         vm.coords = {
             from: {
                 x: 0,
@@ -49,13 +49,14 @@
         vm.drawingPlayer = {};
 
         vm.state = {};
-        vm.myMessages = [];
-        vm.inputGuessMode = false;
-        vm.chatMessages = [];
-        vm.newMessage = '';
 
-        // TODO: lag en generell toggle-functino ?
-        // TODO: og så trenger jeg booleans til view etterpå
+        vm.chat = {
+            input: '',
+            messages: [],
+            myMessages: [],
+            guessMode: false,
+        };
+
         vm.soundSettings = {
             muteSfx: false,
             muteMusic: false
@@ -72,9 +73,6 @@
             currentTool: tools[0],
             strokeStyle: colors[0],
         };
-
-        // TODO: remove later...
-        vm.messagesElement = {};
 
         /**
          * Viewmodel functions
@@ -100,7 +98,6 @@
             // TODO: dette er vel ikke helt spa, hva med å sende med som
             // parameter fra directive, eller bruke angular.element ?
             vm.canvas = document.getElementById('canvas');
-            vm.messagesElement = document.getElementById('messages');
             if (vm.canvas !== undefined) {
                 vm.canvas.onmousedown = onMouseDown;
                 vm.canvas.onmouseup = onMouseUp;
@@ -148,7 +145,7 @@
          */
         function onMouseDown(event) {
             vm.coords.from = getCoords(event);
-            vm.drawing = true;
+            vm.isDrawing = true;
 
             if (vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
@@ -157,11 +154,11 @@
         }
 
         function onMouseUp(event) {
-            vm.drawing = false;
+            vm.isDrawing = false;
         }
 
         function onMouseMove(event) {
-            if (vm.drawing && vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
+            if (vm.isDrawing && vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
                 sendClientEvent(vm.drawSettings.currentTool, vm.coords);
 
@@ -170,7 +167,7 @@
         }
 
         function onMouseLeave(event) {
-            vm.drawing = false;
+            vm.isDrawing = false;
         }
 
         function onResize(event) {
@@ -187,35 +184,34 @@
                 }
                 // Arrow up
                 case 38: {
-                    vm.newMessage = vm.myMessages[vm.myMessages.length - 1];
+                    vm.chat.input = vm.chat.myMessages[vm.chat.myMessages.length - 1];
                     break;
                 }
 
                 // | - Toggle guess mode
                 case 220: {
-                    console.log(vm.newMessage);
-                    vm.newMessage = vm.newMessage.replace('|', '');
-                    setInputGuessMode(!vm.inputGuessMode);
-                    // vm.newMessage = vm.newMessage.substr(0, vm.newMessage.length - 1);
+                    vm.chat.input = vm.chat.input.replace('|', '');
+                    setInputGuessMode(!vm.chat.guessMode);
+                    // vm.chat.input = vm.chat.input.substr(0, vm.chat.input.length - 1);
                     break;
                 }
             }
 
-            if (vm.inputGuessMode && vm.newMessage.substr(0, 1) !== '!') {
-                vm.newMessage = '!' + vm.newMessage;
+            if (vm.chat.guessMode && vm.chat.input.substr(0, 1) !== '!') {
+                vm.chat.input = '!' + vm.chat.input;
             }
         }
 
         function setInputGuessMode(value) {
-            vm.inputGuessMode = value;
+            vm.chat.guessMode = value;
 
-            var firstChar = vm.newMessage.substr(0, 1);
-            if (!vm.inputGuessMode && firstChar === '!') {
-                vm.newMessage = vm.newMessage.substr(1, vm.newMessage.length);
+            var firstChar = vm.chat.input.substr(0, 1);
+            if (!vm.chat.guessMode && firstChar === '!') {
+                vm.chat.input = vm.chat.input.substr(1, vm.chat.input.length);
             }
 
-            if (vm.inputGuessMode && firstChar !== '!') {
-                vm.newMessage = '!' + vm.newMessage;
+            if (vm.chat.guessMode && firstChar !== '!') {
+                vm.chat.input = '!' + vm.chat.input;
             }
         }
 
@@ -225,16 +221,16 @@
         }
 
         function addMessage() {
-            if (!vm.newMessage || vm.newMessage === '!') {
+            if (!vm.chat.input || vm.chat.input === '!') {
                 return;
             }
 
-            vm.myMessages.push(vm.newMessage);
+            vm.chat.myMessages.push(vm.chat.input);
 
             // Drawing player cannot use chat
             if (vm.drawingPlayer !== undefined && vm.player.id === vm.drawingPlayer.id) {
                 alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
-                vm.newMessage = '';
+                vm.chat.input = '';
                 return;
             }
 
@@ -243,18 +239,18 @@
                 timestamp: new Date(),
                 type: 'chat',
                 from: vm.player.name,
-                message: vm.newMessage
+                message: vm.chat.input
             };
 
-            if (vm.newMessage.charAt(0) === '!') {
+            if (vm.chat.input.charAt(0) === '!') {
                 eventType = 'guessWord';
                 eventValue.type = 'guess-word';
-                eventValue.message = vm.newMessage.substr(1);
+                eventValue.message = vm.chat.input.substr(1);
             }
 
             sendClientEvent(eventType, eventValue);
 
-            vm.newMessage = '';
+            vm.chat.input = '';
         }
 
         function sendClientEvent(type, value) {
@@ -344,7 +340,7 @@
             };
 
             serverEvents.addMessage = function (serverEvent) {
-                vm.chatMessages.push(serverEvent.value);
+                vm.chat.messages.push(serverEvent.value);
 
                 var message = serverEvent.value;
                 if (message.type === 'important') {
@@ -361,7 +357,7 @@
             };
 
             serverEvents.serverError = function (serverEvent) {
-                vm.chatMessages.push({
+                vm.chat.messages.push({
                     timestamp: new Date(),
                     type: 'danger',
                     message: serverEvent.value

@@ -35,7 +35,6 @@ server.init = function (weesketch, next) {
 
     if (!server.wordlist.length) {
         server.wordlist = require('./wesketch.wordlist-new.js');
-        console.log('server.wordlist: ', server.wordlist);
     }
 
     next();

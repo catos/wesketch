@@ -58,6 +58,7 @@
 - Order by points på player-lista
 - LOL => LOL selv om det sammenlignes med lowercase
 - serverEvents.brush: sjekk hva som overføres, vil ha minst mulig data her
+- Make templateurl work with templateCache: wesketch.controller.js:279
 
 ### WeSketch Server
 - Minify js & css
