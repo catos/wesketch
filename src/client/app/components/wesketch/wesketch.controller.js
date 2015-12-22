@@ -75,28 +75,27 @@
         };
 
         /**
-         * Viewmodel functions
+         * Developer
          */
-        vm.sendClientEvent = sendClientEvent;
+        vm.isAdmin = false;
 
-        // vm.toggleSoundSettings = toggleSoundSettings;
-        // vm.setInputGuessMode = setInputGuessMode;
-        vm.addMessage = addMessage;
-        vm.onInputKey = onInputKey;
-
-        // TODO: TEST
+        /**
+         * Client events
+         */
+        // vm.sendClientEvent = sendClientEvent;
 
         vm.clientEvent = function (event) {
             var clientEvents = clientEvents || {};
 
-            vm.clientEvents.toggleSoundSettings = function (event) {
+            clientEvents.toggleSoundSettings = function (event) {
                 var setting = event.value;
                 vm.soundSettings[setting] = !vm.soundSettings[setting];
                 console.log('vm.soundSettings: ', vm.soundSettings);
             };
 
-            vm.clientEvents.setInputGuessMode = function (value) {
-                vm.chat.guessMode = value;
+            clientEvents.setInputGuessMode = function (event) {
+                console.log('setInputGuessMode, value: ' + event.value);
+                vm.chat.guessMode = event.value;
 
                 var firstChar = vm.chat.input.substr(0, 1);
                 if (!vm.chat.guessMode && firstChar === '!') {
@@ -108,9 +107,91 @@
                 }
             };
 
+            clientEvents.addMessage = function (event) {
+
+                // Empty messages are not allowed
+                if (!vm.chat.input || vm.chat.input === '!') {
+                    return;
+                }
+
+                // Add message to personaly history
+                vm.chat.myMessages.push(vm.chat.input);
+
+                // Drawing player cannot use chat
+                if (vm.drawingPlayer !== undefined && vm.player.id === vm.drawingPlayer.id) {
+                    alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
+                    vm.chat.input = '';
+                    return;
+                }
+
+                var eventType = 'addMessage';
+                var eventValue = {
+                    timestamp: new Date(),
+                    type: 'chat',
+                    from: vm.player.name,
+                    message: vm.chat.input
+                };
+
+                if (vm.chat.input.charAt(0) === '!') {
+                    eventType = 'guessWord';
+                    eventValue.type = 'guess-word';
+                    eventValue.message = vm.chat.input.substr(1);
+                }
+
+                vm.clientEvent({ 
+                    type: eventType, 
+                    value: eventValue 
+                });
+
+                vm.chat.input = '';
+
+            };
+
+            clientEvents.onInputKey = function (event) {
+                switch (event.value.keyCode) {
+                    // Enter key
+                    case 13: {
+                        vm.clientEvent({
+                            type: 'addMessage'
+                        });
+                        break;
+                    }
+                    // Arrow up
+                    case 38: {
+                        vm.chat.input = vm.chat.myMessages[vm.chat.myMessages.length - 1];
+                        break;
+                    }
+
+                    // | - Toggle guess mode
+                    case 220: {
+                        vm.chat.input = vm.chat.input.replace('|', '');
+                        vm.clientEvent({
+                            type: 'setInputGuessMode',
+                            value: !vm.chat.guessMode
+                        });
+                        break;
+                    }
+                }
+
+                if (vm.chat.guessMode && vm.chat.input.substr(0, 1) !== '!') {
+                    vm.chat.input = '!' + vm.chat.input;
+                }
+            };
+
             clientEvents.default = function (event) {
-                alert.show('warning', 'clientEvents Error', 'No clientEvent found for type: ' + event.type);
-                console.log('clientEvents Error - No clientEvent found for type: ' + event.type);
+                sawkit.emit('clientEvent', {
+                    player: vm.player,
+                    type: event.type,
+                    value: event.value
+                });
+
+                if (event.type !== 'brush') {
+                    console.log(
+                        '\n*** sendClientEvent:' +
+                        ' player = ' + vm.player.email + '(' + vm.player.id + ')' +
+                        ', type = ' + event.type +
+                        ', value = ' + event.value);
+                }
             };
 
             if (clientEvents[event.type]) {
@@ -118,14 +199,8 @@
             } else {
                 return clientEvents.default(event);
             }
-        }
-
-        /**
-         * Developer
-         */
-        vm.isAdmin = false;
-
-
+        };
+        
         init();
 
         function init() {
@@ -146,7 +221,7 @@
             vm.player.id = -1;
             vm.player.email = tokenIdentity.currentUser.email;
             vm.player.name = tokenIdentity.currentUser.name;
-            vm.sendClientEvent('addPlayer', vm.player);
+            vm.clientEvent({ type: 'addPlayer', value: vm.player });
 
             vm.isAdmin = tokenIdentity.isAdmin();
 
@@ -185,7 +260,10 @@
 
             if (vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
-                sendClientEvent(vm.drawSettings.currentTool, vm.coords);
+                vm.clientEvent({ 
+                    type: vm.drawSettings.currentTool, 
+                    value: vm.coords 
+                });
             }
         }
 
@@ -196,7 +274,10 @@
         function onMouseMove(event) {
             if (vm.isDrawing && vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
-                sendClientEvent(vm.drawSettings.currentTool, vm.coords);
+                vm.clientEvent({ 
+                    type: vm.drawSettings.currentTool, 
+                    value: vm.coords 
+                });
 
                 vm.coords.from = vm.coords.to;
             }
@@ -210,103 +291,22 @@
             console.log('onResize: ', event);
         }
 
-        function onInputKey(event) {
+        // function sendClientEvent(type, value) {
+        //     sawkit.emit('clientEvent', {
+        //         player: vm.player,
+        //         type: type,
+        //         value: value
+        //     });
 
-            switch (event.keyCode) {
-                // Enter key
-                case 13: {
-                    addMessage();
-                    break;
-                }
-                // Arrow up
-                case 38: {
-                    vm.chat.input = vm.chat.myMessages[vm.chat.myMessages.length - 1];
-                    break;
-                }
-
-                // | - Toggle guess mode
-                case 220: {
-                    vm.chat.input = vm.chat.input.replace('|', '');
-                    vm.clientEvents.setInputGuessMode(!vm.chat.guessMode);
-                    // vm.chat.input = vm.chat.input.substr(0, vm.chat.input.length - 1);
-                    break;
-                }
-            }
-
-            if (vm.chat.guessMode && vm.chat.input.substr(0, 1) !== '!') {
-                vm.chat.input = '!' + vm.chat.input;
-            }
-        }
-
-        // function setInputGuessMode(value) {
-        //     vm.chat.guessMode = value;
-
-        //     var firstChar = vm.chat.input.substr(0, 1);
-        //     if (!vm.chat.guessMode && firstChar === '!') {
-        //         vm.chat.input = vm.chat.input.substr(1, vm.chat.input.length);
-        //     }
-
-        //     if (vm.chat.guessMode && firstChar !== '!') {
-        //         vm.chat.input = '!' + vm.chat.input;
+        //     if (type !== 'brush') {
+        //         console.log(
+        //             '\n*** sendClientEvent:' +
+        //             ' player = ' + vm.player.email + '(' + vm.player.id + ')' +
+        //             ', type = ' + type +
+        //             ', value = ' + value);
         //     }
         // }
 
-        // function toggleSoundSettings(setting) {
-        //     console.log('toggleSoundSettings: ' + setting);
-        //     vm.soundSettings[setting] = !vm.soundSettings[setting];
-        // }
-
-        function addMessage() {
-
-            // Empty messages are not allowed
-            if (!vm.chat.input || vm.chat.input === '!') {
-                return;
-            }
-
-            // Add message to personaly history
-            vm.chat.myMessages.push(vm.chat.input);
-
-            // Drawing player cannot use chat
-            if (vm.drawingPlayer !== undefined && vm.player.id === vm.drawingPlayer.id) {
-                alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
-                vm.chat.input = '';
-                return;
-            }
-
-            var eventType = 'addMessage';
-            var eventValue = {
-                timestamp: new Date(),
-                type: 'chat',
-                from: vm.player.name,
-                message: vm.chat.input
-            };
-
-            if (vm.chat.input.charAt(0) === '!') {
-                eventType = 'guessWord';
-                eventValue.type = 'guess-word';
-                eventValue.message = vm.chat.input.substr(1);
-            }
-
-            sendClientEvent(eventType, eventValue);
-
-            vm.chat.input = '';
-        }
-
-        function sendClientEvent(type, value) {
-            sawkit.emit('clientEvent', {
-                player: vm.player,
-                type: type,
-                value: value
-            });
-
-            if (type !== 'brush') {
-                console.log(
-                    '\n*** sendClientEvent:' +
-                    ' player = ' + vm.player.email + '(' + vm.player.id + ')' +
-                    ', type = ' + type +
-                    ', value = ' + value);
-            }
-        }
 
         /**
          * Server events
@@ -388,7 +388,11 @@
             };
 
             serverEvents.setInputGuessMode = function (serverEvent) {
-                vm.clientEvents.setInputGuessMode(serverEvent.value);
+                console.log('serverEvent.value: ' + serverEvent.value);
+                vm.clientEvent({
+                    type: 'setInputGuessMode',
+                    value: serverEvent.value 
+                });
             };
 
             serverEvents.serverError = function (serverEvent) {
