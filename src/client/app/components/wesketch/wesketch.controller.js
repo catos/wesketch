@@ -170,6 +170,8 @@
         /**
          * Client events
          */
+
+        // TODO: all onXXX-methods are belong to vm.clientEvent
         function onMouseDown(event) {
             vm.client.coords.from = getCoords(event);
             vm.client.isDrawing = true;
