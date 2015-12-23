@@ -6,9 +6,9 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['$filter', '$uibModal', 'alert', 'sawkit', 'tokenIdentity'];
+    WesketchController.$inject = ['$filter', '$uibModal', 'alert', 'tokenIdentity', 'WesketchSocketService'];
 
-    function WesketchController($filter, $uibModal, alert, sawkit, tokenIdentity) {
+    function WesketchController($filter, $uibModal, alert, tokenIdentity, WesketchSocketService) {
         /**
          * Private variables
          */
@@ -79,11 +79,11 @@
          */
         vm.isAdmin = false;
 
+
+
         /**
          * Client events
          */
-        // vm.sendClientEvent = sendClientEvent;
-
         vm.clientEvent = function (event) {
             var clientEvents = clientEvents || {};
 
@@ -138,10 +138,7 @@
                     eventValue.message = vm.chat.input.substr(1);
                 }
 
-                vm.clientEvent({ 
-                    type: eventType, 
-                    value: eventValue 
-                });
+                WesketchSocketService.emit(vm.player, eventType, eventValue);
 
                 vm.chat.input = '';
 
@@ -179,19 +176,7 @@
             };
 
             clientEvents.default = function (event) {
-                sawkit.emit('clientEvent', {
-                    player: vm.player,
-                    type: event.type,
-                    value: event.value
-                });
-
-                if (event.type !== 'brush') {
-                    console.log(
-                        '\n*** sendClientEvent:' +
-                        ' player = ' + vm.player.email + '(' + vm.player.id + ')' +
-                        ', type = ' + event.type +
-                        ', value = ' + event.value);
-                }
+                WesketchSocketService.emit(vm.player, event.type, event.value);
             };
 
             if (clientEvents[event.type]) {
@@ -200,11 +185,11 @@
                 return clientEvents.default(event);
             }
         };
-        
+
         init();
 
         function init() {
-            sawkit.connect('weesketch');
+            WesketchSocketService.init();
 
             // TODO: dette er vel ikke helt spa, hva med å sende med som
             // parameter fra directive, eller bruke angular.element ?
@@ -260,9 +245,9 @@
 
             if (vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
-                vm.clientEvent({ 
-                    type: vm.drawSettings.currentTool, 
-                    value: vm.coords 
+                vm.clientEvent({
+                    type: vm.drawSettings.currentTool,
+                    value: vm.coords
                 });
             }
         }
@@ -274,9 +259,9 @@
         function onMouseMove(event) {
             if (vm.isDrawing && vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
                 vm.coords.to = getCoords(event);
-                vm.clientEvent({ 
-                    type: vm.drawSettings.currentTool, 
-                    value: vm.coords 
+                vm.clientEvent({
+                    type: vm.drawSettings.currentTool,
+                    value: vm.coords
                 });
 
                 vm.coords.from = vm.coords.to;
@@ -291,27 +276,11 @@
             console.log('onResize: ', event);
         }
 
-        // function sendClientEvent(type, value) {
-        //     sawkit.emit('clientEvent', {
-        //         player: vm.player,
-        //         type: type,
-        //         value: value
-        //     });
-
-        //     if (type !== 'brush') {
-        //         console.log(
-        //             '\n*** sendClientEvent:' +
-        //             ' player = ' + vm.player.email + '(' + vm.player.id + ')' +
-        //             ', type = ' + type +
-        //             ', value = ' + value);
-        //     }
-        // }
-
-
         /**
          * Server events
          */
-        sawkit.on('serverEvent', function (serverEvent) {
+        // sawkit.on('serverEvent', function (serverEvent) {
+        WesketchSocketService.onServerEvent(function (serverEvent) {
 
             var serverEvents = serverEvents || {};
 
@@ -391,7 +360,7 @@
                 console.log('serverEvent.value: ' + serverEvent.value);
                 vm.clientEvent({
                     type: 'setInputGuessMode',
-                    value: serverEvent.value 
+                    value: serverEvent.value
                 });
             };
 
