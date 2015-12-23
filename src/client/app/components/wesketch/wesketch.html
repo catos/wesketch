@@ -1,20 +1,20 @@
-<div id="wesketch" class="wesketch" ng-class="{'drawing-player' : vm.player.isDrawing}">
+<div id="wesketch" class="wesketch" ng-class="{'drawing-player' : vm.client.player.isDrawing}">
 
     <div class="top-row row">
 
         <div class="col-left col-xs-6">
             <ul class="list-inline pull-right">
                 <li><a class="nav-right" href="https://github.com/catos/CSA/blob/master/README.md#todo" target="_blank"><i class="fa fa-github"></i></a></li>
-                <li><i class="fa fa-volume-up sfx" ng-class="{ 'sfx-muted' : vm.soundSettings.muteSfx}" ng-click="vm.clientEvent({ type: 'toggleSoundSettings', value: 'muteSfx'})"></i></li>
-                <li><i class="fa fa-music music" ng-class="{ 'music-muted' : vm.soundSettings.muteMusic}" ng-click="vm.clientEvent({ type: 'toggleSoundSettings', value: 'muteMusic'})"></i></li>
-                <li>Round <strong>{{vm.state.round}}</strong> of <strong>{{vm.state.roundsTotal}}</strong></li>
+                <li><i class="fa fa-volume-up sfx" ng-class="{ 'sfx-muted' : vm.client.soundSettings.muteSfx}" ng-click="vm.clientEvent({ type: 'toggleSoundSettings', value: 'muteSfx'})"></i></li>
+                <li><i class="fa fa-music music" ng-class="{ 'music-muted' : vm.client.soundSettings.muteMusic}" ng-click="vm.clientEvent({ type: 'toggleSoundSettings', value: 'muteMusic'})"></i></li>
+                <li>Round <strong>{{vm.client.state.round}}</strong> of <strong>{{vm.client.state.roundsTotal}}</strong></li>
             </ul>
         </div>
         <div class="col-right col-xs-6">
             <ul class="list-inline">
-                <li ng-hide="vm.drawingPlayer === undefined">Drawing: {{vm.drawingPlayer.name}}</li>
-                <li ng-hide="vm.nextDrawingPlayer === undefined">Next: Another Player</li>
-                <!--<li ng-hide="vm.state.hint.length > 0">Hint: {{vm.state.hint}} ({{vm.state.hint.length}})</li>-->
+                <li ng-hide="vm.client.drawingPlayer === undefined">Drawing: {{vm.client.drawingPlayer.name}}</li>
+                <li ng-hide="vm.client.nextDrawingPlayer === undefined">Next: Another Player</li>
+                <!--<li ng-hide="vm.client.state.hint.length > 0">Hint: {{vm.client.state.hint}} ({{vm.client.state.hint.length}})</li>-->
             </ul>
         </div>
 
@@ -22,25 +22,25 @@
 
     <div class="main-row row">
 
-        <div class="timer" ng-class="{ 'animated shake' : vm.state.timer.remaining === 30 }">
-            <div class="timer-remaining">{{vm.state.timer.remaining}}</div>
+        <div class="timer" ng-class="{ 'animated shake' : vm.client.state.timer.remaining === 30 }">
+            <div class="timer-remaining">{{vm.client.state.timer.remaining}}</div>
         </div>
 
         <div class="col-xs-6 chat">
             <div class="players">
-                <div class="checkbox ready-button" ng-show="vm.state.phase === vm.state.phaseTypes.preGame" ng-click="vm.clientEvent({ type: 'togglePlayerReady' })">
-                    <input type="checkbox" ng-checked="vm.player.ready">
+                <div class="checkbox ready-button" ng-show="vm.client.state.phase === vm.client.state.phaseTypes.preGame" ng-click="vm.clientEvent({ type: 'togglePlayerReady' })">
+                    <input type="checkbox" ng-checked="vm.client.player.ready">
                     <span>I am ready</span>
                 </div>
                 <table class="table">
-                    <tr ng-repeat="player in vm.state.players" ng-class="{ 'ready' : player.ready, 'guessed-correct' : player.guessedWord }">
+                    <tr ng-repeat="player in vm.client.state.players" ng-class="{ 'ready' : player.ready, 'guessed-correct' : player.guessedWord }">
                         <td data-player-id="{{player.id}}">{{player.name}}</td>
                         <td class="player-score">{{player.score}}</td>
                     </tr>
                 </table>
             </div>
-            <div id="messages" class="messages" ws-scroll-down="vm.chat.messages">
-                <div ng-repeat="message in vm.chat.messages track by $index" class="message text-{{message.type}}">
+            <div id="messages" class="messages" ws-scroll-down="vm.client.chat.messages">
+                <div ng-repeat="message in vm.client.chat.messages track by $index" class="message text-{{message.type}}">
                     <small class="text-muted">{{message.timestamp | date:'HH:mm:ss'}}</small>
                     <strong ng-show="message.from">{{message.from}}: </strong> {{message.message}}
                 </div>
@@ -51,7 +51,7 @@
             <canvas width="500" height="500" id="canvas">
             </canvas>
 
-            <div ng-show="vm.player.isDrawing" class="drawing-tools">
+            <div ng-show="vm.client.player.isDrawing" class="drawing-tools">
 
                 <div>
                     <div class="wesketch-button" ng-click="vm.clientEvent({ type: 'clear' })"><i class="fa fa-times"></i></div>
@@ -59,13 +59,13 @@
                 </div>
 
                 <div>
-                    <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.clientEvent({ type: 'updateDrawSettings', value: { lineWidth: vm.drawSettings.lineWidth - 2 } })"></i></div>
-                    <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.clientEvent({ type: 'updateDrawSettings', value: { lineWidth: vm.drawSettings.lineWidth + 2 } })"></i></div>
-                    <div class="wesketch-button">{{vm.drawSettings.lineWidth}}</div>
+                    <div class="wesketch-button"><i class="fa fa-minus-circle" ng-click="vm.clientEvent({ type: 'updateDrawSettings', value: { lineWidth: vm.client.drawSettings.lineWidth - 2 } })"></i></div>
+                    <div class="wesketch-button"><i class="fa fa-plus-circle" ng-click="vm.clientEvent({ type: 'updateDrawSettings', value: { lineWidth: vm.client.drawSettings.lineWidth + 2 } })"></i></div>
+                    <div class="wesketch-button">{{vm.client.drawSettings.lineWidth}}</div>
                 </div>
 
                 <div>
-                    <div ng-repeat="color in vm.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.drawSettings.strokeStyle ? 'current' : ''"
+                    <div ng-repeat="color in vm.client.drawSettings.colors" style="background-color: {{color}}" ng-class="color === vm.client.drawSettings.strokeStyle ? 'current' : ''"
                     ng-click="vm.clientEvent({ type: 'updateDrawSettings', value: { strokeStyle: color } })" class="wesketch-button"></div>
                 </div>
 
@@ -79,25 +79,25 @@
 
         <div class="col-xs-12">
 
-            <div ng-hide="vm.player.isDrawing" class="new-message input-group">
+            <div ng-hide="vm.client.player.isDrawing" class="new-message input-group">
                 <span class="input-group-btn">
-                    <button class="btn" ng-class="{ 'btn-primary' : vm.chat.guessMode }" ng-click="vm.clientEvent({ type: 'setInputGuessMode', value: true })" type="button"><i title="Guess mode" class="fa fa-exclamation-circle"></i></button>
-                    <button class="btn" ng-class="{ 'btn-primary' : !vm.chat.guessMode }" ng-click="vm.clientEvent({ type: 'setInputGuessMode', value: false })" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
+                    <button class="btn" ng-class="{ 'btn-primary' : vm.client.chat.guessMode }" ng-click="vm.clientEvent({ type: 'setInputGuessMode', value: true })" type="button"><i title="Guess mode" class="fa fa-exclamation-circle"></i></button>
+                    <button class="btn" ng-class="{ 'btn-primary' : !vm.client.chat.guessMode }" ng-click="vm.clientEvent({ type: 'setInputGuessMode', value: false })" type="button"><i title="Chat mode" class="fa fa-comment"></i></button>
                 </span>
 
-                <input class="form-control" type="text" ng-model="vm.chat.input" ng-keyup="vm.clientEvent({ type: 'onInputKey', value: $event })">
+                <input class="form-control" type="text" ng-model="vm.client.chat.input" ng-keyup="vm.clientEvent({ type: 'onInputKey', value: $event })">
 
                 <span class="input-group-btn">
                     <button class="btn btn-primary" ng-click="vm.clientEvent({ type: 'addMessage' })" type="button">Send</button>
                 </span>
             </div>
 
-            <div ng-show="vm.player.isDrawing" class="drawing-player-panel">
+            <div ng-show="vm.client.player.isDrawing" class="drawing-player-panel">
                 <form class="inline-form">
                     <div class="form-group">
                         <div class="current-word">
                             <span>Draw the word: </span>
-                            <div class="word">{{vm.state.currentWord}}</div>
+                            <div class="word">{{vm.client.state.currentWord}}</div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -111,7 +111,7 @@
 
     </div>
 
-    <div class="debug-row row" ng-show="vm.player.email === 'cskogholt@gmail.com'">
+    <div class="debug-row row" ng-show="vm.client.player.email === 'cskogholt@gmail.com'">
         <div class="col-xs-12">
 
             <button class="btn btn-sm btn-primary" ng-click="vm.clientEvent({ type: 'resetGame' })">Reset game</button>
@@ -122,22 +122,22 @@
 
             <div>
                 <div>
-                    <strong>vm.player:</strong>
+                    <strong>vm.client.player:</strong>
                 </div>
-                {{vm.player}}
+                {{vm.client.player}}
             </div>
 
             <div>
                 <div>
-                    <strong>vm.state.players:</strong>
+                    <strong>vm.client.state.players:</strong>
                 </div>
-                {{vm.state.players}}
+                {{vm.client.state.players}}
             </div>
             <div>
                 <div>
-                    <strong>vm.state:</strong>
+                    <strong>vm.client.state:</strong>
                 </div>
-                {{vm.state}}
+                {{vm.client.state}}
             </div>
         </div>
     </div>

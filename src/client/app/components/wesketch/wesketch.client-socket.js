@@ -1,16 +1,21 @@
-(function () {
-    'use strict';
+(function() {
+'use strict';
 
     angular
         .module('components.wesketch')
-        .service('WesketchSocketService', WesketchSocketService);
+        .factory('wesketchClientSocket', wesketchClientSocket);
 
-    WesketchSocketService.$inject = ['sawkit'];
-    function WesketchSocketService(sawkit) {
-        this.init = init;
-        this.onServerEvent = onServerEvent;
-        this.emit = emit;
+    wesketchClientSocket.$inject = ['sawkit'];
+    function wesketchClientSocket(sawkit) {
+        var service = {
+            init: init,
+            onServerEvent: onServerEvent,
+            emit: emit
+        };
 
+        return service;
+
+        ////////////////
         function init() {
             sawkit.connect('weesketch');
         }
@@ -35,6 +40,5 @@
                     ', value = ' + value);
             }
         }
-
     }
 })();

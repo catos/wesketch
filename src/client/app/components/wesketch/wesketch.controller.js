@@ -6,121 +6,52 @@
         .module('components.wesketch')
         .controller('WesketchController', WesketchController);
 
-    WesketchController.$inject = ['$filter', '$uibModal', 'alert', 'tokenIdentity', 'WesketchSocketService'];
+    WesketchController.$inject = ['$filter', '$uibModal', 'alert', 'tokenIdentity', 'wesketchClientModel', 'wesketchClientSocket'];
 
-    function WesketchController($filter, $uibModal, alert, tokenIdentity, WesketchSocketService) {
-        /**
-         * Private variables
-         */
-        var tools = ['brush', 'eraser', 'fill'];
-        var colors = [
-            '#000000', '#c0c0c0', '#ffffff',
-            '#2c4fa5', '#007cc9', '#00acf3',
-            '#00a446', '#5bb339', '#95c51f',
-            '#f1b700', '#fbdd00', '#fff200',
-            '#d9242a', '#de5b1f', '#e58100',
-            '#c50c70', '#d9058f', '#e486b9',
-            '#6c4b1f', '#a98754', '#c2ac79'
-        ];
-        var sfx = {};
-
-        /**
-         * Viewmodel variables
-         */
+    function WesketchController($filter, $uibModal, alert, tokenIdentity, wesketchClientModel, wesketchClientSocket) {
         var vm = this;
-        vm.ctx = null;
-        vm.canvas = null;
-        vm.isDrawing = false;
-        vm.coords = {
-            from: {
-                x: 0,
-                y: 0
-            },
-            to: {
-                x: 0,
-                y: 0
-            }
-        };
 
-        vm.player = {
-            id: -1,
-            email: ''
-        };
-        vm.drawingPlayer = {};
-
-        vm.state = {};
-
-        vm.chat = {
-            input: '',
-            messages: [],
-            myMessages: [],
-            guessMode: false,
-        };
-
-        vm.soundSettings = {
-            muteSfx: false,
-            muteMusic: false
-        };
-
-        vm.drawSettings = {
-            lineWidth: 2,
-            lineJoin: 'round', // 'butt', 'round', 'square'
-            lineCap: 'round', // 'bevel', 'round', 'miter',
-
-            tools: tools,
-            colors: colors,
-
-            currentTool: tools[0],
-            strokeStyle: colors[0],
-        };
-
-        /**
-         * Developer
-         */
-        vm.isAdmin = false;
-
-
+        vm.client = wesketchClientModel;
 
         /**
          * Client events
          */
-        vm.clientEvent = function (event) {
+        // TODO: dette må skilles ut...
+        vm.clientEvent = function(event) {
             var clientEvents = clientEvents || {};
 
             clientEvents.toggleSoundSettings = function (event) {
                 var setting = event.value;
-                vm.soundSettings[setting] = !vm.soundSettings[setting];
-                console.log('vm.soundSettings: ', vm.soundSettings);
+                vm.client.soundSettings[setting] = !vm.client.soundSettings[setting];
             };
 
             clientEvents.setInputGuessMode = function (event) {
-                console.log('setInputGuessMode, value: ' + event.value);
-                vm.chat.guessMode = event.value;
+                vm.client.chat.guessMode = event.value;
 
-                var firstChar = vm.chat.input.substr(0, 1);
-                if (!vm.chat.guessMode && firstChar === '!') {
-                    vm.chat.input = vm.chat.input.substr(1, vm.chat.input.length);
+                var firstChar = vm.client.chat.input.substr(0, 1);
+                if (!vm.client.chat.guessMode && firstChar === '!') {
+                    vm.client.chat.input = vm.client.chat.input.substr(1, vm.client.chat.input.length);
                 }
 
-                if (vm.chat.guessMode && firstChar !== '!') {
-                    vm.chat.input = '!' + vm.chat.input;
+                if (vm.client.chat.guessMode && firstChar !== '!') {
+                    vm.client.chat.input = '!' + vm.client.chat.input;
                 }
             };
 
             clientEvents.addMessage = function (event) {
 
                 // Empty messages are not allowed
-                if (!vm.chat.input || vm.chat.input === '!') {
+                if (!vm.client.chat.input || vm.client.chat.input === '!') {
                     return;
                 }
 
                 // Add message to personaly history
-                vm.chat.myMessages.push(vm.chat.input);
+                vm.client.chat.myMessages.push(vm.client.chat.input);
 
                 // Drawing player cannot use chat
-                if (vm.drawingPlayer !== undefined && vm.player.id === vm.drawingPlayer.id) {
+                if (vm.client.drawingPlayer !== undefined && vm.client.player.id === vm.client.drawingPlayer.id) {
                     alert.show('warning', 'Permission denied', 'Drawing player can not use chat.');
-                    vm.chat.input = '';
+                    vm.client.chat.input = '';
                     return;
                 }
 
@@ -128,19 +59,19 @@
                 var eventValue = {
                     timestamp: new Date(),
                     type: 'chat',
-                    from: vm.player.name,
-                    message: vm.chat.input
+                    from: vm.client.player.name,
+                    message: vm.client.chat.input
                 };
 
-                if (vm.chat.input.charAt(0) === '!') {
+                if (vm.client.chat.input.charAt(0) === '!') {
                     eventType = 'guessWord';
                     eventValue.type = 'guess-word';
-                    eventValue.message = vm.chat.input.substr(1);
+                    eventValue.message = vm.client.chat.input.substr(1);
                 }
 
-                WesketchSocketService.emit(vm.player, eventType, eventValue);
+                wesketchClientSocket.emit(vm.client.player, eventType, eventValue);
 
-                vm.chat.input = '';
+                vm.client.chat.input = '';
 
             };
 
@@ -155,28 +86,28 @@
                     }
                     // Arrow up
                     case 38: {
-                        vm.chat.input = vm.chat.myMessages[vm.chat.myMessages.length - 1];
+                        vm.client.chat.input = vm.client.chat.myMessages[vm.client.chat.myMessages.length - 1];
                         break;
                     }
 
                     // | - Toggle guess mode
                     case 220: {
-                        vm.chat.input = vm.chat.input.replace('|', '');
+                        vm.client.chat.input = vm.client.chat.input.replace('|', '');
                         vm.clientEvent({
                             type: 'setInputGuessMode',
-                            value: !vm.chat.guessMode
+                            value: !vm.client.chat.guessMode
                         });
                         break;
                     }
                 }
 
-                if (vm.chat.guessMode && vm.chat.input.substr(0, 1) !== '!') {
-                    vm.chat.input = '!' + vm.chat.input;
+                if (vm.client.chat.guessMode && vm.client.chat.input.substr(0, 1) !== '!') {
+                    vm.client.chat.input = '!' + vm.client.chat.input;
                 }
             };
 
             clientEvents.default = function (event) {
-                WesketchSocketService.emit(vm.player, event.type, event.value);
+                wesketchClientSocket.emit(vm.client.player, event.type, event.value);
             };
 
             if (clientEvents[event.type]) {
@@ -189,26 +120,26 @@
         init();
 
         function init() {
-            WesketchSocketService.init();
+            wesketchClientSocket.init();
 
             // TODO: dette er vel ikke helt spa, hva med å sende med som
             // parameter fra directive, eller bruke angular.element ?
-            vm.canvas = document.getElementById('canvas');
-            if (vm.canvas !== undefined) {
-                vm.canvas.onmousedown = onMouseDown;
-                vm.canvas.onmouseup = onMouseUp;
-                vm.canvas.onmousemove = onMouseMove;
-                vm.canvas.onmouseleave = onMouseLeave;
-                vm.ctx = vm.canvas.getContext('2d');
+            vm.client.canvas = document.getElementById('canvas');
+            if (vm.client.canvas !== undefined) {
+                vm.client.canvas.onmousedown = onMouseDown;
+                vm.client.canvas.onmouseup = onMouseUp;
+                vm.client.canvas.onmousemove = onMouseMove;
+                vm.client.canvas.onmouseleave = onMouseLeave;
+                vm.client.ctx = vm.client.canvas.getContext('2d');
             }
 
             // Add player to the game
-            vm.player.id = -1;
-            vm.player.email = tokenIdentity.currentUser.email;
-            vm.player.name = tokenIdentity.currentUser.name;
-            vm.clientEvent({ type: 'addPlayer', value: vm.player });
+            vm.client.player.id = -1;
+            vm.client.player.email = tokenIdentity.currentUser.email;
+            vm.client.player.name = tokenIdentity.currentUser.name;
+            vm.clientEvent({ type: 'addPlayer', value: vm.client.player });
 
-            vm.isAdmin = tokenIdentity.isAdmin();
+            vm.client.isAdmin = tokenIdentity.isAdmin();
 
             prepareSounds(function () {
                 console.log('Finished preparing sounds.');
@@ -217,12 +148,12 @@
 
         function prepareSounds(next) {
 
-            sfx.playerJoined = addSfx('SUCCESS TUNE Happy Sticks Short 01.wav');
-            sfx.playerReady = addSfx('TECH INTERFACE Computer Beeps 08.wav');
-            sfx.playerRightAnswer = addSfx('SUCCESS PICKUP Collect Beep 02.wav');
-            sfx.endRoundNoCorrect = addSfx('SUCCESS TUNE Win Ending 09.wav');
-            sfx.timerTension = addSfx('Time Strain.wav');
-            sfx.endGame = addSfx('SUCCESS TUNE Win Complete 07.wav');
+            vm.client.sounds.playerJoined = addSfx('SUCCESS TUNE Happy Sticks Short 01.wav');
+            vm.client.sounds.playerReady = addSfx('TECH INTERFACE Computer Beeps 08.wav');
+            vm.client.sounds.playerRightAnswer = addSfx('SUCCESS PICKUP Collect Beep 02.wav');
+            vm.client.sounds.endRoundNoCorrect = addSfx('SUCCESS TUNE Win Ending 09.wav');
+            vm.client.sounds.timerTension = addSfx('Time Strain.wav');
+            vm.client.sounds.endGame = addSfx('SUCCESS TUNE Win Complete 07.wav');
 
             next();
 
@@ -240,36 +171,36 @@
          * Client events
          */
         function onMouseDown(event) {
-            vm.coords.from = getCoords(event);
-            vm.isDrawing = true;
+            vm.client.coords.from = getCoords(event);
+            vm.client.isDrawing = true;
 
-            if (vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
-                vm.coords.to = { x: vm.coords.from.x - 1, y: vm.coords.from.y - 1 };
+            if (vm.client.drawingPlayer !== undefined && vm.client.drawingPlayer.id === vm.client.player.id) {
+                vm.client.coords.to = { x: vm.client.coords.from.x - 1, y: vm.client.coords.from.y - 1 };
                 vm.clientEvent({
-                    type: vm.drawSettings.currentTool,
-                    value: vm.coords
+                    type: vm.client.drawSettings.currentTool,
+                    value: vm.client.coords
                 });
             }
         }
 
         function onMouseUp(event) {
-            vm.isDrawing = false;
+            vm.client.isDrawing = false;
         }
 
         function onMouseMove(event) {
-            if (vm.isDrawing && vm.drawingPlayer !== undefined && vm.drawingPlayer.id === vm.player.id) {
-                vm.coords.to = getCoords(event);
+            if (vm.client.isDrawing && vm.client.drawingPlayer !== undefined && vm.client.drawingPlayer.id === vm.client.player.id) {
+                vm.client.coords.to = getCoords(event);
                 vm.clientEvent({
-                    type: vm.drawSettings.currentTool,
-                    value: vm.coords
+                    type: vm.client.drawSettings.currentTool,
+                    value: vm.client.coords
                 });
 
-                vm.coords.from = vm.coords.to;
+                vm.client.coords.from = vm.client.coords.to;
             }
         }
 
         function onMouseLeave(event) {
-            vm.isDrawing = false;
+            vm.client.isDrawing = false;
         }
 
         function onResize(event) {
@@ -280,61 +211,61 @@
          * Server events
          */
         // sawkit.on('serverEvent', function (serverEvent) {
-        WesketchSocketService.onServerEvent(function (serverEvent) {
+        wesketchClientSocket.onServerEvent(function (serverEvent) {
 
             var serverEvents = serverEvents || {};
 
             serverEvents.updateState = function (serverEvent) {
                 // Update state
-                angular.extend(vm.state, serverEvent.value);
+                angular.extend(vm.client.state, serverEvent.value);
 
                 // Reassign drawing player
-                vm.drawingPlayer = $filter('filter')(vm.state.players, { isDrawing: true }, true)[0];
+                vm.client.drawingPlayer = $filter('filter')(vm.client.state.players, { isDrawing: true }, true)[0];
 
                 // Update player
-                var player = $filter('filter')(vm.state.players, { email: vm.player.email }, true)[0];
-                angular.extend(vm.player, player);
+                var player = $filter('filter')(vm.client.state.players, { email: vm.client.player.email }, true)[0];
+                angular.extend(vm.client.player, player);
             };
 
             serverEvents.updateDrawSettings = function (serverEvent) {
-                angular.extend(vm.drawSettings, serverEvent.value);
+                angular.extend(vm.client.drawSettings, serverEvent.value);
             };
 
             serverEvents.updateTimer = function (serverEvent) {
-                vm.state.timer = serverEvent.value;
+                vm.client.state.timer = serverEvent.value;
             };
 
             serverEvents.brush = function (serverEvent) {
                 var coords = serverEvent.value;
 
-                vm.ctx.beginPath();
+                vm.client.ctx.beginPath();
 
-                vm.ctx.strokeStyle = vm.drawSettings.strokeStyle;
-                vm.ctx.lineWidth = vm.drawSettings.lineWidth;
-                vm.ctx.lineJoin = vm.drawSettings.lineJoin;
-                vm.ctx.lineCap = vm.drawSettings.lineCap;
+                vm.client.ctx.strokeStyle = vm.client.drawSettings.strokeStyle;
+                vm.client.ctx.lineWidth = vm.client.drawSettings.lineWidth;
+                vm.client.ctx.lineJoin = vm.client.drawSettings.lineJoin;
+                vm.client.ctx.lineCap = vm.client.drawSettings.lineCap;
 
-                vm.ctx.moveTo(coords.from.x, coords.from.y);
-                vm.ctx.lineTo(coords.to.x, coords.to.y);
-                vm.ctx.stroke();
+                vm.client.ctx.moveTo(coords.from.x, coords.from.y);
+                vm.client.ctx.lineTo(coords.to.x, coords.to.y);
+                vm.client.ctx.stroke();
             };
 
             serverEvents.clear = function (serverEvent) {
-                vm.ctx.clearRect(0, 0, vm.canvas.width, vm.canvas.height);
+                vm.client.ctx.clearRect(0, 0, vm.client.canvas.width, vm.client.canvas.height);
             };
 
             serverEvents.playSound = function (serverEvent) {
-                if (!vm.soundSettings.muteSfx) {
-                    sfx[serverEvent.value].play();
+                if (!vm.client.soundSettings.muteSfx) {
+                    vm.client.sounds[serverEvent.value].play();
                 }
             };
 
             serverEvents.stopSound = function (serverEvent) {
-                sfx[serverEvent.value].stop();
+                vm.client.sounds[serverEvent.value].stop();
             };
 
             serverEvents.addMessage = function (serverEvent) {
-                vm.chat.messages.push(serverEvent.value);
+                vm.client.chat.messages.push(serverEvent.value);
 
                 var message = serverEvent.value;
                 if (message.type === 'important') {
@@ -345,12 +276,12 @@
             serverEvents.showScores = function (serverEvent) {
                 $uibModal.open({
                     // templateUrl: 'app/components/wesketch/wesketch.scores.html',
-                    template: '<div class="wesketch-scores"><div class="modal-header"><h3 class="modal-title">Scoreboard!</h3></div><div class="modal-body"><table class="table table-bordered table-striped"><tr><th>Player</th><th>Score</th></tr><tr ng-repeat="player in vm.players"><td>{{player.name}}</td><td>{{player.score}}</td></tr></table></div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="vm.close()">Close</button></div></div>',
+                    template: '<div class="wesketch-scores"><div class="modal-header"><h3 class="modal-title">Scoreboard!</h3></div><div class="modal-body"><table class="table table-bordered table-striped"><tr><th>Player</th><th>Score</th></tr><tr ng-repeat="player in vm.client.players"><td>{{player.name}}</td><td>{{player.score}}</td></tr></table></div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="vm.client.close()">Close</button></div></div>',
                     controller: 'WesketchScoresController',
                     controllerAs: 'vm',
                     resolve: {
                         players: function () {
-                            return vm.state.players;
+                            return vm.client.state.players;
                         }
                     }
                 });
@@ -365,7 +296,7 @@
             };
 
             serverEvents.serverError = function (serverEvent) {
-                vm.chat.messages.push({
+                vm.client.client.chat.messages.push({
                     timestamp: new Date(),
                     type: 'danger',
                     message: serverEvent.value

@@ -32,6 +32,7 @@
 ## TODO
 
 ### WeSketch Client
+- fjern vm.clientEvent og kun ha "typesterke" metoder....default = error
 - Recalculate # rounds at start of first round
 - Warning om at det er din tur, type lyd
 - Close guess = sound (only for guessing player)
