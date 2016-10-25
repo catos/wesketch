@@ -1,6 +1,8 @@
 
 # WeSketch v0.2.0
 
+![Image of WeSketch](https://github.com/catos/wesketch/blob/master/wesketch.png)
+
 ## Version 0.2.2
 - Gulp-task 'serve-dev' and 'serve-build' will now produce environment-specific configurations
 - Client will no longer allow empty strings in chat or as guess
