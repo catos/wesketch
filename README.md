@@ -34,6 +34,9 @@
 ## TODO
 
 ### WeSketch Client
+- New game format "WeSketch Draft": everyone gets a word and starts drawing simultaneously. Drawings are presented to the "next player" and he have to guess the word. Drawings are rotated until they have done a full circle. (Like that boardgame)
+- Store finished images, with word, author and points...showroom in gallery format
+- Store all drawing-data => make a video
 - fjern vm.clientEvent og kun ha "typesterke" metoder....default = error
 - Recalculate # rounds at start of first round
 - Warning om at det er din tur, type lyd
