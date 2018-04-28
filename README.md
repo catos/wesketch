@@ -34,6 +34,7 @@
 ## TODO
 
 ### WeSketch Client
+- Distinct sound when you guess the correct word (to more easily identify when you are correct)
 - Lobby, set game rules: round duration, choose wordlist, number of rounds
 - Add simple description of word to be drawn
 - New game format "WeSketch Draft": everyone gets a word and starts drawing simultaneously. Drawings are presented to the "next player" and he have to guess the word. Drawings are rotated until they have done a full circle. (Like that boardgame)
