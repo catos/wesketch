@@ -34,6 +34,9 @@
 ## TODO
 
 ### WeSketch Client
+- reset settings after done drawing
+- You are close must be better, more leanient
+- Dont cut time so much after first guess
 - Distinct sound when you guess the correct word (to more easily identify when you are correct)
 - Lobby, set game rules: round duration, choose wordlist, number of rounds
 - Add simple description of word to be drawn
