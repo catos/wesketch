@@ -34,6 +34,7 @@
 ## TODO
 
 ### WeSketch Client
+- save picture with author -> gallery
 - reset settings after done drawing
 - You are close must be better, more leanient
 - Dont cut time so much after first guess
